@@ -146,7 +146,7 @@ class GUI : Application() {
                         "0") as String
             } while (s.isNullOrEmpty() || s.equals("new vertex"))
             try {
-                dfa.addTransition(s.first().toChar(),cell.source.id.toInt(),cell.target.id.toInt())
+                dfa.addTransition(s.first().toChar(),cell.source.value.toString(),cell.target.value.toString())
                 cell.value = s
                 cell.style = "rounded=true;arcSize=30"
             }catch (e: Exception){
@@ -181,7 +181,7 @@ class GUI : Application() {
                         val cell = graph.insertVertex(graph.defaultParent, null, s?.toLowerCase(), e.x.toDouble(), e.y.toDouble(), 40.0, 40.0, defaultStyle)
                         try {
                             cell as mxCell
-                            dfa.addState(automata.State(cell.id.toInt(),s?:"q"+cell.id))
+                            dfa.addState(State(s ?: "q" + cell.value.toString()))
 
                         }catch (e: Exception){
                             graph.model.remove(cell)
@@ -214,7 +214,7 @@ class GUI : Application() {
                                 cell.style=cell.style.replace("strokeColor=blue","strokeColor=red")
                             else
                                 cell.style=cell.style.replace("strokeColor=green","strokeColor=red")
-                            dfa.setInitialState(cell.id.toInt())
+                            dfa.setInitialState(cell.value.toString())
                         }
                     }
                 }
@@ -234,7 +234,7 @@ class GUI : Application() {
                             if(style["strokeColor"]=="blue")
                                 cell.style=cell.style.replace("strokeColor=blue","strokeColor=green")
                             cell.style=cell.style.replace("shape=ellipse","shape=doubleEllipse")
-                            dfa.setFinalState(cell.id.toInt())
+                            dfa.setFinalState(cell.value.toString())
                         }
                     }
                 }

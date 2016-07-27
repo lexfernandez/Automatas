@@ -1,7 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3f02fb56-938e-4fd7-8052-674b51955640" name="Default" comment="" />
+    <list default="true" id="3f02fb56-938e-4fd7-8052-674b51955640" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/automata/State.kt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/automata/Transition.kt" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Automatas/GUI$start$2.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Automatas/GUI$start$3.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Automatas/GUI$start$4.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Automatas/GUI$start$5.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Automatas/GUI$start$6$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Automatas/GUI$start$6$2.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Automatas/GUI$start$6$3.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Automatas/GUI$start$6$4.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Automatas/GUI$start$6.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Automatas/GUI.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Automatas/GUIKt.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Automatas/META-INF/Automatas.kotlin_module" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Automatas/MainApplication$start$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Automatas/MainApplication$start$2.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Automatas/MainApplication$start$3.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Automatas/MainApplication$start$4.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Automatas/MainApplication$start$5.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Automatas/MainApplication$start$6$handle$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Automatas/MainApplication$start$6$handle$2.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Automatas/MainApplication$start$6$handle$3.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Automatas/MainApplication$start$6$handle$4.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Automatas/MainApplication$start$6.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Automatas/MainApplication.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Automatas/MainKt.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Automatas/automata/DFA.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Automatas/automata/State.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Automatas/automata/Transition.class" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/GUI.kt" afterPath="$PROJECT_DIR$/src/GUI.kt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Main.kt" afterPath="$PROJECT_DIR$/src/Main.kt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/automata/DFA.kt" afterPath="$PROJECT_DIR$/src/automata/DFA.kt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/automata/automata.kt" afterPath="$PROJECT_DIR$/src/automata/automata.kt" />
+    </list>
     <ignored path="Automatas.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/out/" />
@@ -25,16 +61,9 @@
       <file leaf-file-name="Main.kt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Main.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="36">
-              <caret line="31" column="0" selection-start-line="31" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
-              <folding>
-                <element signature="e#0#38#0" expanded="true" />
-                <element signature="e#113#774#0" expanded="true" />
-                <element signature="e#3439#4265#2" expanded="false" />
-                <element signature="e#4343#4467#2" expanded="false" />
-                <element signature="e#6220#6372#2" expanded="false" />
-                <element signature="e#6897#10139#0" expanded="false" />
-              </folding>
+            <state relative-caret-position="142">
+              <caret line="115" column="69" selection-start-line="115" selection-start-column="67" selection-end-line="115" selection-end-column="69" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -42,33 +71,58 @@
       <file leaf-file-name="GUI.kt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/GUI.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="206">
-              <caret line="89" column="0" selection-start-line="89" selection-start-column="0" selection-end-line="89" selection-end-column="0" />
+            <state relative-caret-position="126">
+              <caret line="262" column="33" selection-start-line="262" selection-start-column="33" selection-end-line="262" selection-end-column="33" />
               <folding>
                 <element signature="e#0#38#0" expanded="true" />
                 <element signature="e#40#713#0" expanded="true" />
-                <element signature="e#4903#5027#2" expanded="false" />
-                <element signature="e#6539#6694#2" expanded="false" />
+                <element signature="e#4915#5039#2" expanded="false" />
+                <element signature="e#6544#6699#2" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="automata.kt" pinned="false" current-in-tab="true">
+      <file leaf-file-name="automata.kt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/automata/automata.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
-              <caret line="20" column="27" selection-start-line="20" selection-start-column="27" selection-end-line="20" selection-end-column="27" />
+            <state relative-caret-position="324">
+              <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DFA.kt" pinned="false" current-in-tab="false">
+      <file leaf-file-name="DFA.kt" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/automata/DFA.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="134">
-              <caret line="93" column="8" selection-start-line="0" selection-start-column="0" selection-end-line="109" selection-end-column="68" />
+            <state relative-caret-position="162">
+              <caret line="9" column="12" selection-start-line="9" selection-start-column="12" selection-end-line="9" selection-end-column="12" />
+              <folding>
+                <element signature="n#!!block;n#addTransition#0;n#!!block;n#DFA#0" expanded="false" />
+                <element signature="n#!!block;n#evaluate#0;n#!!block;n#DFA#0" expanded="false" />
+                <element signature="n#!!block;n#deltaExtended#0;n#!!block;n#DFA#0" expanded="false" />
+                <element signature="n#!!block;n#delta#0;n#!!block;n#DFA#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Transition.kt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/automata/Transition.kt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="36">
+              <caret line="2" column="73" selection-start-line="2" selection-start-column="73" selection-end-line="2" selection-end-column="73" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="State.kt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/automata/State.kt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="72">
+              <caret line="4" column="12" selection-start-line="4" selection-start-column="12" selection-end-line="4" selection-end-column="12" />
               <folding />
             </state>
           </provider>
@@ -83,6 +137,9 @@
         <option value="Kotlin File" />
       </list>
     </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GradleLocalSettings">
     <option name="modificationStamps">
@@ -99,12 +156,12 @@
       <list>
         <option value="$PROJECT_DIR$/src/Automata.form" />
         <option value="$PROJECT_DIR$/src/DFA.kt" />
-        <option value="$PROJECT_DIR$/src/Main.kt" />
-        <option value="$PROJECT_DIR$/src/GUI.kt" />
-        <option value="$PROJECT_DIR$/src/automata/State.kt" />
         <option value="$PROJECT_DIR$/src/automata/Transition.kt" />
-        <option value="$PROJECT_DIR$/src/automata/DFA.kt" />
+        <option value="$PROJECT_DIR$/src/automata/State.kt" />
         <option value="$PROJECT_DIR$/src/automata/automata.kt" />
+        <option value="$PROJECT_DIR$/src/GUI.kt" />
+        <option value="$PROJECT_DIR$/src/Main.kt" />
+        <option value="$PROJECT_DIR$/src/automata/DFA.kt" />
       </list>
     </option>
   </component>
@@ -121,7 +178,7 @@
     <option name="width" value="1225" />
     <option name="height" value="776" />
   </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
     <OptionsSetting value="true" id="Remove" />
     <OptionsSetting value="true" id="Checkout" />
@@ -225,6 +282,8 @@
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+    <property name="settings.editor.splitter.proportion" value="0.2" />
   </component>
   <component name="RunManager" selected="Kotlin.GUIKt">
     <configuration default="false" name="MainKt" type="JetRunConfigurationType" factoryName="Kotlin" temporary="true" nameIsGenerated="true">
@@ -626,14 +685,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2304">
           <caret line="160" column="8" selection-start-line="160" selection-start-column="8" selection-end-line="164" selection-end-column="66" />
-          <folding>
-            <element signature="e#0#38#0" expanded="true" />
-            <element signature="e#113#774#0" expanded="true" />
-            <element signature="e#3439#4265#2" expanded="false" />
-            <element signature="e#4343#4467#2" expanded="false" />
-            <element signature="e#6220#6372#2" expanded="false" />
-            <element signature="e#6897#10139#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -644,8 +696,8 @@
           <folding>
             <element signature="e#0#38#0" expanded="true" />
             <element signature="e#40#713#0" expanded="true" />
-            <element signature="e#4903#5027#2" expanded="false" />
-            <element signature="e#6539#6694#2" expanded="false" />
+            <element signature="e#4915#5039#2" expanded="false" />
+            <element signature="e#6544#6699#2" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -662,7 +714,12 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="324">
           <caret line="65" column="68" selection-start-line="65" selection-start-column="68" selection-end-line="65" selection-end-column="68" />
-          <folding />
+          <folding>
+            <element signature="n#!!block;n#addTransition#0;n#!!block;n#DFA#0" expanded="false" />
+            <element signature="n#!!block;n#evaluate#0;n#!!block;n#DFA#0" expanded="false" />
+            <element signature="n#!!block;n#deltaExtended#0;n#!!block;n#DFA#0" expanded="false" />
+            <element signature="n#!!block;n#delta#0;n#!!block;n#DFA#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -678,14 +735,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#38#0" expanded="true" />
-            <element signature="e#113#774#0" expanded="true" />
-            <element signature="e#3439#4265#2" expanded="false" />
-            <element signature="e#4343#4467#2" expanded="false" />
-            <element signature="e#6220#6372#2" expanded="false" />
-            <element signature="e#6897#10139#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -701,7 +751,12 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="324">
           <caret line="65" column="68" selection-start-line="65" selection-start-column="68" selection-end-line="65" selection-end-column="68" />
-          <folding />
+          <folding>
+            <element signature="n#!!block;n#addTransition#0;n#!!block;n#DFA#0" expanded="false" />
+            <element signature="n#!!block;n#evaluate#0;n#!!block;n#DFA#0" expanded="false" />
+            <element signature="n#!!block;n#deltaExtended#0;n#!!block;n#DFA#0" expanded="false" />
+            <element signature="n#!!block;n#delta#0;n#!!block;n#DFA#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -717,14 +772,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2916">
           <caret line="237" column="20" selection-start-line="237" selection-start-column="20" selection-end-line="237" selection-end-column="20" />
-          <folding>
-            <element signature="e#0#38#0" expanded="true" />
-            <element signature="e#113#774#0" expanded="true" />
-            <element signature="e#3439#4265#2" expanded="false" />
-            <element signature="e#4343#4467#2" expanded="false" />
-            <element signature="e#6220#6372#2" expanded="false" />
-            <element signature="e#6897#10139#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -733,14 +781,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#38#0" expanded="true" />
-            <element signature="e#113#774#0" expanded="true" />
-            <element signature="e#3439#4265#2" expanded="false" />
-            <element signature="e#4343#4467#2" expanded="false" />
-            <element signature="e#6220#6372#2" expanded="false" />
-            <element signature="e#6897#10139#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -754,50 +795,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/automata/State.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72">
-          <caret line="4" column="8" selection-start-line="4" selection-start-column="8" selection-end-line="4" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/automata/Transition.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="36">
-          <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Main.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="36">
-          <caret line="31" column="0" selection-start-line="31" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#38#0" expanded="true" />
-            <element signature="e#113#774#0" expanded="true" />
-            <element signature="e#3439#4265#2" expanded="false" />
-            <element signature="e#4343#4467#2" expanded="false" />
-            <element signature="e#6220#6372#2" expanded="false" />
-            <element signature="e#6897#10139#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/GUI.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="206">
-          <caret line="89" column="0" selection-start-line="89" selection-start-column="0" selection-end-line="89" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#38#0" expanded="true" />
-            <element signature="e#40#713#0" expanded="true" />
-            <element signature="e#4903#5027#2" expanded="false" />
-            <element signature="e#6539#6694#2" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Automatas.iml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -806,19 +803,61 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/automata/DFA.kt">
+    <entry file="file://$PROJECT_DIR$/src/automata/Transition.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="134">
-          <caret line="93" column="8" selection-start-line="0" selection-start-column="0" selection-end-line="109" selection-end-column="68" />
+        <state relative-caret-position="36">
+          <caret line="2" column="73" selection-start-line="2" selection-start-column="73" selection-end-line="2" selection-end-column="73" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/automata/State.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="72">
+          <caret line="4" column="12" selection-start-line="4" selection-start-column="12" selection-end-line="4" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Main.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="142">
+          <caret line="115" column="69" selection-start-line="115" selection-start-column="67" selection-end-line="115" selection-end-column="69" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/automata/automata.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="20" column="27" selection-start-line="20" selection-start-column="27" selection-end-line="20" selection-end-column="27" />
+        <state relative-caret-position="324">
+          <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/GUI.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="262" column="33" selection-start-line="262" selection-start-column="33" selection-end-line="262" selection-end-column="33" />
+          <folding>
+            <element signature="e#0#38#0" expanded="true" />
+            <element signature="e#40#713#0" expanded="true" />
+            <element signature="e#4915#5039#2" expanded="false" />
+            <element signature="e#6544#6699#2" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/automata/DFA.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="9" column="12" selection-start-line="9" selection-start-column="12" selection-end-line="9" selection-end-column="12" />
+          <folding>
+            <element signature="n#!!block;n#addTransition#0;n#!!block;n#DFA#0" expanded="false" />
+            <element signature="n#!!block;n#evaluate#0;n#!!block;n#DFA#0" expanded="false" />
+            <element signature="n#!!block;n#deltaExtended#0;n#!!block;n#DFA#0" expanded="false" />
+            <element signature="n#!!block;n#delta#0;n#!!block;n#DFA#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
