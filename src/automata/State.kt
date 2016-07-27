@@ -1,8 +1,9 @@
 package automata
 
+import java.io.Serializable
 import java.util.*
 
-class State(val value: String) {
+class State(val value: String): Serializable {
     private var transitions: HashMap<Char, Transition> = HashMap()
 
     fun addTransition(transition: Transition): Transition? {

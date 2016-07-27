@@ -22,29 +22,63 @@ import javafx.scene.layout.BorderPane
 import javafx.scene.layout.VBox
 import javafx.stage.Screen
 import java.awt.event.MouseAdapter
+import java.io.*
 import javax.swing.JOptionPane
 
 
 // This is what makes this file the starting point of the program
 fun main(args: Array<String>) {
 //    var dfa: DFA = DFA()
-//    Automata multiplos de 3
-//    dfa.addState(State(0,"s0"))
-//    dfa.addState(State(1,"s1"))
-//    dfa.addState(State(2,"s2"))
+//    IAutomata multiplos de 3
+//    dfa.addState(State("0"))
+//    dfa.addState(State("1"))
+//    dfa.addState(State("2"))
 //
-//    dfa.addTransition('0',0,0)
-//    dfa.addTransition('1',0,1)
-//    dfa.addTransition('1',1,0)
-//    dfa.addTransition('0',1,2)
-//    dfa.addTransition('0',2,1)
-//    dfa.addTransition('1',2,2)
+//    dfa.addTransition('0',"0","0")
+//    dfa.addTransition('1',"0","1")
+//    dfa.addTransition('1',"1","0")
+//    dfa.addTransition('0',"1","2")
+//    dfa.addTransition('0',"2","1")
+//    dfa.addTransition('1',"2","2")
 //
-//    dfa.setInitialState(0)
-//    dfa.setFinalState(0)
+//    dfa.setInitialState("0")
+//    dfa.setFinalState("0")
 //    dfa.printStates()
-
+//
 //    println("evaluation: ${dfa.evaluate("0011")}")
+//    try {
+//        val fileOut = FileOutputStream("./numerosPrimos.dfa")
+//        val out = ObjectOutputStream(fileOut)
+//        out.writeObject(dfa)
+//        out.flush()
+//        out.close()
+//        fileOut.close()
+//        System.out.printf("Serialized data is saved in ./numerosPrimos.dfa")
+//    } catch (i: IOException) {
+//        i.printStackTrace()
+//    }
+
+
+    var e: DFA? = null
+    try {
+        val fileIn = FileInputStream("./numerosPrimos.dfa")
+        val ois: ObjectInputStream = ObjectInputStream(fileIn)
+        e = ois.readObject() as DFA
+        ois.close()
+        fileIn.close()
+    } catch (i: IOException) {
+        i.printStackTrace()
+        return
+    } catch (c: ClassNotFoundException) {
+        println("Employee class not found")
+        c.printStackTrace()
+        return
+    }
+
+    e.printStates()
+
+    println("evaluation: ${e.evaluate("0111")}")
+    println("evaluation: ${e.evaluate("01111")}")
 
 
     // The only thing it does is to launch our JavaFX application defined below

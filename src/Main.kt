@@ -30,7 +30,7 @@
 //fun main(args: Array<String>) {
 //    // The only thing it does is to launch our JavaFX application defined below
 ////    var dfa: DFA = DFA()
-////    Automata multiplos de 3
+////    IAutomata multiplos de 3
 ////    dfa.addState(State(0,"s0"))
 ////    dfa.addState(State(1,"s1"))
 ////    dfa.addState(State(2,"s2"))
