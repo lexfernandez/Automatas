@@ -4,16 +4,18 @@
 
 import automata.DFA
 import automata.State
+import automata.VertexType
 import com.mxgraph.model.mxCell
+import com.mxgraph.model.mxGeometry
 import com.mxgraph.swing.mxGraphComponent
 import com.mxgraph.util.mxEvent
+import com.mxgraph.util.mxRectangle
 import com.mxgraph.view.mxGraph
 import javafx.application.Application
 import javafx.embed.swing.SwingNode
 import javafx.event.EventHandler
 import javafx.scene.Scene
 import javafx.scene.control.*
-import javafx.stage.Stage
 import javafx.scene.image.ImageView
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
@@ -21,6 +23,7 @@ import javafx.scene.input.MouseEvent
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.VBox
 import javafx.stage.Screen
+import javafx.stage.Stage
 import java.awt.event.MouseAdapter
 import java.io.*
 import javax.swing.JOptionPane
@@ -59,26 +62,26 @@ fun main(args: Array<String>) {
 //    }
 
 
-    var e: DFA? = null
-    try {
-        val fileIn = FileInputStream("./numerosPrimos.dfa")
-        val ois: ObjectInputStream = ObjectInputStream(fileIn)
-        e = ois.readObject() as DFA
-        ois.close()
-        fileIn.close()
-    } catch (i: IOException) {
-        i.printStackTrace()
-        return
-    } catch (c: ClassNotFoundException) {
-        println("Employee class not found")
-        c.printStackTrace()
-        return
-    }
-
-    e.printStates()
-
-    println("evaluation: ${e.evaluate("0111")}")
-    println("evaluation: ${e.evaluate("01111")}")
+//    var e: DFA? = null
+//    try {
+//        val fileIn = FileInputStream("./numerosPrimos.dfa")
+//        val ois: ObjectInputStream = ObjectInputStream(fileIn)
+//        e = ois.readObject() as DFA
+//        ois.close()
+//        fileIn.close()
+//    } catch (i: IOException) {
+//        i.printStackTrace()
+//        return
+//    } catch (c: ClassNotFoundException) {
+//        println("Employee class not found")
+//        c.printStackTrace()
+//        return
+//    }
+//
+//    e.printStates()
+//
+//    println("evaluation: ${e.evaluate("0111")}")
+//    println("evaluation: ${e.evaluate("01111")}")
 
 
     // The only thing it does is to launch our JavaFX application defined below
@@ -110,6 +113,10 @@ class GUI : Application() {
         graph.isEdgeLabelsMovable = false
 
         graph.isDisconnectOnMove = false
+
+        graph.isAutoSizeCells=true
+
+        graph.isCellsResizable=false
 
 
         graphComponent.isGridVisible=true
@@ -212,11 +219,11 @@ class GUI : Application() {
                                     null,
                                     "0") as String?
                         } while (s.isNullOrEmpty() || s.equals("new vertex") )
-                        val cell = graph.insertVertex(graph.defaultParent, null, s?.toLowerCase(), e.x.toDouble(), e.y.toDouble(), 40.0, 40.0, defaultStyle)
+                        var cell = graph.insertVertex(graph.defaultParent, null, s?.toLowerCase(), e.x.toDouble(), e.y.toDouble(), 40.0, 40.0, defaultStyle)
                         try {
                             cell as mxCell
-                            dfa.addState(State(s ?: "q" + cell.value.toString()))
-
+                            dfa.addState(State(cell.value.toString()))
+                            cell.resize()
                         }catch (e: Exception){
                             graph.model.remove(cell)
                         }
@@ -320,6 +327,34 @@ class GUI : Application() {
         primaryStage.show()
     }
 
+    private fun mxCell.resize(){
+        if(this.isVertex){
+            if(this.value.toString().length>5){
+                //cell = graph.updateCellSize(cell) as mxCell
+
+                var bounds = graph.view.getState(this).labelBounds
+                val g = this.geometry.clone() as mxGeometry
+
+                if(bounds.width>g.width)
+                    g.width=bounds.width+10
+                g.height=bounds.width+10
+
+                graph.update {
+                    graph.cellsResized(arrayOf(this), arrayOf( mxRectangle(g)))
+                }
+
+            }
+        }
+    }
+
+    private fun mxCell.setVertexType(type: VertexType){
+        when(type){
+            VertexType.NORMAL -> {}
+            VertexType.INITIAL -> {}
+            VertexType.FINAL -> {}
+        }
+    }
+
     private fun  mxGraph.update(block: () -> Any) {
         model.beginUpdate()
         try {
@@ -331,3 +366,4 @@ class GUI : Application() {
     }
 
 }
+
