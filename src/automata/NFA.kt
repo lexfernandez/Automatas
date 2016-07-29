@@ -1,18 +1,6 @@
 package automata
 
-import java.io.Serializable
-import java.util.*
-
-/**
- * Created by Alex Fernandez on 07/25/2016.
- */
-
-open class DFA(): IAutomata, Serializable {
-    override var states: HashMap<String, State> = HashMap()
-    override var initial: String = ""
-    override var finals: MutableList<String> = mutableListOf()
-
-
+class NFA(): DFA() {
     override fun addTransition(symbol: Char, source: String, target: String): Transition? {
         var s = getState(source) ?: throw IllegalArgumentException("source not exist")
         getState(target) ?: throw IllegalArgumentException("target not exist")
@@ -47,4 +35,3 @@ open class DFA(): IAutomata, Serializable {
             throw Exception("Transition dont exits")
     }
 }
-

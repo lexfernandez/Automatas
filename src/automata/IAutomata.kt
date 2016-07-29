@@ -6,7 +6,7 @@ import java.util.*
  * Created by lex on 07-26-16.
  */
 
-interface Automata {
+interface IAutomata {
     var states: HashMap<String, State>
     var initial: String
     var finals: MutableList<String>
@@ -50,6 +50,17 @@ interface Automata {
     fun getFinalStates(): MutableList<String> {
         return finals
     }
+
+    fun removeState(value: String){
+        if(states[value]!=null){
+            for (transition in states[value]!!.getTransitions()){
+
+            }
+        }
+//        return states.remove(value)
+    }
+
+
 
     fun addTransition( symbol: Char,source: String, target: String): Transition?
     fun evaluate(alphabet: String): Boolean
