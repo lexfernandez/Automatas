@@ -37,6 +37,7 @@ class NFA(): DFA() {
             var delta = delta(q,a)
             result = result.union(delta).toMutableList()
         }
+        println("DeltaExtended ${q.value},$x:")
         for (st in result){
             println("${st.value}")
         }
@@ -45,8 +46,11 @@ class NFA(): DFA() {
 
     private fun delta(q: State, symbol: Char): List<State> {
         if (q.getTransition(symbol)!=null){
-            var qs = q.getTransitions(symbol).map{ it.target }
-            println("Delta $symbol: $qs")
+            println("Delta ${q.value},$symbol:")
+            var qs = q.getTransitions(symbol).map{
+                println("${it.target.value}")
+                it.target }
+
             return qs
         }
         else{
