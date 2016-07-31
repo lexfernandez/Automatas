@@ -4,16 +4,20 @@
 
 import automata.DFA
 import automata.State
+import VertexType
+import automata.NFA
 import com.mxgraph.model.mxCell
+import com.mxgraph.model.mxGeometry
 import com.mxgraph.swing.mxGraphComponent
 import com.mxgraph.util.mxEvent
+import com.mxgraph.util.mxRectangle
 import com.mxgraph.view.mxGraph
+import com.mxgraph.view.mxStylesheet
 import javafx.application.Application
 import javafx.embed.swing.SwingNode
 import javafx.event.EventHandler
 import javafx.scene.Scene
 import javafx.scene.control.*
-import javafx.stage.Stage
 import javafx.scene.image.ImageView
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
@@ -21,30 +25,65 @@ import javafx.scene.input.MouseEvent
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.VBox
 import javafx.stage.Screen
+import javafx.stage.Stage
 import java.awt.event.MouseAdapter
+import java.io.*
 import javax.swing.JOptionPane
 
 
 // This is what makes this file the starting point of the program
 fun main(args: Array<String>) {
 //    var dfa: DFA = DFA()
-//    Automata multiplos de 3
-//    dfa.addState(State(0,"s0"))
-//    dfa.addState(State(1,"s1"))
-//    dfa.addState(State(2,"s2"))
+//    IAutomata multiplos de 3
+//    dfa.addState(State("0"))
+//    dfa.addState(State("1"))
+//    dfa.addState(State("2"))
 //
-//    dfa.addTransition('0',0,0)
-//    dfa.addTransition('1',0,1)
-//    dfa.addTransition('1',1,0)
-//    dfa.addTransition('0',1,2)
-//    dfa.addTransition('0',2,1)
-//    dfa.addTransition('1',2,2)
+//    dfa.addTransition('0',"0","0")
+//    dfa.addTransition('1',"0","1")
+//    dfa.addTransition('1',"1","0")
+//    dfa.addTransition('0',"1","2")
+//    dfa.addTransition('0',"2","1")
+//    dfa.addTransition('1',"2","2")
 //
-//    dfa.setInitialState(0)
-//    dfa.setFinalState(0)
+//    dfa.setInitialState("0")
+//    dfa.setFinalState("0")
 //    dfa.printStates()
-
+//
 //    println("evaluation: ${dfa.evaluate("0011")}")
+//    try {
+//        val fileOut = FileOutputStream("./numerosPrimos.dfa")
+//        val out = ObjectOutputStream(fileOut)
+//        out.writeObject(dfa)
+//        out.flush()
+//        out.close()
+//        fileOut.close()
+//        System.out.printf("Serialized data is saved in ./numerosPrimos.dfa")
+//    } catch (i: IOException) {
+//        i.printStackTrace()
+//    }
+
+
+//    var e: DFA? = null
+//    try {
+//        val fileIn = FileInputStream("./numerosPrimos.dfa")
+//        val ois: ObjectInputStream = ObjectInputStream(fileIn)
+//        e = ois.readObject() as DFA
+//        ois.close()
+//        fileIn.close()
+//    } catch (i: IOException) {
+//        i.printStackTrace()
+//        return
+//    } catch (c: ClassNotFoundException) {
+//        println("Employee class not found")
+//        c.printStackTrace()
+//        return
+//    }
+//
+//    e.printStates()
+//
+//    println("evaluation: ${e.evaluate("0111")}")
+//    println("evaluation: ${e.evaluate("01111")}")
 
 
     // The only thing it does is to launch our JavaFX application defined below
@@ -53,7 +92,7 @@ fun main(args: Array<String>) {
 
 class GUI : Application() {
     val graph = mxGraph()
-    var dfa: DFA = DFA()
+    var dfa: DFA = NFA()
     val defaultStyle: String = "shape=ellipse;fillColor=white;strokeColor=blue"
 
     override fun start(primaryStage: Stage) {
@@ -77,6 +116,11 @@ class GUI : Application() {
 
         graph.isDisconnectOnMove = false
 
+        graph.isAutoSizeCells=true
+
+        graph.isCellsResizable=false
+
+        graph.isCellsEditable=false
 
         graphComponent.isGridVisible=true
 
@@ -111,7 +155,7 @@ class GUI : Application() {
         val evaluateBtn = Button("Evaluar")
 
 
-        //Add some button graphics
+        //Add some button graphicsdelta(q,a)delta(q,a)
         openFileBtn.graphic = ImageView("file:///../icons/folder-11.png")
         printBtn.graphic = ImageView("file:///../icons/print.png")
         snapshotBtn.graphic = ImageView("file:///../icons/photo-camera-1.png")
@@ -138,33 +182,40 @@ class GUI : Application() {
             do {
                 s = JOptionPane.showInputDialog(
                         null,
-                        "Enter vertex name:\n" + "e.g.\"1\" or \"a\"",
-                        "Vertex Name",
+                        "Enter edge name:\n" + "e.g.\"1\" or \"a\"",
+                        "Edge Name",
                         JOptionPane.PLAIN_MESSAGE,
                         null,
                         null,
                         "0") as String
-            } while (s.isNullOrEmpty() || s.equals("new vertex"))
+            } while (s.isNullOrEmpty())
             try {
                 dfa.addTransition(s.first().toChar(),cell.source.value.toString(),cell.target.value.toString())
                 cell.value = s
-                cell.style = "rounded=true;arcSize=30"
+                cell.style = "rounded=true;arcSize=30;edgeStyle=orthogonalEdgeStyle;portConstraint=north"
             }catch (e: Exception){
                 graph.model.remove(cell)
             }
         }
 
-        graphComponent.connectionHandler.addListener(mxEvent.LABEL_CHANGED) { sender, evt ->
-            println("label change to=" + evt.name)
-            println(evt.properties.toString())
-        }
+//        graphComponent.connectionHandler.addListener(mxEvent.LABEL_CHANGED) { sender, evt ->
+//            println("label change to=" + evt.name)
+//            println(evt.properties.toString())
+//        }
 
         graphComponent.graphControl.addMouseListener(object : MouseAdapter() {
 
-            override fun mouseReleased(e: java.awt.event.MouseEvent?) {
-                val cell = graphComponent.getCellAt(e!!.x, e.y)
-                if (cell !is mxCell) {
+            override fun mouseReleased(e: java.awt.event.MouseEvent) {
 
+                val cell = graphComponent.getCellAt(e.x, e.y)
+
+                if (cell is mxCell) {
+                    if (e.clickCount == 2) {
+                        println("vertex clicked")
+                        cell.toggleType()
+                        graphComponent.refresh()
+                    }
+                }else{
                     if (e.clickCount == 2) {
                         var s: String?
 
@@ -181,8 +232,8 @@ class GUI : Application() {
                         val cell = graph.insertVertex(graph.defaultParent, null, s?.toLowerCase(), e.x.toDouble(), e.y.toDouble(), 40.0, 40.0, defaultStyle)
                         try {
                             cell as mxCell
-                            dfa.addState(State(s ?: "q" + cell.value.toString()))
-
+                            dfa.addState(State(cell.value.toString()))
+                            cell.resize()
                         }catch (e: Exception){
                             graph.model.remove(cell)
                         }
@@ -202,88 +253,126 @@ class GUI : Application() {
         //add on key release event to scene
         scene.onKeyPressed = EventHandler<KeyEvent> { e ->
             println("keyEvnet: ${e.code}")
-            if (e.isAltDown && e.code === KeyCode.I) {
-
-                println("setting initial")
-                graph.update {
-                    var cell: mxCell = (graph.selectionCell as mxCell)
-                    if(cell is mxCell){
-                        if(cell.isVertex){
-                            val style = graph.getCellStyle(cell)
-                            if(style["strokeColor"]=="blue")
-                                cell.style=cell.style.replace("strokeColor=blue","strokeColor=red")
-                            else
-                                cell.style=cell.style.replace("strokeColor=green","strokeColor=red")
-                            dfa.setInitialState(cell.value.toString())
+            val cell: mxCell = (graph.selectionCell as mxCell)
+            if(cell.isVertex){
+                if (e.isAltDown && e.code === KeyCode.I) {
+                    println("setting initial")
+                    cell.setVertexStyle(VertexType.INITIAL)
+                    graphComponent.refresh()
+                }else if (e.isAltDown && e.code === KeyCode.F) {
+                    println("setting final")
+                    cell.setVertexStyle(VertexType.FINAL)
+                    graphComponent.refresh()
+                }else if (e.isAltDown && e.code === KeyCode.B) {
+                    println("setting Both Initial and Final")
+                    cell.setVertexStyle(VertexType.INITIAL_FINAL)
+                    graphComponent.refresh()
+                }else if (e.isAltDown && e.code === KeyCode.N) {
+                    println("setting normal")
+                    cell.setVertexStyle(VertexType.NORMAL)
+                    graphComponent.refresh()
+                }else if (e.code === KeyCode.DELETE) {
+                    println("Deleting cell")
+                    if(dfa.removeState(cell.value.toString())){
+                        graph.update {
+                            for (edge in graph.getEdges(cell)){
+                                graph.model.remove(edge)
+                            }
+                            graph.model.remove(cell)
                         }
+                        graphComponent.refresh()
                     }
+
                 }
-                graphComponent.refresh()
-                //Stop letting it do anything else
-
                 e.consume()
-
-            }else if (e.isAltDown && e.code === KeyCode.F) {
-
-                println("setting final")
-                graph.update {
-                    var cell = (graph.selectionCell as mxCell)
-                    if(cell is mxCell){
-                        if(cell.isVertex){
-                            val style = graph.getCellStyle(cell)
-                            if(style["strokeColor"]=="blue")
-                                cell.style=cell.style.replace("strokeColor=blue","strokeColor=green")
-                            cell.style=cell.style.replace("shape=ellipse","shape=doubleEllipse")
-                            dfa.setFinalState(cell.value.toString())
-                        }
+            }else if(cell.isEdge){
+                if (e.code === KeyCode.DELETE) {
+                    println("Deleting edge")
+                    graph.update {
+                        graph.model.remove(cell)
                     }
+                    graphComponent.refresh()
                 }
-                graphComponent.refresh()
-                //Stop letting it do anything else
-
                 e.consume()
-
-            }else if (e.isAltDown && e.code === KeyCode.N) {
-
-                println("setting normal")
-                graph.update {
-                    var cell = (graph.selectionCell as mxCell)
-                    if(cell is mxCell){
-                        if(cell.isVertex)
-                            cell.style=defaultStyle
-                    }
-                }
-                graphComponent.refresh()
-                //Stop letting it do anything else
-
-                e.consume()
-
-            }else if (e.getCode() === KeyCode.DELETE) {
-
-                println("Deleting cell")
-                graph.update {
-
-                    var cell = (graph.selectionCell as mxCell)
-                    if(cell.isVertex){
-
-                        for (edge in graph.getEdges(cell)){
-                            graph.model.remove(edge)
-                        }
-                    }
-                    graph.model.remove(cell)
-                }
-                graphComponent.refresh()
-                //Stop letting it do anything else
-
-                e.consume()
-
             }
+            e.consume()
+
         }
 
         //Setup the Stage.
         primaryStage.title = "Automatas"
         primaryStage.scene = scene
         primaryStage.show()
+    }
+
+    private fun mxCell.toggleType() {
+        val style = graph.getCellStyle(this)
+        val ss="${style["strokeColor"]}${style["shape"]}"
+        when(ss){
+            "blueellipse" -> {
+                this.setVertexStyle(VertexType.INITIAL)
+            }
+            "redellipse" -> {
+                this.setVertexStyle(VertexType.FINAL)
+            }
+            "greendoubleEllipse" -> {
+                this.setVertexStyle(VertexType.INITIAL_FINAL)
+            }
+            "reddoubleEllipse" -> {
+                this.setVertexStyle(VertexType.NORMAL)
+            }
+            else -> {
+                this.setVertexStyle(VertexType.NORMAL)
+            }
+        }
+    }
+
+    private fun mxCell.resize(){
+        if(this.isVertex){
+            if(this.value.toString().length>5){
+                //cell = graph.updateCellSize(cell) as mxCell
+
+                val bounds = graph.view.getState(this).labelBounds
+                val g = this.geometry.clone() as mxGeometry
+
+                if(bounds.width>g.width)
+                    g.width=bounds.width+10
+                g.height=bounds.width+10
+
+                graph.update {
+                    graph.cellsResized(arrayOf(this), arrayOf( mxRectangle(g)))
+                }
+
+            }
+        }
+    }
+
+    private fun mxCell.setVertexStyle(type: VertexType){
+        if(this.isVertex){
+            graph.update {
+                when(type){
+                    VertexType.INITIAL -> {
+                        this.style=defaultStyle.replace("strokeColor=blue","strokeColor=red")
+                        dfa.unsetFinalState(this.value.toString())
+                        dfa.setInitialState(this.value.toString())
+                    }
+                    VertexType.FINAL -> {
+                        this.style=defaultStyle.replace("strokeColor=blue","strokeColor=green").replace("shape=ellipse","shape=doubleEllipse")
+                        dfa.setFinalState(this.value.toString())
+                    }
+                    VertexType.INITIAL_FINAL -> {
+                        this.style=defaultStyle.replace("strokeColor=blue","strokeColor=red").replace("shape=ellipse","shape=doubleEllipse")
+                        dfa.setInitialState(this.value.toString())
+                        dfa.setFinalState(this.value.toString())
+                    }
+                    VertexType.NORMAL -> {
+                        this.style=defaultStyle
+                        dfa.setInitialState(null)
+                        dfa.unsetFinalState(this.value.toString())
+                    }
+                }
+            }
+        }
     }
 
     private fun  mxGraph.update(block: () -> Any) {
@@ -297,3 +386,4 @@ class GUI : Application() {
     }
 
 }
+
