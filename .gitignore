@@ -21,3 +21,11 @@ ultimate/out
 ultimate/tmp
 ultimate/workspace.xml
 ultimate/*.versionsBackup
+*.iml
+.gradle
+/local.properties
+/.idea
+.DS_Store
+/build
+/captures
+out/*
