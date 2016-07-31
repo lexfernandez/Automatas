@@ -8,15 +8,15 @@ import java.util.*
  */
 
 open class DFA(): IAutomata, Serializable {
-    override var states: HashMap<String, State> = HashMap()
-    override var initial: String = ""
-    override var finals: MutableList<String> = mutableListOf()
+    override var states: MutableList<State> = mutableListOf()
+    override var initial: State? = null
+    override var finals: MutableList<State> = mutableListOf()
 
 
-    override fun addTransition(symbol: Char, source: String, target: String): Transition? {
-        var s = getState(source) ?: throw IllegalArgumentException("source not exist")
-        getState(target) ?: throw IllegalArgumentException("target not exist")
-        var transition: Transition = Transition(symbol, source, target)
+    override fun addTransition(symbol: Char, source: String, target: String): Boolean {
+        var s = getState(source)
+        var t = getState(target)
+        var transition: Transition = Transition(symbol, s, t)
         if(s.getTransition(symbol)!=null)
             throw Exception("transition alredy exist")
         else
@@ -24,8 +24,8 @@ open class DFA(): IAutomata, Serializable {
     }
 
     override fun evaluate(alphabet: String): Boolean {
-        val result: State = deltaExtended(states[initial]!!,alphabet)
-        return finals.contains(result.value)
+        val result: State = deltaExtended(initial!!,alphabet)
+        return finals.contains(result)
     }
 
     private fun deltaExtended(q: State, alphabet: String): State {
@@ -42,7 +42,7 @@ open class DFA(): IAutomata, Serializable {
 
     private fun delta(q: State, symbol: Char): State {
         if (q.getTransition(symbol)!=null)
-            return getState(q.getTransition(symbol)!!.target)!!
+            return q.getTransition(symbol)!!.target
         else
             throw Exception("Transition dont exits")
     }
