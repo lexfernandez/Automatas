@@ -2,29 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3f02fb56-938e-4fd7-8052-674b51955640" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/VertexType.kt" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Automatas/GUI$start$6$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Automatas/GUI$start$6$2.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Automatas/GUI$start$6$3.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Automatas/GUI$start$6$4.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Automatas/GUI$start$6.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/automata/VertexType.kt" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/out/production/Automatas/GUI$start$5.class" afterPath="$PROJECT_DIR$/out/production/Automatas/GUI$start$4.class" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/automata/NFA.kt" afterPath="$PROJECT_DIR$/src/automata/DFA.kt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Automatas/GUI$start$2.class" afterPath="$PROJECT_DIR$/out/production/Automatas/GUI$start$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Automatas/GUI$start$3.class" afterPath="$PROJECT_DIR$/out/production/Automatas/GUI$start$3.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Automatas/GUI$start$5.class" afterPath="$PROJECT_DIR$/out/production/Automatas/GUI$start$5.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Automatas/GUI.class" afterPath="$PROJECT_DIR$/out/production/Automatas/GUI.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Automatas/GUIKt.class" afterPath="$PROJECT_DIR$/out/production/Automatas/GUIKt.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Automatas/automata/DFA.class" afterPath="$PROJECT_DIR$/out/production/Automatas/automata/DFA.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Automatas/automata/State.class" afterPath="$PROJECT_DIR$/out/production/Automatas/automata/State.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Automatas/automata/Transition.class" afterPath="$PROJECT_DIR$/out/production/Automatas/automata/Transition.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/GUI.kt" afterPath="$PROJECT_DIR$/src/GUI.kt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/automata/IAutomata.kt" afterPath="$PROJECT_DIR$/src/automata/IAutomata.kt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/automata/NFA.kt" afterPath="$PROJECT_DIR$/src/automata/NFA.kt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/automata/State.kt" afterPath="$PROJECT_DIR$/src/automata/State.kt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/automata/Transition.kt" afterPath="$PROJECT_DIR$/src/automata/Transition.kt" />
     </list>
     <ignored path="Automatas.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -50,8 +29,8 @@
       <file leaf-file-name="NFA.kt" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/automata/NFA.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="16" selection-start-line="0" selection-start-column="16" selection-end-line="0" selection-end-column="16" />
+            <state relative-caret-position="90">
+              <caret line="39" column="45" selection-start-line="39" selection-start-column="45" selection-end-line="39" selection-end-column="45" />
               <folding />
             </state>
           </provider>
@@ -60,8 +39,8 @@
       <file leaf-file-name="GUI.kt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/GUI.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="34" column="1" selection-start-line="34" selection-start-column="1" selection-end-line="34" selection-end-column="1" />
+            <state relative-caret-position="306">
+              <caret line="51" column="2" selection-start-line="51" selection-start-column="2" selection-end-line="51" selection-end-column="2" />
               <folding>
                 <element signature="e#0#38#0" expanded="true" />
                 <element signature="e#10146#10361#1" expanded="false" />
@@ -658,7 +637,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
           <url>file://$PROJECT_DIR$/src/automata/NFA.kt</url>
-          <line>42</line>
+          <line>43</line>
           <properties />
           <option name="timeStamp" value="13" />
         </line-breakpoint>
@@ -1066,8 +1045,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/GUI.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="34" column="1" selection-start-line="34" selection-start-column="1" selection-end-line="34" selection-end-column="1" />
+        <state relative-caret-position="306">
+          <caret line="51" column="2" selection-start-line="51" selection-start-column="2" selection-end-line="51" selection-end-column="2" />
           <folding>
             <element signature="e#0#38#0" expanded="true" />
             <element signature="e#10146#10361#1" expanded="false" />
@@ -1078,8 +1057,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/automata/NFA.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="16" selection-start-line="0" selection-start-column="16" selection-end-line="0" selection-end-column="16" />
+        <state relative-caret-position="90">
+          <caret line="39" column="45" selection-start-line="39" selection-start-column="45" selection-end-line="39" selection-end-column="45" />
           <folding />
         </state>
       </provider>
