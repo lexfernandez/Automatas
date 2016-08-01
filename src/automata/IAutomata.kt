@@ -10,6 +10,7 @@ interface IAutomata {
     var states: MutableList<State>
     var initial: State?
     var finals: MutableList<State>
+    var language: MutableList<Char>
 
     fun addState(state: State): Boolean {
         if(states.find { it.value==state.value }!=null)
@@ -38,8 +39,8 @@ interface IAutomata {
         initial = states.find { it.value==value }
     }
 
-    fun getInitialState(): State? {
-        return initial
+    fun getInitialState(): State {
+        return initial?:throw Exception("Initial state is not set")
     }
 
     fun setFinalState(value: String):Boolean {
@@ -65,8 +66,8 @@ interface IAutomata {
         }
     }
 
-    fun getFinalStates(): MutableList<State> {
-        return finals
+    fun getFinalStates(): List<State> {
+        return finals.toList()
     }
 
     fun removeState(value: String): Boolean {
@@ -76,7 +77,24 @@ interface IAutomata {
         return false
     }
 
+    fun hasState(value: String): Boolean {
+        return states.find { it.value==value }!=null
+    }
 
+    fun hasTransition(symbol: Char,source: String, target: String): Boolean{
+        if(hasState(source))
+        {
+            var s = getState(source)
+            var transitions = s.getTransitions(symbol)
+
+            for (transition in transitions){
+                if(transition.target.value==target)
+                    return true
+            }
+
+        }
+        return false
+    }
 
     fun addTransition( symbol: Char,source: String, target: String): Boolean
     fun evaluate(alphabet: String): Boolean

@@ -8,6 +8,7 @@ import java.util.*
  */
 
 open class DFA(): IAutomata, Serializable {
+    override var language: MutableList<Char> = mutableListOf()
     override var states: MutableList<State> = mutableListOf()
     override var initial: State? = null
     override var finals: MutableList<State> = mutableListOf()
@@ -18,14 +19,18 @@ open class DFA(): IAutomata, Serializable {
         var t = getState(target)
         var transition: Transition = Transition(symbol, s, t)
         if(s.getTransition(symbol)!=null)
-            throw Exception("transition alredy exist")
-        else
+            throw Exception("Transition from ${s.value} with symbol $symbol already exist!")
+        else{
+            if(!language.contains(symbol))
+                language.add(symbol)
             return s.addTransition(transition)
+        }
     }
 
     override fun evaluate(alphabet: String): Boolean {
-        val result: State = deltaExtended(initial!!,alphabet)
-        return finals.contains(result)
+        var init = getInitialState()
+        val result: State = deltaExtended(init,alphabet)
+        return getFinalStates().contains(result)
     }
 
     private fun deltaExtended(q: State, alphabet: String): State {
@@ -36,7 +41,7 @@ open class DFA(): IAutomata, Serializable {
         var a = alphabet.last()
         var x = alphabet.subSequence(0,alphabet.length-1).toString()
 
-        println("x: $x a:$a")
+        //println("x: $x a:$a")
         return delta(deltaExtended(q,x),a)
     }
 
