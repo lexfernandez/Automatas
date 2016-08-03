@@ -15,6 +15,8 @@ open class DFA(): IAutomata, Serializable {
 
 
     override fun addTransition(symbol: Char, source: String, target: String): Boolean {
+        if(symbol.equals('E'))
+            throw Exception("Symbol E is not valid for a ${this.javaClass.simpleName}")
         var s = getState(source)
         var t = getState(target)
         var transition: Transition = Transition(symbol, s, t)

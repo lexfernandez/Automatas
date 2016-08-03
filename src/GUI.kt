@@ -2,10 +2,7 @@
  * Created by lex on 07-24-16.
  */
 
-import automata.DFA
-import automata.IAutomata
-import automata.NFA
-import automata.State
+import automata.*
 import com.mxgraph.model.mxCell
 import com.mxgraph.model.mxGeometry
 import com.mxgraph.swing.mxGraphComponent
@@ -17,6 +14,7 @@ import javafx.embed.swing.SwingNode
 import javafx.event.EventHandler
 import javafx.scene.Scene
 import javafx.scene.control.*
+import javafx.scene.image.Image
 import javafx.scene.image.ImageView
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
@@ -26,6 +24,7 @@ import javafx.scene.layout.VBox
 import javafx.stage.Screen
 import javafx.stage.Stage
 import java.awt.event.MouseAdapter
+import java.io.File
 import java.util.*
 import javax.swing.JOptionPane.*
 
@@ -78,7 +77,7 @@ fun main(args: Array<String>) {
 
 class GUI : Application() {
     val graph = mxGraph()
-    var dfa: IAutomata = NFA()
+    var dfa: IAutomata = NFAE()
     val defaultStyle: String = "shape=ellipse;fillColor=white;strokeColor=blue;defaultHotspot=1.0"
     var stage: Stage = Stage()
 
@@ -142,9 +141,9 @@ class GUI : Application() {
 
 
         //Add some button graphicsdelta(q,a)delta(q,a)
-        openFileBtn.graphic = ImageView("file:///../icons/folder-11.png")
-        printBtn.graphic = ImageView("file:///../icons/print.png")
-        snapshotBtn.graphic = ImageView("file:///../icons/photo-camera-1.png")
+        openFileBtn.graphic = ImageView(Image("icons"+File.separator+"folder-11.png"))
+        printBtn.graphic = ImageView(Image("icons"+File.separator+"print.png"))
+        snapshotBtn.graphic = ImageView(Image("icons"+File.separator+"photo-camera-1.png"))
 
 
         toolBar.items.addAll(openFileBtn, printBtn, snapshotBtn,Separator(),alphabetTextField,evaluateBtn)
@@ -311,24 +310,27 @@ class GUI : Application() {
         primaryStage.scene = scene
         primaryStage.show()
 
-        dfa.addState(State("0"))
-        dfa.addState(State("1"))
-        dfa.addState(State("2"))
-        dfa.addState(State("3"))
-        dfa.addState(State("4"))
+        dfa.addState(State("p"))
+        dfa.addState(State("q"))
+        dfa.addState(State("r"))
 
-        dfa.addTransition('a',"2","1")
-        dfa.addTransition('a',"1","0")
-        dfa.addTransition('b',"2","3")
-        dfa.addTransition('b',"3","4")
-        dfa.addTransition('a',"2","2")
-        dfa.addTransition('b',"2","2")
+        dfa.addTransition('a',"p","p")
+        dfa.addTransition('b',"p","q")
+        dfa.addTransition('c',"p","r")
 
-        dfa.setInitialState("2")
-        dfa.setFinalState("0")
-        dfa.setFinalState("4")
+        dfa.addTransition('a',"q","q")
+        dfa.addTransition('b',"q","r")
+        dfa.addTransition('E',"q","p")
 
-        drawAutomata((dfa as NFA).toDFA())
+        dfa.addTransition('a',"r","r")
+        dfa.addTransition('E',"r","q")
+        dfa.addTransition('c',"r","p")
+
+        dfa.setInitialState("p")
+        dfa.setFinalState("r")
+
+        drawAutomata((dfa as NFAE).toDFA())
+        (dfa as NFAE).printClosure()
     }
 
     private fun mxCell.toggleType() {

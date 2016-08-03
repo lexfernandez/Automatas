@@ -1,17 +1,19 @@
 package automata
 
+/**
+ * Created by lex on 08-02-16.
+ */
+
 import java.io.Serializable
 import java.util.*
 
-class NFA(): IAutomata, Serializable {
+class NFAE(): IAutomata, Serializable {
     override var language: MutableList<Char> = mutableListOf()
     override var states: MutableList<State> = mutableListOf()
     override var initial: State? = null
     override var finals: MutableList<State> = mutableListOf()
 
     override fun addTransition(symbol: Char, source: String, target: String): Boolean {
-        if(symbol.equals('E'))
-            throw Exception("Symbol E is not valid for a ${this.javaClass.simpleName}")
         var s = getState(source)
         var f = getState(target)
         var ts = s.getTransitions(symbol)
@@ -31,33 +33,33 @@ class NFA(): IAutomata, Serializable {
 
     override fun evaluate(alphabet: String): Boolean {
         var init = getInitialState()
-        val result: List<State> = deltaExtended(init,alphabet)
+        val result: List<State> = deltaExtended(eClosure(init),alphabet)
         return !getFinalStates().intersect(result).isEmpty()
     }
 
-    private fun deltaExtended(q: State, alphabet: String): List<State> {
+    private fun deltaExtended(eclosures: List<State>, alphabet: String): List<State> {
         if(alphabet.isEmpty()){
-            return listOf(q)
+            return eclosures
         }
 
         var a = alphabet.last()
         var x = alphabet.subSequence(0,alphabet.length-1).toString()
 
         //println("x: $x a:$a")
+        var deltas : MutableList<State> = mutableListOf()
 
-        var subset = deltaExtended(q,x)
+        for(cstate in eclosures){
+            var delta = delta(cstate,a)
+            deltas = deltas.union(delta).toMutableList()
+        }
 
         var result : MutableList<State> = mutableListOf()
-
-        for (q in subset){
-            var delta = delta(q,a)
-            result = result.union(delta).toMutableList()
+        for (d in deltas){
+            result = result.union(eClosure(d)).toMutableList()
         }
-        //println("DeltaExtended ${q.value},$x:")
-//        for (st in result){
-//            println("${st.value}")
-//        }
-        return result
+
+
+        return deltaExtended(result,x)
     }
 
     private fun delta(q: State, symbol: Char): List<State> {
@@ -87,6 +89,34 @@ class NFA(): IAutomata, Serializable {
 //            print("\n")
 //        }
 //    }
+
+    private fun getTargetsName(states: String, symbol: Char): String?{
+        var transitions: MutableSet<String> = mutableSetOf()
+        for (name  in states.split(",")){
+            if(hasState(name.trim())){
+                var state = this.getState(name.trim())
+                val mutableList = state.getTransitions(symbol).map { it.target.value }
+                transitions.addAll(mutableList)
+            }
+        }
+        if(transitions.count()==0) return null
+        return transitions.sorted().toString().replace("[","").replace("]","").trim()
+    }
+
+    private fun eClosure(state: State): List<State> {
+        var c = state.getTransitions('E').map { it.target }
+        for(s in c){
+            c=c.union(eClosure(s)).toList()
+        }
+        c=c.union(listOf(state)).toList()
+        return c.sortedBy { it.value }
+    }
+
+    fun printClosure(){
+        for (state in states){
+            println(eClosure(state).map { it.value })
+        }
+    }
 
     fun toDFA(): DFA{
         var dfa = DFA()
@@ -132,16 +162,5 @@ class NFA(): IAutomata, Serializable {
         return dfa
     }
 
-    private fun getTargetsName(states: String, symbol: Char): String?{
-        var transitions: MutableSet<String> = mutableSetOf()
-        for (name  in states.split(",")){
-            if(hasState(name.trim())){
-                var state = this.getState(name.trim())
-                val mutableList = state.getTransitions(symbol).map { it.target.value }
-                transitions.addAll(mutableList)
-            }
-        }
-        if(transitions.count()==0) return null
-        return transitions.sorted().toString().replace("[","").replace("]","").trim()
-    }
+
 }
