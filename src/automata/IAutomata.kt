@@ -12,6 +12,12 @@ interface IAutomata {
     var finals: MutableList<State>
     var language: MutableList<Char>
 
+    fun addLanguageSymbol(symbol: Char): Boolean {
+        if(!symbol.equals('E') && !language.contains(symbol))
+            return language.add(symbol)
+        return false
+    }
+
     fun addState(state: State): Boolean {
         if(states.find { it.value==state.value }!=null)
             throw Exception("El estado ya existe")

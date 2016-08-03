@@ -23,8 +23,7 @@ open class DFA(): IAutomata, Serializable {
         if(s.getTransition(symbol)!=null)
             throw Exception("Transition from ${s.value} with symbol $symbol already exist!")
         else{
-            if(!language.contains(symbol))
-                language.add(symbol)
+            addLanguageSymbol(symbol)
             return s.addTransition(transition)
         }
     }

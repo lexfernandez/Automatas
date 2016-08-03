@@ -26,8 +26,7 @@ class NFAE(): IAutomata, Serializable {
         }
 
         var transition: Transition = Transition(symbol, s, f)
-        if(!language.contains(symbol))
-            language.add(symbol)
+        addLanguageSymbol(symbol)
         return s.addTransition(transition)
     }
 
