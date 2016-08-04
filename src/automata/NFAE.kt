@@ -90,16 +90,22 @@ class NFAE(): IAutomata, Serializable {
 //    }
 
     private fun getTargetsName(states: String, symbol: Char): String?{
-        var transitions: MutableSet<String> = mutableSetOf()
-        for (name  in states.split(",")){
-            if(hasState(name.trim())){
-                var state = this.getState(name.trim())
-                val mutableList = state.getTransitions(symbol).map { it.target.value }
-                transitions.addAll(mutableList)
+        var deltas: MutableList<State> = mutableListOf()
+
+        for (value in states.split(",")){
+            if(hasState(value.trim())){
+                var state = getState(value.trim())
+                deltas = deltas.union(delta(state,symbol)).toMutableList()
             }
         }
-        if(transitions.count()==0) return null
-        return transitions.sorted().toString().replace("[","").replace("]","").trim()
+        print("$symbol: e-Closure(${deltas.map { it.value }})")
+
+        var closures: MutableList<State> = mutableListOf()
+        for(delta in deltas){
+            closures = closures.union(eClosure(delta)).toMutableList()
+        }
+        println(closures.map { it.value }.sorted())
+        return closures.map { it.value }.sorted().toString().replace("[","").replace("]","").trim()
     }
 
     private fun eClosure(state: State): List<State> {
@@ -120,21 +126,26 @@ class NFAE(): IAutomata, Serializable {
     fun toDFA(): DFA{
         var dfa = DFA()
         var queue: Queue<State> = Queue()
-        var initial = State(this.getInitialState().value.toString())
+        var closure = eClosure(this.getInitialState())
+        var initial = State(closure.map { it.value }.toString().replace("[","").replace("]","").trim())
         queue.enqueue(initial)
         dfa.addState(initial)
         dfa.setInitialState(initial.value)
-        if (this.isFinal(initial.value)){
-            dfa.setFinalState(initial.value)
+        for (c in closure){
+            if (this.isFinal(c.value)){
+                dfa.setFinalState(initial.value)
+                break
+            }
         }
+
         while (queue.isNotEmpty()){
             var q = queue.dequeue()
             if(q!=null) {
-                println("State: ${q.value}| ")
+                //println("State: ${q.value}| ")
                 for (symbol in language){
                     var newStateName = getTargetsName(q.value,symbol)
-                    if(newStateName!=null)
-                        println("$symbol : $newStateName| ")
+                    //if(newStateName!=null)
+                        //println("$symbol : $newStateName| ")
                     if(newStateName!=null && newStateName.isNotEmpty()){
                         if(!dfa.hasState(newStateName)){
                             var newState = State(newStateName)
@@ -152,7 +163,6 @@ class NFAE(): IAutomata, Serializable {
                                 break
                             }
                         }
-
                     }
                 }
                 print("\n")

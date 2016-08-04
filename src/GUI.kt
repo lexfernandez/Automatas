@@ -310,27 +310,39 @@ class GUI : Application() {
         primaryStage.scene = scene
         primaryStage.show()
 
-        dfa.addState(State("p"))
-        dfa.addState(State("q"))
-        dfa.addState(State("r"))
+        dfa.addState(State("0"))
+        dfa.addState(State("1"))
+        dfa.addState(State("2"))
+        dfa.addState(State("3"))
+        dfa.addState(State("4"))
+        dfa.addState(State("5"))
+        dfa.addState(State("6"))
+        dfa.addState(State("7"))
+        dfa.addState(State("8"))
+        dfa.addState(State("9"))
+        dfa.addState(State("10"))
 
-        dfa.addTransition('a',"p","p")
-        dfa.addTransition('b',"p","q")
-        dfa.addTransition('c',"p","r")
+        dfa.addTransition('E',"0","1")
+        dfa.addTransition('E',"1","2")
+        dfa.addTransition('E',"1","4")
+        dfa.addTransition('a',"2","3")
+        dfa.addTransition('b',"4","5")
+        dfa.addTransition('E',"3","6")
+        dfa.addTransition('E',"5","6")
+        dfa.addTransition('E',"6","7")
+        dfa.addTransition('a',"7","8")
+        dfa.addTransition('b',"8","9")
+        dfa.addTransition('b',"9","10")
+        dfa.addTransition('E',"0","7")
+        dfa.addTransition('E',"6","1")
 
-        dfa.addTransition('a',"q","q")
-        dfa.addTransition('b',"q","r")
-        dfa.addTransition('E',"q","p")
+        dfa.setInitialState("0")
+        dfa.setFinalState("10")
 
-        dfa.addTransition('a',"r","r")
-        dfa.addTransition('E',"r","q")
-        dfa.addTransition('c',"r","p")
+        //dfa = (dfa as NFAE).toDFA()
+        drawAutomata(dfa)
 
-        dfa.setInitialState("p")
-        dfa.setFinalState("r")
 
-        drawAutomata((dfa as NFAE).toDFA())
-        (dfa as NFAE).printClosure()
     }
 
     private fun mxCell.toggleType() {
