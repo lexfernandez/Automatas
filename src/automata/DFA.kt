@@ -15,14 +15,15 @@ open class DFA(): IAutomata, Serializable {
 
 
     override fun addTransition(symbol: Char, source: String, target: String): Boolean {
+        if(symbol.equals('E'))
+            throw Exception("Symbol E is not valid for a ${this.javaClass.simpleName}")
         var s = getState(source)
         var t = getState(target)
         var transition: Transition = Transition(symbol, s, t)
         if(s.getTransition(symbol)!=null)
             throw Exception("Transition from ${s.value} with symbol $symbol already exist!")
         else{
-            if(!language.contains(symbol))
-                language.add(symbol)
+            addLanguageSymbol(symbol)
             return s.addTransition(transition)
         }
     }
