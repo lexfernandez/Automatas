@@ -29,6 +29,7 @@ open class DFA(): IAutomata, Serializable {
     }
 
     override fun evaluate(alphabet: String): Boolean {
+        println("DFA Evaluation")
         var init = getInitialState()
         val result: State = deltaExtended(init,alphabet)
         return getFinalStates().contains(result)

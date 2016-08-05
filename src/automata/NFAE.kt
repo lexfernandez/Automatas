@@ -31,6 +31,7 @@ class NFAE(): IAutomata, Serializable {
     }
 
     override fun evaluate(alphabet: String): Boolean {
+        println("NFAE Evaluation")
         var init = getInitialState()
         val result: List<State> = deltaExtended(eClosure(init),alphabet)
         return !getFinalStates().intersect(result).isEmpty()
@@ -41,10 +42,11 @@ class NFAE(): IAutomata, Serializable {
             return eclosures
         }
 
-        var a = alphabet.last()
-        var x = alphabet.subSequence(0,alphabet.length-1).toString()
+        var a = alphabet.first()
+        var x = alphabet.subSequence(1,alphabet.length).toString()
 
-        //println("x: $x a:$a")
+        //print("s: $a ")
+        //println("c:${eclosures.map { it.value }}")
         var deltas : MutableList<State> = mutableListOf()
 
         for(cstate in eclosures){
@@ -56,7 +58,6 @@ class NFAE(): IAutomata, Serializable {
         for (d in deltas){
             result = result.union(eClosure(d)).toMutableList()
         }
-
 
         return deltaExtended(result,x)
     }
@@ -104,7 +105,7 @@ class NFAE(): IAutomata, Serializable {
         for(delta in deltas){
             closures = closures.union(eClosure(delta)).toMutableList()
         }
-        println(closures.map { it.value }.sorted())
+        //println(closures.map { it.value }.sorted())
         return closures.map { it.value }.sorted().toString().replace("[","").replace("]","").trim()
     }
 
@@ -153,7 +154,7 @@ class NFAE(): IAutomata, Serializable {
                             queue.enqueue(newState)
                         }
 
-                        if(!hasTransition(symbol,q.value,newStateName)){
+                        if(!dfa.hasTransition(symbol,q.value,newStateName)){
                             dfa.addTransition(symbol,q.value,newStateName)
                         }
 

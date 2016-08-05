@@ -29,6 +29,7 @@ class NFA(): IAutomata, Serializable {
     }
 
     override fun evaluate(alphabet: String): Boolean {
+        println("NFA Evaluation")
         var init = getInitialState()
         val result: List<State> = deltaExtended(init,alphabet)
         return !getFinalStates().intersect(result).isEmpty()
@@ -112,7 +113,7 @@ class NFA(): IAutomata, Serializable {
                             queue.enqueue(newState)
                         }
 
-                        if(!hasTransition(symbol,q.value,newStateName)){
+                        if(!dfa.hasTransition(symbol,q.value,newStateName)){
                             dfa.addTransition(symbol,q.value,newStateName)
                         }
 

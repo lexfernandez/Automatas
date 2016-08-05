@@ -243,7 +243,7 @@ class GUI : Application() {
         evaluateBtn.onMouseClicked = EventHandler<MouseEvent> {
             val alphabet = alphabetTextField.text ?:""
             try{
-                showMessageDialog(null, "evaluation: ${dfa.evaluate(alphabet)}")
+                showMessageDialog(null, "evaluation: ${(dfa as NFAE).evaluate(alphabet)}")
             }catch (e: Exception){
                 showMessageDialog(null, e.message, "Error",ERROR_MESSAGE)
             }
@@ -339,9 +339,13 @@ class GUI : Application() {
         dfa.setInitialState("0")
         dfa.setFinalState("10")
 
-        //dfa = (dfa as NFAE).toDFA()
-        drawAutomata(dfa)
+        //
 
+        println(dfa.evaluate("abb"))
+        dfa=(dfa as NFAE).toDFA()
+        println(dfa.evaluate("ababababb"))
+        drawAutomata(dfa)
+        //(dfa as NFAE).printClosure()
 
     }
 
