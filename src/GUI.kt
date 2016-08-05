@@ -154,11 +154,14 @@ class GUI : Application() {
 
 
         //Apply the VBox to the Top Border
-        root.top = topContainer
-        root.center = BorderPane(SwingNode().apply {
+        var tab = TabContainer(DFA())
+        tab.content= BorderPane(SwingNode().apply {
             //Sets the graph as the content of the swing node
             content = graphComponent
         })
+        root.top = topContainer
+        root.center = TabPane(tab)
+
 
         graphComponent.connectionHandler.addListener(mxEvent.CONNECT) { sender, evt ->
             val cell = evt.getProperty("cell") as mxCell
@@ -243,7 +246,7 @@ class GUI : Application() {
         evaluateBtn.onMouseClicked = EventHandler<MouseEvent> {
             val alphabet = alphabetTextField.text ?:""
             try{
-                showMessageDialog(null, "evaluation: ${(dfa as NFAE).evaluate(alphabet)}")
+                showMessageDialog(null, "evaluation: ${dfa.evaluate(alphabet)}")
             }catch (e: Exception){
                 showMessageDialog(null, e.message, "Error",ERROR_MESSAGE)
             }
