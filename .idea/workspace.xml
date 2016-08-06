@@ -2,11 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3f02fb56-938e-4fd7-8052-674b51955640" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Automatas/GUI$start$2.class" afterPath="$PROJECT_DIR$/out/production/Automatas/GUI$start$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Automatas/GUI$start$3.class" afterPath="$PROJECT_DIR$/out/production/Automatas/GUI$start$3.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Automatas/GUI$start$4.class" afterPath="$PROJECT_DIR$/out/production/Automatas/GUI$start$4.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Automatas/GUI$start$5.class" afterPath="$PROJECT_DIR$/out/production/Automatas/GUI$start$5.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Automatas/GUI.class" afterPath="$PROJECT_DIR$/out/production/Automatas/GUI.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/GUI.kt" afterPath="$PROJECT_DIR$/src/GUI.kt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/TabContainer.kt" afterPath="$PROJECT_DIR$/src/TabContainer.kt" />
@@ -32,33 +27,29 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="GUI.kt" pinned="false" current-in-tab="true">
+      <file leaf-file-name="GUI.kt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/GUI.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="165">
-              <caret line="247" column="20" selection-start-line="247" selection-start-column="20" selection-end-line="247" selection-end-column="20" />
+            <state relative-caret-position="254">
+              <caret line="164" column="43" selection-start-line="164" selection-start-column="43" selection-end-line="164" selection-end-column="43" />
               <folding>
                 <element signature="e#0#38#0" expanded="true" />
                 <element signature="e#40#834#0" expanded="true" />
-                <element signature="e#5020#6295#2" expanded="false" />
-                <element signature="e#6656#8205#0" expanded="false" />
-                <element signature="n#!!block;n#toggleType#0;n#!!block;n#GUI#0" expanded="false" />
-                <element signature="n#!!block;n#resize#0;n#!!block;n#GUI#0" expanded="false" />
-                <element signature="n#!!block;n#setVertexStyle#0;n#!!block;n#GUI#0" expanded="false" />
-                <element signature="n#!!block;n#update#0;n#!!block;n#GUI#0" expanded="false" />
-                <element signature="n#!!block;n#drawAutomata#0;n#!!block;n#GUI#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TabContainer.kt" pinned="false" current-in-tab="false">
+      <file leaf-file-name="TabContainer.kt" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/TabContainer.kt">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="252">
-              <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+              <caret line="140" column="24" selection-start-line="140" selection-start-column="24" selection-end-line="140" selection-end-column="24" />
               <folding>
-                <element signature="e#0#57#0" expanded="true" />
+                <element signature="e#0#496#0" expanded="true" />
+                <element signature="e#3131#5133#0" expanded="false" />
+                <element signature="n#!!block;n#toggleType#0;n#!!block;n#TabContainer#0" expanded="false" />
+                <element signature="n#!!block;n#resize#0;n#!!block;n#TabContainer#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -100,7 +91,7 @@
       <file leaf-file-name="DFA.kt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/automata/DFA.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="522">
+            <state relative-caret-position="540">
               <caret line="30" column="25" selection-start-line="30" selection-start-column="17" selection-end-line="30" selection-end-column="25" />
               <folding>
                 <element signature="e#18#64#0" expanded="true" />
@@ -149,8 +140,8 @@
         <option value="$PROJECT_DIR$/src/automata/DFA.kt" />
         <option value="$PROJECT_DIR$/src/automata/NFA.kt" />
         <option value="$PROJECT_DIR$/src/automata/NFAE.kt" />
-        <option value="$PROJECT_DIR$/src/TabContainer.kt" />
         <option value="$PROJECT_DIR$/src/GUI.kt" />
+        <option value="$PROJECT_DIR$/src/TabContainer.kt" />
       </list>
     </option>
   </component>
@@ -706,12 +697,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
           <url>file://$PROJECT_DIR$/src/GUI.kt</url>
-          <line>268</line>
+          <line>193</line>
           <properties />
           <option name="timeStamp" value="53" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="54" />
+      <option name="time" value="55" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -735,13 +726,6 @@
           <folding>
             <element signature="e#0#38#0" expanded="true" />
             <element signature="e#40#834#0" expanded="true" />
-            <element signature="e#5020#6295#2" expanded="false" />
-            <element signature="e#6656#8205#0" expanded="false" />
-            <element signature="n#!!block;n#toggleType#0;n#!!block;n#GUI#0" expanded="false" />
-            <element signature="n#!!block;n#resize#0;n#!!block;n#GUI#0" expanded="false" />
-            <element signature="n#!!block;n#setVertexStyle#0;n#!!block;n#GUI#0" expanded="false" />
-            <element signature="n#!!block;n#update#0;n#!!block;n#GUI#0" expanded="false" />
-            <element signature="n#!!block;n#drawAutomata#0;n#!!block;n#GUI#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -805,13 +789,6 @@
           <folding>
             <element signature="e#0#38#0" expanded="true" />
             <element signature="e#40#834#0" expanded="true" />
-            <element signature="e#5020#6295#2" expanded="false" />
-            <element signature="e#6656#8205#0" expanded="false" />
-            <element signature="n#!!block;n#toggleType#0;n#!!block;n#GUI#0" expanded="false" />
-            <element signature="n#!!block;n#resize#0;n#!!block;n#GUI#0" expanded="false" />
-            <element signature="n#!!block;n#setVertexStyle#0;n#!!block;n#GUI#0" expanded="false" />
-            <element signature="n#!!block;n#update#0;n#!!block;n#GUI#0" expanded="false" />
-            <element signature="n#!!block;n#drawAutomata#0;n#!!block;n#GUI#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -857,13 +834,6 @@
           <folding>
             <element signature="e#0#38#0" expanded="true" />
             <element signature="e#40#834#0" expanded="true" />
-            <element signature="e#5020#6295#2" expanded="false" />
-            <element signature="e#6656#8205#0" expanded="false" />
-            <element signature="n#!!block;n#toggleType#0;n#!!block;n#GUI#0" expanded="false" />
-            <element signature="n#!!block;n#resize#0;n#!!block;n#GUI#0" expanded="false" />
-            <element signature="n#!!block;n#setVertexStyle#0;n#!!block;n#GUI#0" expanded="false" />
-            <element signature="n#!!block;n#update#0;n#!!block;n#GUI#0" expanded="false" />
-            <element signature="n#!!block;n#drawAutomata#0;n#!!block;n#GUI#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -909,13 +879,6 @@
           <folding>
             <element signature="e#0#38#0" expanded="true" />
             <element signature="e#40#834#0" expanded="true" />
-            <element signature="e#5020#6295#2" expanded="false" />
-            <element signature="e#6656#8205#0" expanded="false" />
-            <element signature="n#!!block;n#toggleType#0;n#!!block;n#GUI#0" expanded="false" />
-            <element signature="n#!!block;n#resize#0;n#!!block;n#GUI#0" expanded="false" />
-            <element signature="n#!!block;n#setVertexStyle#0;n#!!block;n#GUI#0" expanded="false" />
-            <element signature="n#!!block;n#update#0;n#!!block;n#GUI#0" expanded="false" />
-            <element signature="n#!!block;n#drawAutomata#0;n#!!block;n#GUI#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1005,7 +968,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="18">
           <caret line="1" column="41" selection-start-line="1" selection-start-column="28" selection-end-line="1" selection-end-column="41" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1102,7 +1064,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/automata/DFA.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="522">
+        <state relative-caret-position="540">
           <caret line="30" column="25" selection-start-line="30" selection-start-column="17" selection-end-line="30" selection-end-column="25" />
           <folding>
             <element signature="e#18#64#0" expanded="true" />
@@ -1111,30 +1073,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/TabContainer.kt">
+    <entry file="file://$PROJECT_DIR$/src/GUI.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+        <state relative-caret-position="254">
+          <caret line="164" column="43" selection-start-line="164" selection-start-column="43" selection-end-line="164" selection-end-column="43" />
           <folding>
-            <element signature="e#0#57#0" expanded="true" />
+            <element signature="e#0#38#0" expanded="true" />
+            <element signature="e#40#834#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/GUI.kt">
+    <entry file="file://$PROJECT_DIR$/src/TabContainer.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="247" column="20" selection-start-line="247" selection-start-column="20" selection-end-line="247" selection-end-column="20" />
+        <state relative-caret-position="252">
+          <caret line="140" column="24" selection-start-line="140" selection-start-column="24" selection-end-line="140" selection-end-column="24" />
           <folding>
-            <element signature="e#0#38#0" expanded="true" />
-            <element signature="e#40#834#0" expanded="true" />
-            <element signature="e#5020#6295#2" expanded="false" />
-            <element signature="e#6656#8205#0" expanded="false" />
-            <element signature="n#!!block;n#toggleType#0;n#!!block;n#GUI#0" expanded="false" />
-            <element signature="n#!!block;n#resize#0;n#!!block;n#GUI#0" expanded="false" />
-            <element signature="n#!!block;n#setVertexStyle#0;n#!!block;n#GUI#0" expanded="false" />
-            <element signature="n#!!block;n#update#0;n#!!block;n#GUI#0" expanded="false" />
-            <element signature="n#!!block;n#drawAutomata#0;n#!!block;n#GUI#0" expanded="false" />
+            <element signature="e#0#496#0" expanded="true" />
+            <element signature="e#3131#5133#0" expanded="false" />
+            <element signature="n#!!block;n#toggleType#0;n#!!block;n#TabContainer#0" expanded="false" />
+            <element signature="n#!!block;n#resize#0;n#!!block;n#TabContainer#0" expanded="false" />
           </folding>
         </state>
       </provider>
