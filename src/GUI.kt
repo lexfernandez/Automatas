@@ -240,6 +240,14 @@ class GUI : Application() {
                     }
                 }
             }
+
+            override fun mousePressed(e: java.awt.event.MouseEvent) {
+                var cell = graphComponent.getCellAt(e.x, e.y);
+                println("Mouse click in graph component");
+                if (cell != null) {
+                    println("cell=" + graph.getLabel(cell));
+                }
+            }
         })
 
         // Creates an event handler for the button
@@ -255,58 +263,60 @@ class GUI : Application() {
 
         val scene = Scene(root, Screen.getPrimary().bounds.width-200, Screen.getPrimary().bounds.height-200)
 
-        //add on key release event to scene
-        scene.onKeyPressed = EventHandler<KeyEvent> { e ->
-            try{
-                println("keyEvnet: ${e.code}")
-                val cell: mxCell = (graph.selectionCell as mxCell)
-                if(cell.isVertex){
-                    if (e.isAltDown && e.code === KeyCode.I) {
-                        println("setting initial")
-                        cell.setVertexStyle(VertexType.INITIAL)
-                        graphComponent.refresh()
-                    }else if (e.isAltDown && e.code === KeyCode.F) {
-                        println("setting final")
-                        cell.setVertexStyle(VertexType.FINAL)
-                        graphComponent.refresh()
-                    }else if (e.isAltDown && e.code === KeyCode.B) {
-                        println("setting Both Initial and Final")
-                        cell.setVertexStyle(VertexType.INITIAL_FINAL)
-                        graphComponent.refresh()
-                    }else if (e.isAltDown && e.code === KeyCode.N) {
-                        println("setting normal")
-                        cell.setVertexStyle(VertexType.NORMAL)
-                        graphComponent.refresh()
-                    }else if (e.code === KeyCode.DELETE) {
-                        println("Deleting cell")
-                        if(dfa.removeState(cell.value.toString())){
-                            graph.update {
-                                for (edge in graph.getEdges(cell)){
-                                    graph.model.remove(edge)
-                                }
-                                graph.model.remove(cell)
-                            }
-                            graphComponent.refresh()
-                        }
+//        //add on key release event to scene
+//        scene.onKeyPressed = EventHandler<KeyEvent> { e ->
+//            try{
+//                println("keyEvnet: ${e.code}")
+//                val cell: mxCell = (graph.selectionCell as mxCell)
+//                if(cell.isVertex){
+//                    if (e.isAltDown && e.code === KeyCode.I) {
+//                        println("setting initial")
+//                        cell.setVertexStyle(VertexType.INITIAL)
+//                        graphComponent.refresh()
+//                    }else if (e.isAltDown && e.code === KeyCode.F) {
+//                        println("setting final")
+//                        cell.setVertexStyle(VertexType.FINAL)
+//                        graphComponent.refresh()
+//                    }else if (e.isAltDown && e.code === KeyCode.B) {
+//                        println("setting Both Initial and Final")
+//                        cell.setVertexStyle(VertexType.INITIAL_FINAL)
+//                        graphComponent.refresh()
+//                    }else if (e.isAltDown && e.code === KeyCode.N) {
+//                        println("setting normal")
+//                        cell.setVertexStyle(VertexType.NORMAL)
+//                        graphComponent.refresh()
+//                    }else if (e.code === KeyCode.DELETE) {
+//                        println("Deleting cell")
+//                        if(dfa.removeState(cell.value.toString())){
+//                            graph.update {
+//                                for (edge in graph.getEdges(cell)){
+//                                    graph.model.remove(edge)
+//                                }
+//                                graph.model.remove(cell)
+//                            }
+//                            graphComponent.refresh()
+//                        }
+//
+//                    }
+//                    e.consume()
+//                }else if(cell.isEdge){
+//                    if (e.code === KeyCode.DELETE) {
+//                        println("Deleting edge")
+//                        graph.update {
+//                            graph.model.remove(cell)
+//                        }
+//                        graphComponent.refresh()
+//                    }
+//                    e.consume()
+//                }
+//                e.consume()
+//            }catch (e:Exception){
+//                showMessageDialog(null, e.message, "Error",ERROR_MESSAGE)
+//            }
+//
+//        }
 
-                    }
-                    e.consume()
-                }else if(cell.isEdge){
-                    if (e.code === KeyCode.DELETE) {
-                        println("Deleting edge")
-                        graph.update {
-                            graph.model.remove(cell)
-                        }
-                        graphComponent.refresh()
-                    }
-                    e.consume()
-                }
-                e.consume()
-            }catch (e:Exception){
-                showMessageDialog(null, e.message, "Error",ERROR_MESSAGE)
-            }
 
-        }
 
         //Setup the Stage.
         primaryStage.title = "Automatas"
