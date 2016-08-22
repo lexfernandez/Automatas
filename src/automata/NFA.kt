@@ -1,9 +1,12 @@
 package automata
 
 import java.io.Serializable
-import java.util.*
 
 class NFA(): IAutomata, Serializable {
+    override fun toRegex(): String {
+        return this.toDFA().toRegex()
+    }
+
     override var language: MutableList<Char> = mutableListOf()
     override var states: MutableList<State> = mutableListOf()
     override var initial: State? = null
@@ -88,7 +91,7 @@ class NFA(): IAutomata, Serializable {
 //        }
 //    }
 
-    fun toDFA(): DFA{
+    override fun toDFA(): DFA{
         var dfa = DFA()
         var queue: Queue<State> = Queue()
         var initial = State(this.getInitialState().value.toString())
@@ -101,11 +104,11 @@ class NFA(): IAutomata, Serializable {
         while (queue.isNotEmpty()){
             var q = queue.dequeue()
             if(q!=null) {
-                println("State: ${q.value}| ")
+                //println("State: ${q.value}| ")
                 for (symbol in language){
                     var newStateName = getTargetsName(q.value,symbol)
                     if(newStateName!=null)
-                        println("$symbol : $newStateName| ")
+                        //println("$symbol : $newStateName| ")
                     if(newStateName!=null && newStateName.isNotEmpty()){
                         if(!dfa.hasState(newStateName)){
                             var newState = State(newStateName)
@@ -126,7 +129,7 @@ class NFA(): IAutomata, Serializable {
 
                     }
                 }
-                print("\n")
+                //print("\n")
             }
         }
         return dfa

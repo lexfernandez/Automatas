@@ -1,7 +1,5 @@
 package automata
 
-import java.util.*
-
 /**
  * Created by lex on 07-26-16.
  */
@@ -11,6 +9,10 @@ interface IAutomata {
     var initial: State?
     var finals: MutableList<State>
     var language: MutableList<Char>
+
+    fun getClassName(): String{
+        return this.javaClass.simpleName
+    }
 
     fun addLanguageSymbol(symbol: Char): Boolean {
         if(!symbol.equals('E') && !language.contains(symbol))
@@ -56,7 +58,7 @@ interface IAutomata {
             return finals.add(getState(value))
     }
 
-    fun unsetFinalState(value: String): Boolean {
+    fun removeFinalState(value: String): Boolean {
         var state = finals.find { it.value == value }
         if(state!=null)
             return finals.remove(state)
@@ -104,4 +106,6 @@ interface IAutomata {
 
     fun addTransition( symbol: Char,source: String, target: String): Boolean
     fun evaluate(alphabet: String): Boolean
+    fun toDFA(): DFA
+    fun  toRegex(): String
 }

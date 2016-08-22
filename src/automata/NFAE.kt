@@ -5,9 +5,12 @@ package automata
  */
 
 import java.io.Serializable
-import java.util.*
 
 class NFAE(): IAutomata, Serializable {
+    override fun toRegex(): String {
+        return this.toDFA().toRegex()
+    }
+
     override var language: MutableList<Char> = mutableListOf()
     override var states: MutableList<State> = mutableListOf()
     override var initial: State? = null
@@ -124,7 +127,7 @@ class NFAE(): IAutomata, Serializable {
         }
     }
 
-    fun toDFA(): DFA{
+    override fun toDFA(): DFA{
         var dfa = DFA()
         var queue: Queue<State> = Queue()
         var closure = eClosure(this.getInitialState())
