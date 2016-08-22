@@ -4,6 +4,7 @@ import java.io.Serializable
 
 class State(val value: String): Serializable {
     private var transitions: MutableList<Transition> = mutableListOf()
+    private var transitionsPointingToMe: MutableList<Transition> = mutableListOf()
 
     fun addTransition(transition: Transition): Boolean {
         return transitions.add(transition)
@@ -17,7 +18,15 @@ class State(val value: String): Serializable {
         return transitions
     }
 
+    fun getTransitionsPointingToMe(): MutableList<Transition> {
+        return transitionsPointingToMe
+    }
+
     fun getTransitions(id: Char): List<Transition> {
         return transitions.filter { it.symbol==id }
+    }
+
+    fun  addTransitionPointingToMe(transition: Transition) : Boolean {
+        return transitionsPointingToMe.add(transition)
     }
 }
