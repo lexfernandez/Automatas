@@ -1,13 +1,28 @@
 package automata
 
 import java.io.Serializable
-import java.util.*
 
 /**
  * Created by Alex Fernandez on 07/25/2016.
  */
 
-open class DFA(): IAutomata, Serializable {
+open class DFA(): IAutomata, Serializable,Cloneable {
+    override fun toDFA(): DFA {
+        return this
+    }
+
+    override fun toRegex(): String {
+        println(this)
+        for(final in getFinalStates()){
+            var clone = this.clone() as DFA
+            for(cfinal in clone.getFinalStates()){
+                if(final.value!=cfinal.value)
+                    clone.removeFinalState(cfinal.value)
+            }
+        }
+        return "not implemented"
+    }
+
     override var language: MutableList<Char> = mutableListOf()
     override var states: MutableList<State> = mutableListOf()
     override var initial: State? = null

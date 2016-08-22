@@ -2,31 +2,25 @@
  * Created by lex on 07-24-16.
  */
 
-import automata.*
-import com.mxgraph.model.mxCell
-import com.mxgraph.model.mxGeometry
-import com.mxgraph.swing.mxGraphComponent
-import com.mxgraph.util.mxEvent
-import com.mxgraph.util.mxRectangle
-import com.mxgraph.view.mxGraph
+import automata.DFA
+import automata.IAutomata
+import automata.NFA
+import automata.NFAE
 import javafx.application.Application
-import javafx.embed.swing.SwingNode
+import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.scene.Scene
 import javafx.scene.control.*
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
-import javafx.scene.input.KeyCode
-import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.VBox
 import javafx.stage.Screen
 import javafx.stage.Stage
-import java.awt.event.MouseAdapter
 import java.io.File
-import java.util.*
-import javax.swing.JOptionPane.*
+import javax.swing.JOptionPane
+import javax.swing.JOptionPane.showMessageDialog
 
 
 // This is what makes this file the starting point of the program
@@ -78,7 +72,7 @@ fun main(args: Array<String>) {
 class GUI : Application() {
 
     var stage: Stage = Stage()
-
+    var tabPane = TabPane()
     override fun start(primaryStage: Stage) {
         stage = primaryStage
         //Setup the VBox Container and BorderPane
@@ -91,21 +85,232 @@ class GUI : Application() {
 
         //Create SubMenu File.
         val file = Menu("File")
+        val newFile = Menu("New")
+        val dfaMenu = MenuItem("DFA")
+        val nfaMenu = MenuItem("NFA")
+        val nfaeMenu = MenuItem("NFA-e")
+        val regexMenu = MenuItem("Regex")
+        dfaMenu.onAction= EventHandler<ActionEvent> {
+            var newDfa = DFA()
+            addNewTab(newDfa)
+        }
+        nfaMenu.onAction= EventHandler<ActionEvent> {
+            var newNfa = NFA()
+            addNewTab(newNfa)
+        }
+        nfaeMenu.onAction= EventHandler<ActionEvent> {
+            var newNfae = NFAE()
+            addNewTab(newNfae)
+        }
+        newFile.items.addAll(dfaMenu,nfaMenu,nfaeMenu,regexMenu)
         val openFile = MenuItem("Open File")
         val exitApp = MenuItem("Exit")
-        file.items.addAll(openFile, exitApp)
+        exitApp.onAction= EventHandler<ActionEvent> {
+            System.exit(0)
+        }
+        file.items.addAll(newFile,openFile,SeparatorMenuItem(), exitApp)
 
         //Create SubMenu Edit.
         val edit = Menu("Edit")
         val properties = MenuItem("Properties")
         edit.items.add(properties)
 
-        //Create SubMenu Help.
+        //Create SubMenu Edit.
+        val convert = Menu("Convert")
+        val toDFA = MenuItem("To DFA")
+        toDFA.onAction= EventHandler<ActionEvent> {
+            if(tabPane.selectionModel.selectedItem!=null){
+                var automata = (tabPane.selectionModel.selectedItem as TabContainer).automaton
+                when(automata){
+                    is DFA -> { showMessageDialog(null, "Your automaton is already a DFA", "Error", JOptionPane.ERROR_MESSAGE) }
+                    else -> { addNewTab(automata.toDFA()) }
+                }
+            }
+
+        }
+        val toRegex = MenuItem("To Regex")
+        toRegex.onAction= EventHandler<ActionEvent> {
+            if(tabPane.selectionModel.selectedItem!=null){
+                var automata = (tabPane.selectionModel.selectedItem as TabContainer).automaton
+                var regex= automata.toRegex()
+                showMessageDialog(null, regex, "Regex", JOptionPane.INFORMATION_MESSAGE)
+            }
+        }
+        convert.items.addAll(toDFA,toRegex)
+
+
+
+        //Create SubMenu Examples.
+        val examples = Menu("Examples")
+        val dfaExamples = Menu("DFA Examples")
+        val dfaFirstExample = MenuItem("Binary numbers that are multiples of 3")
+        dfaExamples.items.addAll(dfaFirstExample)
+        dfaFirstExample.onAction = EventHandler {
+            var dfa= DFA()
+            dfa.addState(automata.State("q0"))
+            dfa.addState(automata.State("q1"))
+            dfa.addState(automata.State("q2"))
+
+            dfa.addTransition('0',"q0","q0")
+            dfa.addTransition('1',"q0","q1")
+            dfa.addTransition('0',"q1","q2")
+            dfa.addTransition('1',"q2","q2")
+            dfa.addTransition('0',"q2","q1")
+            dfa.addTransition('1',"q1","q0")
+
+            dfa.setInitialState("q0")
+            dfa.setFinalState("q0")
+            addNewTab(dfa)
+        }
+
+        val nfaExamples = Menu("NFA Example")
+        val nfaFirstExample = MenuItem("F Example")
+        val nfaSecondExample = MenuItem("Strings starting with a's")
+        val nfaThirdExample = MenuItem("S Example")
+        nfaExamples.items.addAll(nfaFirstExample,nfaSecondExample,nfaThirdExample)
+        nfaFirstExample.onAction = EventHandler {
+            var nfa= NFA()
+            nfa.addState(automata.State("0"))
+            nfa.addState(automata.State("1"))
+            nfa.addState(automata.State("2"))
+            nfa.addState(automata.State("3"))
+            nfa.addState(automata.State("4"))
+
+            nfa.addTransition('a',"0","1")
+            nfa.addTransition('a',"0","2")
+            nfa.addTransition('a',"0","3")
+            nfa.addTransition('b',"0","2")
+            nfa.addTransition('b',"0","3")
+
+            nfa.addTransition('a',"1","1")
+            nfa.addTransition('a',"1","2")
+            nfa.addTransition('b',"1","2")
+            nfa.addTransition('b',"1","3")
+
+            nfa.addTransition('b',"2","2")
+            nfa.addTransition('b',"2","3")
+            nfa.addTransition('b',"2","4")
+
+            nfa.addTransition('b',"3","3")
+            nfa.addTransition('b',"3","2")
+            nfa.addTransition('a',"3","4")
+            nfa.addTransition('b',"3","4")
+
+            nfa.setInitialState("0")
+            nfa.setFinalState("1")
+            addNewTab(nfa)
+        }
+        nfaSecondExample.onAction = EventHandler {
+            var nfa= NFA()
+            nfa.addState(automata.State("0"))
+            nfa.addState(automata.State("1"))
+            nfa.addState(automata.State("2"))
+            nfa.addState(automata.State("3"))
+
+            nfa.addTransition('a',"0","1")
+            nfa.addTransition('a',"0","2")
+            nfa.addTransition('a',"1","1")
+            nfa.addTransition('a',"1","2")
+            nfa.addTransition('b',"2","3")
+            nfa.addTransition('b',"2","1")
+            nfa.addTransition('a',"3","1")
+            nfa.addTransition('a',"3","2")
+
+            nfa.setInitialState("0")
+            nfa.setFinalState("0")
+            nfa.setFinalState("1")
+            addNewTab(nfa)
+        }
+        nfaThirdExample.onAction = EventHandler {
+            var nfa= NFA()
+            nfa.addState(automata.State("0"))
+            nfa.addState(automata.State("1"))
+            nfa.addState(automata.State("2"))
+            nfa.addState(automata.State("3"))
+            nfa.addState(automata.State("4"))
+
+            nfa.addTransition('a',"2","1")
+            nfa.addTransition('a',"1","0")
+            nfa.addTransition('b',"2","3")
+            nfa.addTransition('b',"3","4")
+            nfa.addTransition('a',"2","2")
+            nfa.addTransition('b',"2","2")
+
+            nfa.setInitialState("2")
+            nfa.setFinalState("0")
+            nfa.setFinalState("4")
+            addNewTab(nfa)
+        }
+
+        val nfaeExamples = Menu("NFA-e Examples")
+        val nfaeFirstExample = MenuItem("Strings terminated with abb")
+        val nfaeSecondExample = MenuItem("S Example")
+        nfaeExamples.items.addAll(nfaeFirstExample,nfaeSecondExample)
+        nfaeFirstExample.onAction = EventHandler {
+            var nfae = NFAE()
+            nfae.addState(automata.State("0"))
+            nfae.addState(automata.State("1"))
+            nfae.addState(automata.State("2"))
+            nfae.addState(automata.State("3"))
+            nfae.addState(automata.State("4"))
+            nfae.addState(automata.State("5"))
+            nfae.addState(automata.State("6"))
+            nfae.addState(automata.State("7"))
+            nfae.addState(automata.State("8"))
+            nfae.addState(automata.State("9"))
+            nfae.addState(automata.State("10"))
+
+            nfae.addTransition('E',"0","1")
+            nfae.addTransition('E',"1","2")
+            nfae.addTransition('E',"1","4")
+            nfae.addTransition('a',"2","3")
+            nfae.addTransition('b',"4","5")
+            nfae.addTransition('E',"3","6")
+            nfae.addTransition('E',"5","6")
+            nfae.addTransition('E',"6","7")
+            nfae.addTransition('a',"7","8")
+            nfae.addTransition('b',"8","9")
+            nfae.addTransition('b',"9","10")
+            nfae.addTransition('E',"0","7")
+            nfae.addTransition('E',"6","1")
+
+            nfae.setInitialState("0")
+            nfae.setFinalState("10")
+            addNewTab(nfae)
+        }
+        nfaeSecondExample.onAction = EventHandler {
+            var nfae = NFAE()
+            nfae.addState(automata.State("p"))
+            nfae.addState(automata.State("q"))
+            nfae.addState(automata.State("r"))
+
+            nfae.addTransition('a',"p","p")
+            nfae.addTransition('b',"p","q")
+            nfae.addTransition('c',"p","r")
+
+            nfae.addTransition('a',"q","q")
+            nfae.addTransition('b',"q","r")
+            nfae.addTransition('E',"q","p")
+
+            nfae.addTransition('a',"r","r")
+            nfae.addTransition('E',"r","q")
+            nfae.addTransition('c',"r","p")
+
+            nfae.setInitialState("p")
+            nfae.setFinalState("r")
+            addNewTab(nfae)
+        }
+
+        val regexExample = MenuItem("Regex Example")
+
+
+        examples.items.addAll(dfaExamples,nfaExamples,nfaeExamples,regexExample)
+        // /Create SubMenu Help.
         val help = Menu("Help")
         val visitWebsite = MenuItem("Visit Website")
         help.items.add(visitWebsite)
 
-        mainMenu.menus.addAll(file, edit, help)
+        mainMenu.menus.addAll(file, edit,convert,examples, help)
 
         //Create some toolbar buttons
         val openFileBtn = Button()
@@ -127,47 +332,52 @@ class GUI : Application() {
         topContainer.children.add(mainMenu)
         topContainer.children.add(toolBar)
 
-
-        //Apply the VBox to the Top Border
-        var dfa:NFAE=NFAE()
-        dfa.addState(State("0"))
-        dfa.addState(State("1"))
-        dfa.addState(State("2"))
-        dfa.addState(State("3"))
-        dfa.addState(State("4"))
-        dfa.addState(State("5"))
-        dfa.addState(State("6"))
-        dfa.addState(State("7"))
-        dfa.addState(State("8"))
-        dfa.addState(State("9"))
-        dfa.addState(State("10"))
-
-        dfa.addTransition('E',"0","1")
-        dfa.addTransition('E',"1","2")
-        dfa.addTransition('E',"1","4")
-        dfa.addTransition('a',"2","3")
-        dfa.addTransition('b',"4","5")
-        dfa.addTransition('E',"3","6")
-        dfa.addTransition('E',"5","6")
-        dfa.addTransition('E',"6","7")
-        dfa.addTransition('a',"7","8")
-        dfa.addTransition('b',"8","9")
-        dfa.addTransition('b',"9","10")
-        dfa.addTransition('E',"0","7")
-        dfa.addTransition('E',"6","1")
-
-        dfa.setInitialState("0")
-        dfa.setFinalState("10")
-
-        var tab = TabContainer(dfa)
-        var tabPane = TabPane()
-        tabPane.tabs.add(tab)
-        tabPane.tabs.add(TabContainer(DFA()))
         root.top = topContainer
         root.center = tabPane
 
+        var newDfa = DFA()
+        addNewTab(newDfa)
 
+//        tabPane.setOnContextMenuRequested({ e ->
+////            val cell = (tabPane.selectionModel.selectedItem as TabContainer).graphComponent.getCellAt(e.x.toInt(), e.y.toInt())
+////
+////            if (cell is mxCell) {}
+//            println(e.sceneX)
+//            println(e.sceneY)
+//                tabPane.selectionModel.selectedItem.contextMenu.show(tabPane, e.sceneX, e.sceneY)
+//
+//        })
+//
 
+//        var dfa=NFAE()
+//        dfa.addState(automata.State("0"))
+//        dfa.addState(automata.State("1"))
+//        dfa.addState(automata.State("2"))
+//        dfa.addState(automata.State("3"))
+//        dfa.addState(automata.State("4"))
+//        dfa.addState(automata.State("5"))
+//        dfa.addState(automata.State("6"))
+//        dfa.addState(automata.State("7"))
+//        dfa.addState(automata.State("8"))
+//        dfa.addState(automata.State("9"))
+//        dfa.addState(automata.State("10"))
+//
+//        dfa.addTransition('E',"0","1")
+//        dfa.addTransition('E',"1","2")
+//        dfa.addTransition('E',"1","4")
+//        dfa.addTransition('a',"2","3")
+//        dfa.addTransition('b',"4","5")
+//        dfa.addTransition('E',"3","6")
+//        dfa.addTransition('E',"5","6")
+//        dfa.addTransition('E',"6","7")
+//        dfa.addTransition('a',"7","8")
+//        dfa.addTransition('b',"8","9")
+//        dfa.addTransition('b',"9","10")
+//        dfa.addTransition('E',"0","7")
+//        dfa.addTransition('E',"6","1")
+//
+//        dfa.setInitialState("0")
+//        dfa.setFinalState("10")
 
 //        graphComponent.connectionHandler.addListener(mxEvent.LABEL_CHANGED) { sender, evt ->
 //            println("label change to=" + evt.name)
@@ -176,15 +386,18 @@ class GUI : Application() {
 
 
         // Creates an event handler for the button
-//        evaluateBtn.onMouseClicked = EventHandler<MouseEvent> {
-//            val alphabet = alphabetTextField.text ?:""
-//            try{
-//                showMessageDialog(null, "evaluation: ${dfa.evaluate(alphabet)}")
-//            }catch (e: Exception){
-//                showMessageDialog(null, e.message, "Error",ERROR_MESSAGE)
-//            }
-//
-//        }
+        evaluateBtn.onMouseClicked = EventHandler<MouseEvent> {
+            val alphabet = alphabetTextField.text ?:""
+            val automataTab = tabPane.selectionModel.selectedItem
+
+            if(automataTab!=null){
+                try{
+                    showMessageDialog(null, "evaluation: ${(automataTab as TabContainer).automaton.evaluate(alphabet)}")
+                }catch (e: Exception){
+                    showMessageDialog(null, e.message, "Error", JOptionPane.ERROR_MESSAGE)
+                }
+            }
+        }
 
         val scene = Scene(root, Screen.getPrimary().bounds.width-200, Screen.getPrimary().bounds.height-200)
 
@@ -251,6 +464,11 @@ class GUI : Application() {
 
         //(dfa as NFAE).printClosure()
 
+    }
+
+    private fun  addNewTab(automaton: IAutomata) {
+        val tab = TabContainer(automaton,"new "+automaton.getClassName())
+        tabPane.tabs.add(tab)
     }
 
 
