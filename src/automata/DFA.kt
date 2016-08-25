@@ -60,7 +60,7 @@ open class DFA(): IAutomata, Serializable,Cloneable {
 
 
     override fun toDFA(): DFA {
-        return this.clone()
+        return this
     }
 
     override fun toRegex(): String {
@@ -121,71 +121,129 @@ open class DFA(): IAutomata, Serializable,Cloneable {
     }
 
     override fun toMinimizedDFA(): DFA {
-        hopcroftMinimization(this)
-        return this
-    }
+        var pairsTable:MutableList<Pair<State,State>> = mutableListOf()
+        var markedPairs:MutableList<Pair<State,State>> = mutableListOf()
+        var unmarkedPairs:MutableList<Pair<State,State>> = mutableListOf()
 
-    private fun hopcroftMinimization(dfa: DFA): MutableList<MutableList<State>> {
-        println(this.states.map { it.value+"*" })
-        var partitions: MutableList<MutableList<State>> = mutableListOf()
-        var L: Queue<MutableList<State>> = Queue()
 
-        var F = dfa.getFinalStates().toMutableList()
-        var FdifQ = dfa.states.subtract(dfa.getFinalStates()).toMutableList()
-
-        var C0:MutableList<State>
-        var C1:MutableList<State>
-        if(F.count()<FdifQ.count()){
-            C0 = FdifQ
-            C1 = F
-            L.enqueue(C1)
-        }else{
-            C1 = FdifQ
-            C0 = F
-            L.enqueue(C1)
+        //Step 1
+        var visitedStates:MutableList<State> = mutableListOf()
+        for (qi in this.states){
+            for (qj in this.states.filter { !visitedStates.contains(it) }){
+                if(qi!=qj){
+                    pairsTable.add(Pair(qi,qj))
+                }
+            }
+            visitedStates.add(qi)
         }
 
-        partitions.add(C0)
-        partitions.add(C1)
 
-        while (L.isNotEmpty()){
-            var S = L.dequeue().orEmpty().toMutableList()
-            for (a in dfa.language) {
-                var P: MutableList<MutableList<State>> = mutableListOf()
-                P = P.union(partitions).toMutableList()
-                var iterate= P.listIterator()
-                while (iterate.hasNext()) {
-                    var B = iterate.next()
-                    var tuple = split(B,S,a)
-                    if(tuple.first.isNotEmpty() and tuple.second.isNotEmpty()){
-                        partitions.remove(B)
-                        partitions.add(tuple.first)
-                        partitions.add(tuple.second)
-                        if(L.items.contains(B)){
-                            L.items.remove(B)
-                            L.enqueue(tuple.first)
-                            L.enqueue(tuple.second)
-                        }else{
-                            if(tuple.first.count()<tuple.second.count())
-                                L.enqueue(tuple.first)
-                            else
-                                L.enqueue(tuple.second)
-                        }
+        //Step 2
+        for (pair in pairsTable){
+
+            if(this.isFinal(pair.first.value) and !this.isFinal(pair.second.value)){
+                markedPairs.add(pair)
+            }else if(this.isFinal(pair.second.value) and !this.isFinal(pair.first.value)){
+                markedPairs.add(pair)
+            }else{
+                unmarkedPairs.add(pair)
+            }
+        }
+
+        //Step 3
+        var up:MutableList<Pair<State,State>> = mutableListOf()
+        up=up.union(unmarkedPairs).toMutableList()
+        var iterate = up.listIterator()
+        while (iterate.hasNext()){
+            var pair=iterate.next()
+            for (a in this.language){
+                try {
+                    var A=delta(pair.first,a)
+                    var B=delta(pair.second,a)
+                    val list = markedPairs.filter { (it.first.value == A.value && it.second.value == B.value) }
+                    var result=list.firstOrNull()
+                    println("(${pair.first.value},${pair.second.value}):$a ==>(${A.value}.${B.value}):${result!=null}")
+                    if(result!=null){
+                        markedPairs.add(pair)
+                        unmarkedPairs.remove(pair)
                     }
-                    iterate.remove()
+                }catch (e:Exception){
+
+                }
+
+            }
+            iterate.remove()
+        }
+
+
+        //Step 4
+        var newStates: MutableList<MutableList<State>> = mutableListOf()
+
+        for (pair in unmarkedPairs){
+            newStates.add(pair.toList().toMutableList())
+        }
+
+        var toAddLater:MutableList<MutableList<State>> = mutableListOf()
+        for (state in this.states){
+            var toCombine = newStates.filter { it.contains(state) }
+            if(toCombine.count()>1){
+                //Combine
+                newStates.removeAll(toCombine)
+                var states: MutableList<State> = toCombine.flatten().toMutableList()
+                newStates.add(states)
+            }else if(toCombine.count()==0){
+                toAddLater.add(mutableListOf(state))
+            }
+        }
+
+        newStates.addAll(toAddLater)
+        //Create minimized DFA
+        var minimizedDfa:DFA = DFA()
+        for (states in newStates){
+            minimizedDfa.addState(State(states.map { it.value }.sorted().toString().replace("[","").replace("]","").trim()))
+        }
+
+        for (states in newStates){
+            for (source in states){
+                if(states.contains(this.getInitialState())){
+                    minimizedDfa.setInitialState(states.map { it.value }.sorted().toString().replace("[", "").replace("]", "").trim())
+                }
+                if(this.isFinal(source.value)){
+                    minimizedDfa.setFinalState(states.map { it.value }.sorted().toString().replace("[", "").replace("]", "").trim())
+                }
+
+                for (symbol in this.language){
+                    try {
+                        var destiny = delta(source, symbol)
+                        var msource = states.map { it.value }.sorted().toString().replace("[", "").replace("]", "").trim()
+                        var targets = newStates.filter { it.contains(destiny) }
+
+                        for (target in targets){
+                            var mdestiny = target.map { it.value }.sorted().toString().replace("[", "").replace("]", "").trim()
+                            minimizedDfa.addTransition(symbol,msource,mdestiny)
+                        }
+                    } catch(e: Exception) {
+
+                    }
                 }
             }
         }
 
-        println(L.items.map { it.map { it.value+"*" } })
-        println(partitions.map { it.map { it.value+"*" } })
-        return partitions
+
+
+
+        return minimizedDfa
     }
 
-    private fun split(B:MutableList<State>,S:MutableList<State>,a:Char):Pair<MutableList<State>,MutableList<State>> {
-        var G1:MutableList<State> = B.intersect(S.map { it.getTransitions(a).map { it.target } }.flatten()).distinct().toMutableList()
-        var G2:MutableList<State> = B.subtract(G1).distinct().toMutableList()
-        return Pair(G1,G2)
+
+    fun renameStates(prefix:Char='q'): DFA {
+        var i=0
+        for (state in this.states){
+            state.value= "$prefix${i.toString()}"
+            i++
+        }
+
+        return this
     }
 }
 

@@ -247,6 +247,15 @@ open class TabContainer: Tab {
 
         for (state in automata.states){
             val cell = graph.insertVertex(graph.defaultParent, null,state.value, x, y, 40.0, 40.0, defaultStyle) as mxCell
+            var isInitial=automata.getInitialState().value==state.value;
+            var isFinal=automata.isFinal(state.value)
+            if(isInitial and isFinal){
+                cell.setVertexStyle(VertexType.INITIAL_FINAL)
+            }else if(isInitial){
+                cell.setVertexStyle(VertexType.INITIAL)
+            }else if(isFinal){
+                cell.setVertexStyle(VertexType.FINAL)
+            }
             cell.resize()
             cells[state.value] = cell
 
@@ -270,6 +279,8 @@ open class TabContainer: Tab {
                 }
             }
         }
+
+        graphComponent.refresh()
     }
 
     protected var undoHandler: mxEventSource.mxIEventListener = mxEventSource.mxIEventListener { source, evt ->
