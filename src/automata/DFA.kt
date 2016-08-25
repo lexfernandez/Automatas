@@ -8,19 +8,64 @@ import java.io.Serializable
 
 open class DFA(): IAutomata, Serializable,Cloneable {
     override fun toDFA(): DFA {
-        return this
+        return this.clone()
     }
 
     override fun toRegex(): String {
         println(this)
+        println(this.finals.map { it.value })
+        var regex=""
         for(final in getFinalStates()){
-            var clone = this.clone() as DFA
+            var clone = this.clone()
+            println(clone)
             for(cfinal in clone.getFinalStates()){
                 if(final.value!=cfinal.value)
                     clone.removeFinalState(cfinal.value)
             }
+
+            for (state in clone.states){
+                //si el estado no es inicial y no final
+//                if(!clone.isFinal(state.value) && clone.getInitialState().value!=state.value ){
+//                    //removerlo
+//                    var transitionsPointingToMe = this.getState(state.value).getTransitionsPointingToMe()
+//                    var transitionsIPointTo = this.getState(state.value).getTransitions()
+//                    transitionsIPointTo.filter { it.target.value= }
+//                    if(clone.removeState(state.value)){
+//                        for(fromT in transitionsPointingToMe){
+//                            for (toT in transitionsIPointTo){
+//                                //fromT.
+//                            }
+//                        }
+//                    }
+//                }
+
+            }
+            println(clone.initial?.value)
+            println(clone.finals.map { it.value })
         }
-        return "not implemented"
+
+        return regex
+    }
+
+    override fun clone(): DFA {
+        var clone = DFA()
+        for(state in this.states){
+            clone.addState(State(state.value))
+        }
+
+        for(state in this.states){
+            for(transition in state.getTransitions()){
+                clone.addTransition(transition.symbol,transition.source.value,transition.target.value)
+            }
+        }
+
+        clone.setInitialState(this.getInitialState().value)
+
+        for(state in this.getFinalStates()){
+            clone.setFinalState(state.value)
+        }
+
+        return clone
     }
 
     override var language: MutableList<Char> = mutableListOf()
@@ -39,11 +84,13 @@ open class DFA(): IAutomata, Serializable,Cloneable {
             throw Exception("Transition from ${s.value} with symbol $symbol already exist!")
         else{
             addLanguageSymbol(symbol)
+            t.addTransitionPointingToMe(transition)
             return s.addTransition(transition)
         }
     }
 
     override fun evaluate(alphabet: String): Boolean {
+        if(this.states.count()==0) return false
         println("DFA Evaluation")
         var init = getInitialState()
         val result: State = deltaExtended(init,alphabet)

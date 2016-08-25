@@ -349,35 +349,6 @@ class GUI : Application() {
 //        })
 //
 
-//        var dfa=NFAE()
-//        dfa.addState(automata.State("0"))
-//        dfa.addState(automata.State("1"))
-//        dfa.addState(automata.State("2"))
-//        dfa.addState(automata.State("3"))
-//        dfa.addState(automata.State("4"))
-//        dfa.addState(automata.State("5"))
-//        dfa.addState(automata.State("6"))
-//        dfa.addState(automata.State("7"))
-//        dfa.addState(automata.State("8"))
-//        dfa.addState(automata.State("9"))
-//        dfa.addState(automata.State("10"))
-//
-//        dfa.addTransition('E',"0","1")
-//        dfa.addTransition('E',"1","2")
-//        dfa.addTransition('E',"1","4")
-//        dfa.addTransition('a',"2","3")
-//        dfa.addTransition('b',"4","5")
-//        dfa.addTransition('E',"3","6")
-//        dfa.addTransition('E',"5","6")
-//        dfa.addTransition('E',"6","7")
-//        dfa.addTransition('a',"7","8")
-//        dfa.addTransition('b',"8","9")
-//        dfa.addTransition('b',"9","10")
-//        dfa.addTransition('E',"0","7")
-//        dfa.addTransition('E',"6","1")
-//
-//        dfa.setInitialState("0")
-//        dfa.setFinalState("10")
 
 //        graphComponent.connectionHandler.addListener(mxEvent.LABEL_CHANGED) { sender, evt ->
 //            println("label change to=" + evt.name)
@@ -392,7 +363,14 @@ class GUI : Application() {
 
             if(automataTab!=null){
                 try{
-                    showMessageDialog(null, "evaluation: ${(automataTab as TabContainer).automaton.evaluate(alphabet)}")
+                    var result=(automataTab as TabContainer).automaton.evaluate(alphabet)
+                    val alert = Alert(Alert.AlertType.INFORMATION)
+                    alert.title = "Evaluation"
+                    alert.headerText = "Evaluating input $alphabet"
+                    alert.contentText = "Accepted: $result"
+
+                    alert.showAndWait()
+                    //showMessageDialog(null, "evaluation: $result")
                 }catch (e: Exception){
                     showMessageDialog(null, e.message, "Error", JOptionPane.ERROR_MESSAGE)
                 }
