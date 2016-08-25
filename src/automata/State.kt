@@ -2,7 +2,7 @@ package automata
 
 import java.io.Serializable
 
-class State(val value: String): Serializable {
+class State(var value: String): Serializable {
     private var transitions: MutableList<Transition> = mutableListOf()
     private var transitionsPointingToMe: MutableList<Transition> = mutableListOf()
 

@@ -4,7 +4,7 @@ import java.io.Serializable
 
 class NFA(): IAutomata, Serializable {
     override fun toMinimizedDFA(): DFA {
-        return this.toDFA().toMinimizedDFA()
+        return this.toDFA().renameStates().toMinimizedDFA()
     }
 
     override fun toRegex(): String {
