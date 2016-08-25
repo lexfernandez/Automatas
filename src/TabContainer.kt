@@ -1,6 +1,7 @@
 
 import automata.IAutomata
 import automata.State
+import com.btr.proxy.util.PlatformUtil
 import com.mxgraph.layout.mxFastOrganicLayout
 import com.mxgraph.model.mxCell
 import com.mxgraph.model.mxGeometry
@@ -10,6 +11,7 @@ import com.mxgraph.swing.mxGraphComponent
 import com.mxgraph.swing.util.mxMorphing
 import com.mxgraph.util.*
 import com.mxgraph.view.mxGraph
+import javafx.application.Platform
 import javafx.embed.swing.SwingNode
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
@@ -426,18 +428,13 @@ open class TabContainer: Tab {
 //    fun status(msg: String) {
 //        statusBar.setText(msg)
 //    }
-//
-    fun updateTitle() {
 
-//        this.text+="*"
+    fun updateTitle() {
+        Platform.runLater({
+            this.text+="*"
+        })
+
     }
-//
-//    fun exit() {
-//        val frame = SwingUtilities.windowForComponent(this) as JFrame
-//
-//        if (frame != null) {
-//            frame!!.dispose()
-//        }
-//    }
+
 
 }
