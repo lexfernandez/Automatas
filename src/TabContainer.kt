@@ -29,6 +29,7 @@ import javax.swing.JOptionPane
  */
 
 
+@Suppress("NAME_SHADOWING")
 open class TabContainer: Tab {
     val graph = mxGraph()
     var automaton: IAutomata
@@ -208,7 +209,7 @@ open class TabContainer: Tab {
         try {
             val layout = mxFastOrganicLayout(graph)
             // set some properties
-            layout.forceConstant = 40.0 // the higher, the more separated
+            layout.forceConstant = 200.0 // the higher, the more separated
             layout.isDisableEdgeStyle = false // true transforms the edges and makes them direct lines
             layout.isUseInputOrigin=true
             // layout graph

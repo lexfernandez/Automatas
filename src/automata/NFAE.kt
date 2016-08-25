@@ -25,15 +25,14 @@ class NFAE(): IAutomata, Serializable {
         var f = getState(target)
         var ts = s.getTransitions(symbol)
         for (t in ts){
-            if(t!=null){
-                if(t.source.value==source && t.target.value==target){
-                    throw Exception("Transition from ${s.value} to ${f.value} with symbol $symbol already exist!")
-                }
+            if(t.source.value==source && t.target.value==target){
+                throw Exception("Transition from ${s.value} to ${f.value} with symbol $symbol already exist!")
             }
         }
 
         var transition: Transition = Transition(symbol, s, f)
         addLanguageSymbol(symbol)
+        f.addTransitionPointingToMe(transition)
         return s.addTransition(transition)
     }
 

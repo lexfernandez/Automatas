@@ -23,15 +23,14 @@ class NFA(): IAutomata, Serializable {
         var f = getState(target)
         var ts = s.getTransitions(symbol)
         for (t in ts){
-            if(t!=null){
-                if(t.source.value==source && t.target.value==target){
-                    throw Exception("Transition from ${s.value} to ${f.value} with symbol $symbol already exist!")
-                }
+            if(t.source.value==source && t.target.value==target){
+                throw Exception("Transition from ${s.value} to ${f.value} with symbol $symbol already exist!")
             }
         }
 
         var transition: Transition = Transition(symbol, s, f)
         addLanguageSymbol(symbol)
+        f.addTransitionPointingToMe(transition)
         return s.addTransition(transition)
     }
 
@@ -56,7 +55,7 @@ class NFA(): IAutomata, Serializable {
 
         var result : MutableList<State> = mutableListOf()
 
-        for (q in subset){
+        subset.forEach { q ->
             var delta = delta(q,a)
             result = result.union(delta).toMutableList()
         }
@@ -106,13 +105,11 @@ class NFA(): IAutomata, Serializable {
             dfa.setFinalState(initial.value)
         }
         while (queue.isNotEmpty()){
-            var q = queue.dequeue()
+            val q = queue.dequeue()
             if(q!=null) {
                 //println("State: ${q.value}| ")
                 for (symbol in language){
-                    var newStateName = getTargetsName(q.value,symbol)
-                    if(newStateName!=null)
-                        //println("$symbol : $newStateName| ")
+                    val newStateName = getTargetsName(q.value,symbol)
                     if(newStateName!=null && newStateName.isNotEmpty()){
                         if(!dfa.hasState(newStateName)){
                             var newState = State(newStateName)
