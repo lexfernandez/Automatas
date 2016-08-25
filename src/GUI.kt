@@ -136,7 +136,14 @@ class GUI : Application() {
                 showMessageDialog(null, regex, "Regex", JOptionPane.INFORMATION_MESSAGE)
             }
         }
-        convert.items.addAll(toDFA,toRegex)
+        val toMinimizedDFA = MenuItem("To minimized DFA")
+        toMinimizedDFA.onAction= EventHandler<ActionEvent> {
+            if(tabPane.selectionModel.selectedItem!=null){
+                var automata = (tabPane.selectionModel.selectedItem as TabContainer).automaton
+                addNewTab(automata.toMinimizedDFA())
+            }
+        }
+        convert.items.addAll(toDFA,toRegex,toMinimizedDFA)
 
 
 
@@ -144,7 +151,8 @@ class GUI : Application() {
         val examples = Menu("Examples")
         val dfaExamples = Menu("DFA Examples")
         val dfaFirstExample = MenuItem("Binary numbers that are multiples of 3")
-        dfaExamples.items.addAll(dfaFirstExample)
+        val dfaToMinimize = MenuItem("Dfa to minimize")
+        dfaExamples.items.addAll(dfaFirstExample,dfaToMinimize)
         dfaFirstExample.onAction = EventHandler {
             var dfa= DFA()
             dfa.addState(automata.State("q0"))
@@ -160,6 +168,35 @@ class GUI : Application() {
 
             dfa.setInitialState("q0")
             dfa.setFinalState("q0")
+            addNewTab(dfa)
+        }
+        dfaToMinimize.onAction = EventHandler {
+            var dfa= DFA()
+            dfa.addState(automata.State("a"))
+            dfa.addState(automata.State("b"))
+            dfa.addState(automata.State("c"))
+            dfa.addState(automata.State("d"))
+            dfa.addState(automata.State("e"))
+            dfa.addState(automata.State("f"))
+
+            dfa.addTransition('0',"a","b")
+            dfa.addTransition('1',"a","c")
+            dfa.addTransition('0',"b","a")
+            dfa.addTransition('1',"b","d")
+            dfa.addTransition('0',"c","e")
+            dfa.addTransition('1',"c","f")
+            dfa.addTransition('0',"d","e")
+            dfa.addTransition('1',"d","f")
+            dfa.addTransition('0',"e","e")
+            dfa.addTransition('1',"e","f")
+            dfa.addTransition('0',"f","f")
+            dfa.addTransition('1',"f","f")
+
+
+            dfa.setInitialState("a")
+            dfa.setFinalState("d")
+            dfa.setFinalState("c")
+            dfa.setFinalState("e")
             addNewTab(dfa)
         }
 

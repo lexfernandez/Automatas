@@ -108,4 +108,5 @@ interface IAutomata {
     fun evaluate(alphabet: String): Boolean
     fun toDFA(): DFA
     fun  toRegex(): String
+    fun toMinimizedDFA(): DFA
 }

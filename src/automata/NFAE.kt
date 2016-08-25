@@ -7,6 +7,10 @@ package automata
 import java.io.Serializable
 
 class NFAE(): IAutomata, Serializable {
+    override fun toMinimizedDFA(): DFA {
+        return this.toDFA().toMinimizedDFA()
+    }
+
     override fun toRegex(): String {
         return this.toDFA().toRegex()
     }

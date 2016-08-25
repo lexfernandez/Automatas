@@ -7,21 +7,7 @@ import java.io.Serializable
  */
 
 open class DFA(): IAutomata, Serializable,Cloneable {
-    override fun toDFA(): DFA {
-        return this
-    }
 
-    override fun toRegex(): String {
-        println(this)
-        for(final in getFinalStates()){
-            var clone = this.clone() as DFA
-            for(cfinal in clone.getFinalStates()){
-                if(final.value!=cfinal.value)
-                    clone.removeFinalState(cfinal.value)
-            }
-        }
-        return "not implemented"
-    }
 
     override var language: MutableList<Char> = mutableListOf()
     override var states: MutableList<State> = mutableListOf()
@@ -67,6 +53,92 @@ open class DFA(): IAutomata, Serializable,Cloneable {
             return q.getTransition(symbol)!!.target
         else
             throw Exception("Transition dont exits")
+    }
+
+
+
+    override fun toDFA(): DFA {
+        return this
+    }
+
+    override fun toRegex(): String {
+        println(this)
+        for(final in getFinalStates()){
+            var clone = this.clone() as DFA
+            for(cfinal in clone.getFinalStates()){
+                if(final.value!=cfinal.value)
+                    clone.removeFinalState(cfinal.value)
+            }
+        }
+        return "not implemented"
+    }
+
+    override fun toMinimizedDFA(): DFA {
+        hopcroftMinimization(this)
+        return this
+    }
+
+    private fun hopcroftMinimization(dfa: DFA): MutableList<MutableList<State>> {
+        println(this.states.map { it.value+"*" })
+        var partitions: MutableList<MutableList<State>> = mutableListOf()
+        var L: Queue<MutableList<State>> = Queue()
+
+        var F = dfa.getFinalStates().toMutableList()
+        var FdifQ = dfa.states.subtract(dfa.getFinalStates()).toMutableList()
+
+        var C0:MutableList<State>
+        var C1:MutableList<State>
+        if(F.count()<FdifQ.count()){
+            C0 = FdifQ
+            C1 = F
+            L.enqueue(C1)
+        }else{
+            C1 = FdifQ
+            C0 = F
+            L.enqueue(C1)
+        }
+
+        partitions.add(C0)
+        partitions.add(C1)
+
+        while (L.isNotEmpty()){
+            var S = L.dequeue().orEmpty().toMutableList()
+            for (a in dfa.language) {
+                var P: MutableList<MutableList<State>> = mutableListOf()
+                P = P.union(partitions).toMutableList()
+                var iterate= P.listIterator()
+                while (iterate.hasNext()) {
+                    var B = iterate.next()
+                    var tuple = split(B,S,a)
+                    if(tuple.first.isNotEmpty() and tuple.second.isNotEmpty()){
+                        partitions.remove(B)
+                        partitions.add(tuple.first)
+                        partitions.add(tuple.second)
+                        if(L.items.contains(B)){
+                            L.items.remove(B)
+                            L.enqueue(tuple.first)
+                            L.enqueue(tuple.second)
+                        }else{
+                            if(tuple.first.count()<tuple.second.count())
+                                L.enqueue(tuple.first)
+                            else
+                                L.enqueue(tuple.second)
+                        }
+                    }
+                    iterate.remove()
+                }
+            }
+        }
+
+        println(L.items.map { it.map { it.value+"*" } })
+        println(partitions.map { it.map { it.value+"*" } })
+        return partitions
+    }
+
+    private fun split(B:MutableList<State>,S:MutableList<State>,a:Char):Pair<MutableList<State>,MutableList<State>> {
+        var G1:MutableList<State> = B.intersect(S.map { it.getTransitions(a).map { it.target } }.flatten()).distinct().toMutableList()
+        var G2:MutableList<State> = B.subtract(G1).distinct().toMutableList()
+        return Pair(G1,G2)
     }
 }
 
