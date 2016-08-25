@@ -3,6 +3,10 @@ package automata
 import java.io.Serializable
 
 class NFA(): IAutomata, Serializable {
+    override fun toMinimizedDFA(): DFA {
+        return this.toDFA().toMinimizedDFA()
+    }
+
     override fun toRegex(): String {
         return this.toDFA().toRegex()
     }
