@@ -6,6 +6,8 @@ import automata.DFA
 import automata.IAutomata
 import automata.NFA
 import automata.NFAE
+import com.mxgraph.model.mxCell
+import com.mxgraph.view.mxGraph
 import javafx.application.Application
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
@@ -13,6 +15,8 @@ import javafx.scene.Scene
 import javafx.scene.control.*
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
+import javafx.scene.input.KeyCode
+import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.VBox
@@ -122,7 +126,8 @@ class GUI : Application() {
             if(tabPane.selectionModel.selectedItem!=null){
                 var automata = (tabPane.selectionModel.selectedItem as TabContainer).automaton
                 when(automata){
-                    is DFA -> { showMessageDialog(null, "Your automaton is already a DFA", "Error", JOptionPane.ERROR_MESSAGE) }
+                    is DFA -> { //showMessageDialog(null, "Your automaton is already a DFA", "Error", JOptionPane.ERROR_MESSAGE)
+                         }
                     else -> { addNewTab(automata.toDFA()) }
                 }
             }
@@ -133,7 +138,7 @@ class GUI : Application() {
             if(tabPane.selectionModel.selectedItem!=null){
                 var automata = (tabPane.selectionModel.selectedItem as TabContainer).automaton
                 var regex= automata.toRegex()
-                showMessageDialog(null, regex, "Regex", JOptionPane.INFORMATION_MESSAGE)
+                //showMessageDialog(null, regex, "Regex", JOptionPane.INFORMATION_MESSAGE)
             }
         }
         val toMinimizedDFA = MenuItem("To minimized DFA")
@@ -409,65 +414,65 @@ class GUI : Application() {
                     alert.showAndWait()
                     //showMessageDialog(null, "evaluation: $result")
                 }catch (e: Exception){
-                    showMessageDialog(null, e.message, "Error", JOptionPane.ERROR_MESSAGE)
+                    //showMessageDialog(null, e.message, "Error", JOptionPane.ERROR_MESSAGE)
                 }
             }
         }
 
         val scene = Scene(root, Screen.getPrimary().bounds.width-200, Screen.getPrimary().bounds.height-200)
 
-//        //add on key release event to scene
-//        scene.onKeyPressed = EventHandler<KeyEvent> { e ->
-//            try{
-//                println("keyEvnet: ${e.code}")
-//                val cell: mxCell = (graph.selectionCell as mxCell)
-//                if(cell.isVertex){
-//                    if (e.isAltDown && e.code === KeyCode.I) {
-//                        println("setting initial")
-//                        cell.setVertexStyle(VertexType.INITIAL)
-//                        graphComponent.refresh()
-//                    }else if (e.isAltDown && e.code === KeyCode.F) {
-//                        println("setting final")
-//                        cell.setVertexStyle(VertexType.FINAL)
-//                        graphComponent.refresh()
-//                    }else if (e.isAltDown && e.code === KeyCode.B) {
-//                        println("setting Both Initial and Final")
-//                        cell.setVertexStyle(VertexType.INITIAL_FINAL)
-//                        graphComponent.refresh()
-//                    }else if (e.isAltDown && e.code === KeyCode.N) {
-//                        println("setting normal")
-//                        cell.setVertexStyle(VertexType.NORMAL)
-//                        graphComponent.refresh()
-//                    }else if (e.code === KeyCode.DELETE) {
-//                        println("Deleting cell")
-//                        if(dfa.removeState(cell.value.toString())){
-//                            graph.update {
-//                                for (edge in graph.getEdges(cell)){
-//                                    graph.model.remove(edge)
-//                                }
-//                                graph.model.remove(cell)
-//                            }
-//                            graphComponent.refresh()
-//                        }
-//
-//                    }
-//                    e.consume()
-//                }else if(cell.isEdge){
-//                    if (e.code === KeyCode.DELETE) {
-//                        println("Deleting edge")
-//                        graph.update {
-//                            graph.model.remove(cell)
-//                        }
-//                        graphComponent.refresh()
-//                    }
-//                    e.consume()
-//                }
-//                e.consume()
-//            }catch (e:Exception){
-//                showMessageDialog(null, e.message, "Error",ERROR_MESSAGE)
-//            }
-//
-//        }
+        //add on key release event to scene
+        scene.onKeyPressed = EventHandler<KeyEvent> { e ->
+            var tab = (tabPane.selectionModel.selectedItem as TabContainer)
+            if(tab==null) {
+            }else{
+                try{
+                    println("keyEvnet: ${e.code}")
+
+                    val cell: mxCell = (tab.graph.selectionCell as mxCell)
+                    if(cell.isVertex){
+                        if (e.isAltDown && e.code === KeyCode.I) {
+                            println("setting initial")
+                            tab.setVertexStyle(cell,VertexType.INITIAL)
+
+                        }else if (e.isAltDown && e.code === KeyCode.F) {
+                            println("setting final")
+                            tab.setVertexStyle(cell,VertexType.FINAL)
+                        }else if (e.isAltDown && e.code === KeyCode.B) {
+                            println("setting Both Initial and Final")
+                            tab.setVertexStyle(cell,VertexType.INITIAL_FINAL)
+                        }else if (e.isAltDown && e.code === KeyCode.N) {
+                            println("setting normal")
+                            tab.setVertexStyle(cell,VertexType.NORMAL)
+                        }else if (e.code === KeyCode.DELETE) {
+                            println("Deleting cell")
+                            if(tab.automaton.removeState(cell.value.toString())){
+                                tab.graph.update {
+                                    for (edge in tab.graph.getEdges(cell)){
+                                        tab.graph.model.remove(edge)
+                                    }
+                                    tab.graph.model.remove(cell)
+                                }
+                            }
+
+                        }
+                    }else if(cell.isEdge){
+                        if (e.code === KeyCode.DELETE) {
+                            println("Deleting edge")
+                            tab.graph.update {
+                                tab.graph.model.remove(cell)
+                            }
+                        }
+                    }
+                }catch (e:Exception){
+                    //showMessageDialog(null, e.message, "Error",ERROR_MESSAGE)
+                }
+            }
+            tab.graphComponent.refresh()
+            e.consume()
+
+
+        }
 
 
 
@@ -481,6 +486,16 @@ class GUI : Application() {
 
     }
 
+
+    private fun mxGraph.update(block: () -> Any) {
+        model.beginUpdate()
+        try {
+            block()
+        }
+        finally {
+            model.endUpdate()
+        }
+    }
     private fun  addNewTab(automaton: IAutomata) {
         val tab = TabContainer(automaton,"new "+automaton.getClassName())
         tabPane.tabs.add(tab)

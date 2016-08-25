@@ -106,10 +106,10 @@ open class TabContainer: Tab {
             //(actionEvent.source as mxCell).setVertexStyle(VertexType.INITIAL)
         }
         setAsFinal.onAction= EventHandler { actionEvent: ActionEvent ->
-            (actionEvent.source as mxCell).setVertexStyle(VertexType.FINAL)
+            setVertexStyle((actionEvent.source as mxCell),VertexType.FINAL)
         }
         setAsInitialAndFinal.onAction= EventHandler { actionEvent: ActionEvent ->
-            (actionEvent.source as mxCell).setVertexStyle(VertexType.INITIAL_FINAL)
+            setVertexStyle((actionEvent.source as mxCell),VertexType.INITIAL_FINAL)
         }
         vertexMenu.items.addAll(setAsInitial,setAsFinal,setAsInitialAndFinal)
 
@@ -133,19 +133,19 @@ open class TabContainer: Tab {
         val ss="${style["strokeColor"]}${style["shape"]}"
         when(ss){
             "blueellipse" -> {
-                this.setVertexStyle(VertexType.INITIAL)
+                setVertexStyle(this,VertexType.INITIAL)
             }
             "redellipse" -> {
-                this.setVertexStyle(VertexType.FINAL)
+                setVertexStyle(this,VertexType.FINAL)
             }
             "greendoubleEllipse" -> {
-                this.setVertexStyle(VertexType.INITIAL_FINAL)
+                setVertexStyle(this,VertexType.INITIAL_FINAL)
             }
             "reddoubleEllipse" -> {
-                this.setVertexStyle(VertexType.NORMAL)
+                setVertexStyle(this,VertexType.NORMAL)
             }
             else -> {
-                this.setVertexStyle(VertexType.NORMAL)
+                setVertexStyle(this,VertexType.NORMAL)
             }
         }
     }
@@ -170,29 +170,29 @@ open class TabContainer: Tab {
         }
     }
 
-    private fun mxCell.setVertexStyle(type: VertexType){
+    fun setVertexStyle(cell:mxCell,type: VertexType){
         try {
-            if(this.isVertex){
+            if(cell.isVertex){
                 graph.update {
                     when(type){
                         VertexType.INITIAL -> {
-                            this.style=defaultStyle.replace("strokeColor=blue","strokeColor=red")
-                            automaton.removeFinalState(this.value.toString())
-                            automaton.setInitialState(this.value.toString())
+                            cell.style=defaultStyle.replace("strokeColor=blue","strokeColor=red")
+                            automaton.removeFinalState(cell.value.toString())
+                            automaton.setInitialState(cell.value.toString())
                         }
                         VertexType.FINAL -> {
-                            this.style=defaultStyle.replace("strokeColor=blue","strokeColor=green").replace("shape=ellipse","shape=doubleEllipse")
-                            automaton.setFinalState(this.value.toString())
+                            cell.style=defaultStyle.replace("strokeColor=blue","strokeColor=green").replace("shape=ellipse","shape=doubleEllipse")
+                            automaton.setFinalState(cell.value.toString())
                         }
                         VertexType.INITIAL_FINAL -> {
-                            this.style=defaultStyle.replace("strokeColor=blue","strokeColor=red").replace("shape=ellipse","shape=doubleEllipse")
-                            automaton.setInitialState(this.value.toString())
-                            automaton.setFinalState(this.value.toString())
+                            cell.style=defaultStyle.replace("strokeColor=blue","strokeColor=red").replace("shape=ellipse","shape=doubleEllipse")
+                            automaton.setInitialState(cell.value.toString())
+                            automaton.setFinalState(cell.value.toString())
                         }
                         VertexType.NORMAL -> {
-                            this.style=defaultStyle
+                            cell.style=defaultStyle
                             automaton.setInitialState(null)
-                            automaton.removeFinalState(this.value.toString())
+                            automaton.removeFinalState(cell.value.toString())
                         }
                     }
                 }
@@ -227,7 +227,7 @@ open class TabContainer: Tab {
 
     }
 
-    private fun  mxGraph.update(block: () -> Any) {
+    fun  mxGraph.update(block: () -> Any) {
         model.beginUpdate()
         try {
             block()
@@ -250,11 +250,11 @@ open class TabContainer: Tab {
             var isInitial=automata.getInitialState().value==state.value;
             var isFinal=automata.isFinal(state.value)
             if(isInitial and isFinal){
-                cell.setVertexStyle(VertexType.INITIAL_FINAL)
+                setVertexStyle(cell,VertexType.INITIAL_FINAL)
             }else if(isInitial){
-                cell.setVertexStyle(VertexType.INITIAL)
+                setVertexStyle(cell,VertexType.INITIAL)
             }else if(isFinal){
-                cell.setVertexStyle(VertexType.FINAL)
+                setVertexStyle(cell,VertexType.FINAL)
             }
             cell.resize()
             cells[state.value] = cell
