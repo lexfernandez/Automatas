@@ -137,7 +137,6 @@ open class DFA(): IAutomata, Serializable,Cloneable {
             visitedStates.add(qi)
         }
 
-
         //Step 2
         for (pair in pairsTable){
 
@@ -168,13 +167,13 @@ open class DFA(): IAutomata, Serializable,Cloneable {
                         unmarkedPairs.remove(pair)
                     }
                 }catch (e:Exception){
-
+                    markedPairs.add(pair)
+                    unmarkedPairs.remove(pair)
                 }
 
             }
             iterate.remove()
         }
-
 
         //Step 4
         var newStates: MutableList<MutableList<State>> = mutableListOf()
@@ -228,9 +227,6 @@ open class DFA(): IAutomata, Serializable,Cloneable {
                 }
             }
         }
-
-
-
 
         return minimizedDfa
     }
