@@ -1,7 +1,6 @@
 
 import automata.IAutomata
 import automata.State
-import com.btr.proxy.util.PlatformUtil
 import com.mxgraph.layout.mxFastOrganicLayout
 import com.mxgraph.model.mxCell
 import com.mxgraph.model.mxGeometry

@@ -23,8 +23,6 @@ import javafx.scene.layout.VBox
 import javafx.stage.Screen
 import javafx.stage.Stage
 import java.io.File
-import javax.swing.JOptionPane
-import javax.swing.JOptionPane.showMessageDialog
 
 
 // This is what makes this file the starting point of the program
@@ -128,7 +126,7 @@ class GUI : Application() {
                 when(automata){
                     is DFA -> { //showMessageDialog(null, "Your automaton is already a DFA", "Error", JOptionPane.ERROR_MESSAGE)
                          }
-                    else -> { addNewTab(automata.toDFA()) }
+                    else -> { addNewTab(automata.toDFA().renameStates()) }
                 }
             }
 
@@ -145,7 +143,7 @@ class GUI : Application() {
         toMinimizedDFA.onAction= EventHandler<ActionEvent> {
             if(tabPane.selectionModel.selectedItem!=null){
                 var automata = (tabPane.selectionModel.selectedItem as TabContainer).automaton
-                addNewTab(automata.toMinimizedDFA())
+                addNewTab(automata.toMinimizedDFA().renameStates())
             }
         }
         convert.items.addAll(toDFA,toRegex,toMinimizedDFA)
