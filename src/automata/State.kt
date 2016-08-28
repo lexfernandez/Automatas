@@ -11,7 +11,7 @@ class State(var value: String): Serializable {
     }
 
     fun getTransition(id: Char): Transition? {
-        return transitions.find { it.symbol==id }
+        return transitions.find { it.symbol.first()==id }
     }
 
     fun getTransitions(): MutableList<Transition> {
@@ -23,10 +23,22 @@ class State(var value: String): Serializable {
     }
 
     fun getTransitions(id: Char): List<Transition> {
-        return transitions.filter { it.symbol==id }
+        return transitions.filter { it.symbol.first()==id }
     }
 
     fun  addTransitionPointingToMe(transition: Transition) : Boolean {
         return transitionsPointingToMe.add(transition)
     }
+
+    fun  removeTransition(e: Transition):Boolean {
+        e.target.removeTransitionPointingToMe(e)
+        return this.transitions.remove(e)
+    }
+
+    fun  removeTransitionPointingToMe(e: Transition):Boolean {
+        return this.transitionsPointingToMe.remove(e)
+    }
+
+    var  index: Int = -1
+    var  lowlink: Int = -1
 }

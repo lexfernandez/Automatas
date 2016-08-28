@@ -2,6 +2,4 @@ package automata
 
 import java.io.Serializable
 
-class Transition(val symbol: Char, var source: State, var target: State): Serializable{
-    var regexSymbols: String = ""
-}
+class Transition(var symbol: String, var source: State, var target: State): Serializable

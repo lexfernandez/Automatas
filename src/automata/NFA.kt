@@ -28,7 +28,7 @@ class NFA(): IAutomata, Serializable {
             }
         }
 
-        var transition: Transition = Transition(symbol, s, f)
+        var transition: Transition = Transition(symbol.toString(), s, f)
         addLanguageSymbol(symbol)
         f.addTransitionPointingToMe(transition)
         return s.addTransition(transition)

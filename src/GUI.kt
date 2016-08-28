@@ -2,10 +2,7 @@
  * Created by lex on 07-24-16.
  */
 
-import automata.DFA
-import automata.IAutomata
-import automata.NFA
-import automata.NFAE
+import automata.*
 import com.mxgraph.model.mxCell
 import com.mxgraph.view.mxGraph
 import javafx.application.Application
@@ -375,7 +372,26 @@ class GUI : Application() {
         root.top = topContainer
         root.center = tabPane
 
-        var newDfa = DFA()
+        var A = DFA()
+        A.addState(State("q0"))
+        A.addState(State("q1"))
+        A.addTransition('1',"q0","q0")
+        A.addTransition('0',"q0","q1")
+        A.addTransition('1',"q1","q0")
+        A.addTransition('0',"q1","q1")
+        A.setInitialState("q0")
+        A.setFinalState("q1")
+
+        var B = DFA()
+        B.addState(State("q0"))
+        B.addState(State("q1"))
+        B.addTransition('1',"q0","q1")
+        B.addTransition('1',"q1","q1")
+        B.addTransition('0',"q1","q1")
+        B.setInitialState("q0")
+        B.setFinalState("q1")
+
+        var newDfa = A.union(B)
         addNewTab(newDfa)
 
 //        tabPane.setOnContextMenuRequested({ e ->

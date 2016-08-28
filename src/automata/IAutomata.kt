@@ -104,6 +104,16 @@ interface IAutomata {
         return false
     }
 
+    fun renameStates(prefix:Char='q'): IAutomata {
+        var i=0
+        for (state in this.states){
+            state.value= "$prefix${i.toString()}"
+            i++
+        }
+
+        return this
+    }
+
     fun addTransition( symbol: Char,source: String, target: String): Boolean
     fun evaluate(alphabet: String): Boolean
     fun toDFA(): DFA
