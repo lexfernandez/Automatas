@@ -29,8 +29,6 @@ import javax.swing.JOptionPane
  * Created by lex on 08-05-16.
  */
 
-
-@Suppress("NAME_SHADOWING")
 open class TabContainer: Tab {
     val graph = mxGraph()
     var automaton: IAutomata
@@ -123,10 +121,6 @@ open class TabContainer: Tab {
 
 
         this.content= bcontent
-
-
-
-
     }
 
     private fun mxCell.toggleType() {
@@ -288,10 +282,10 @@ open class TabContainer: Tab {
         undoManager?.undoableEditHappened(evt.getProperty("edit") as mxUndoableEdit)
     }
 
-    protected var changeTracker: mxEventSource.mxIEventListener = mxEventSource.mxIEventListener { source, evt ->
+    protected var changeTracker: mxEventSource.mxIEventListener = mxEventSource.mxIEventListener({ source, evt ->
         setModifiedProperty(true)
         println("Was Modified")
-    }
+    })
 
     protected fun createUndoManager(): mxUndoManager {
         return mxUndoManager()
@@ -430,7 +424,10 @@ open class TabContainer: Tab {
 
     fun updateTitle() {
         Platform.runLater({
-            this.text+="*"
+            if(this.text.contains("*"))
+                this.text.replace("*","")
+            else
+                this.text+="*"
         })
 
     }

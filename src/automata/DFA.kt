@@ -205,7 +205,6 @@ open class DFA(): IAutomata, Serializable,Cloneable {
                     var B=delta(pair.second,a)
                     val list = markedPairs.filter { (it.first.value == A.value && it.second.value == B.value) }
                     var result=list.firstOrNull()
-                    println("(${pair.first.value},${pair.second.value}):$a ==>(${A.value}.${B.value}):${result!=null}")
                     if(result!=null){
                         markedPairs.add(pair)
                         unmarkedPairs.remove(pair)
@@ -275,13 +274,9 @@ open class DFA(): IAutomata, Serializable,Cloneable {
         return minimizedDfa
     }
 
-
-    fun union(B:DFA): DFA{
-        var A = this
+    private fun unify(A:DFA,B:DFA,op: AutomataOperation): DFA {
         A.renameStates('A')
         B.renameStates('B')
-
-
         var states: MutableList<MutableList<State>> = mutableListOf()
         var initial = mutableListOf(A.getInitialState(),B.getInitialState())
         states.add(initial)
@@ -315,9 +310,25 @@ open class DFA(): IAutomata, Serializable,Cloneable {
                         automata.addState(State(targetName))
                         states.add(targetGroup)
                     }
-                    if((A.finals.intersect(targetGroup).count()>0) or (B.finals.intersect(targetGroup).count()>0)){
-                        automata.setFinalState(targetName)
+                    when(op){
+                        AutomataOperation.Union -> {
+                            if((A.finals.intersect(targetGroup).count()>0) or (B.finals.intersect(targetGroup).count()>0)){
+                                automata.setFinalState(targetName)
+                            }
+                        }
+                        AutomataOperation.Intersect -> {
+                            if((A.finals.intersect(targetGroup).count()>0) and (B.finals.intersect(targetGroup).count()>0)){
+                                automata.setFinalState(targetName)
+                            }
+                        }
+                        AutomataOperation.Subtract -> {
+                            if((A.finals.intersect(targetGroup).count()>0)){
+                                automata.setFinalState(targetName)
+                            }
+                        }
+
                     }
+
                     if(!automata.hasTransition(symbol,sourceName,targetName))
                         automata.addTransition(symbol,sourceName,targetName)
                     iterate = states.listIterator()
@@ -326,17 +337,61 @@ open class DFA(): IAutomata, Serializable,Cloneable {
             }
         }
 
-
-
         return automata
     }
 
+    fun union(B:DFA): DFA{
+        return unify(this,B, AutomataOperation.Union)
+    }
+
     fun intersect(B:DFA): DFA{
-        return this
+        return unify(this,B, AutomataOperation.Intersect)
     }
 
     fun subtract(B:DFA): DFA{
-        return this
+        return unify(this,B, AutomataOperation.Subtract)
     }
+
+    fun complement(): DFA{
+        var complement = this.clone()
+
+        for (state in complement.states){
+            if(this.isFinal(state.value))
+                complement.removeFinalState(state.value)
+            else
+                complement.setFinalState(state.value)
+        }
+
+        var sumidero: State? = null
+
+        for (state in this.states){
+            for (symbol in complement.language){
+                if(state.getTransition(symbol)==null){
+                    if(sumidero==null){
+                        sumidero= State("drain")
+                        complement.addState(sumidero)
+                        complement.setFinalState(sumidero.value)
+                        for (a in complement.language){
+                            complement.addTransition(a,sumidero.value,sumidero.value)
+                        }
+                        complement.addTransition(symbol,state.value,sumidero.value)
+                    }else{
+                        complement.addTransition(symbol,state.value,sumidero.value)
+                    }
+                }
+            }
+        }
+
+        return complement
+    }
+}
+
+enum class AutomataOperation {
+    Union,
+
+    Subtract,
+
+    Intersect
+
 }
 

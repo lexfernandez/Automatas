@@ -17,30 +17,14 @@ import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.VBox
+import javafx.stage.FileChooser
 import javafx.stage.Screen
 import javafx.stage.Stage
-import java.io.File
+import java.io.*
 
 
 // This is what makes this file the starting point of the program
 fun main(args: Array<String>) {
-    //IAutomata multiplos de 3
-
-
-//
-//    println("evaluation: ${dfa.evaluate("0011")}")
-//    try {
-//        val fileOut = FileOutputStream("./numerosPrimos.dfa")
-//        val out = ObjectOutputStream(fileOut)
-//        out.writeObject(dfa)
-//        out.flush()
-//        out.close()
-//        fileOut.close()
-//        System.out.printf("Serialized data is saved in ./numerosPrimos.dfa")
-//    } catch (i: IOException) {
-//        i.printStackTrace()
-//    }
-
 
 //    var e: DFA? = null
 //    try {
@@ -102,12 +86,67 @@ class GUI : Application() {
             addNewTab(newNfae)
         }
         newFile.items.addAll(dfaMenu,nfaMenu,nfaeMenu,regexMenu)
-        val openFile = MenuItem("Open File")
+        val openFile = MenuItem("Open file...")
+        openFile.onAction= EventHandler<ActionEvent> {
+            val fileChooser = FileChooser()
+            fileChooser.title = "Open file..."
+            fileChooser.extensionFilters.addAll(
+                    FileChooser.ExtensionFilter("All", "*.*"),
+                    FileChooser.ExtensionFilter("DFA", "*.dfa"),
+                    FileChooser.ExtensionFilter("NFA", "*.nfa"),
+                    FileChooser.ExtensionFilter("NFAE", "*.nfae"),
+                    FileChooser.ExtensionFilter("REGEX", "*.regex")
+            )
+            var file = fileChooser.showOpenDialog(stage)
+
+            if (file != null) {
+                try {
+                    val fileIn = FileInputStream(file)
+                    val ois: ObjectInputStream = ObjectInputStream(fileIn)
+                    var automata:IAutomata =ois.readObject() as IAutomata
+                    addNewTab(automata,file.name)
+                    ois.close()
+                    fileIn.close()
+                } catch (i: IOException) {
+                    i.printStackTrace()
+                } catch (c: ClassNotFoundException) {
+                    println("Employee class not found")
+                    c.printStackTrace()
+                }
+            }
+        }
+        val saveFile = MenuItem("Save")
+        val saveFileAs = MenuItem("Save As...")
+        saveFileAs.onAction= EventHandler<ActionEvent> {
+            val fileChooser = FileChooser()
+            var automaton = (tabPane.selectionModel.selectedItem as TabContainer).automaton
+            fileChooser.setTitle("Save As...")
+            fileChooser.extensionFilters.addAll(
+                    FileChooser.ExtensionFilter(automaton.getClassName().toUpperCase(), "*.${automaton.getClassName().toLowerCase()}")
+            )
+            var file = fileChooser.showSaveDialog(stage)
+
+            if (file != null) {
+                try {
+                    file = File(file.parentFile, file.nameWithoutExtension + ".${automaton.getClassName().toLowerCase()}")
+                    val fileOut = FileOutputStream(file)
+                    val out = ObjectOutputStream(fileOut)
+
+                    out.writeObject(automaton)
+                    out.flush()
+                    out.close()
+                    fileOut.close()
+                } catch (ex: IOException) {
+                    System.out.println(ex.message)
+                }
+
+            }
+        }
         val exitApp = MenuItem("Exit")
         exitApp.onAction= EventHandler<ActionEvent> {
             System.exit(0)
         }
-        file.items.addAll(newFile,openFile,SeparatorMenuItem(), exitApp)
+        file.items.addAll(newFile,openFile,SeparatorMenuItem(),saveFile,saveFileAs,SeparatorMenuItem(), exitApp)
 
         //Create SubMenu Edit.
         val edit = Menu("Edit")
@@ -377,22 +416,24 @@ class GUI : Application() {
         A.addState(State("q1"))
         A.addTransition('1',"q0","q0")
         A.addTransition('0',"q0","q1")
-        A.addTransition('1',"q1","q0")
-        A.addTransition('0',"q1","q1")
+        A.addTransition('0',"q1","q0")
         A.setInitialState("q0")
-        A.setFinalState("q1")
+        A.setFinalState("q0")
 
         var B = DFA()
         B.addState(State("q0"))
         B.addState(State("q1"))
-        B.addTransition('1',"q0","q1")
-        B.addTransition('1',"q1","q1")
-        B.addTransition('0',"q1","q1")
+        B.addTransition('a',"q0","q1")
+        B.addTransition('a',"q1","q1")
+        B.addTransition('b',"q1","q1")
         B.setInitialState("q0")
         B.setFinalState("q1")
 
-        var newDfa = A.union(B)
+        var newDfa = A.complement()
+        addNewTab(A)
         addNewTab(newDfa)
+
+
 
 //        tabPane.setOnContextMenuRequested({ e ->
 ////            val cell = (tabPane.selectionModel.selectedItem as TabContainer).graphComponent.getCellAt(e.x.toInt(), e.y.toInt())
@@ -432,6 +473,7 @@ class GUI : Application() {
                 }
             }
         }
+
 
         val scene = Scene(root, Screen.getPrimary().bounds.width-200, Screen.getPrimary().bounds.height-200)
 
@@ -489,14 +531,10 @@ class GUI : Application() {
         }
 
 
-
         //Setup the Stage.
         primaryStage.title = "Automatas"
         primaryStage.scene = scene
         primaryStage.show()
-
-
-        //(dfa as NFAE).printClosure()
 
     }
 
@@ -510,8 +548,11 @@ class GUI : Application() {
             model.endUpdate()
         }
     }
-    private fun  addNewTab(automaton: IAutomata) {
-        val tab = TabContainer(automaton,"new "+automaton.getClassName())
+    private fun  addNewTab(automaton: IAutomata,name: String="") {
+        var title = name
+        if(name.isEmpty())
+            title="new "+automaton.getClassName()
+        val tab = TabContainer(automaton,title)
         tabPane.tabs.add(tab)
     }
 
