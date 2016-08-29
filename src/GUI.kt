@@ -12,9 +12,7 @@ import javafx.scene.Scene
 import javafx.scene.control.*
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
-import javafx.scene.input.KeyCode
-import javafx.scene.input.KeyEvent
-import javafx.scene.input.MouseEvent
+import javafx.scene.input.*
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.VBox
 import javafx.stage.FileChooser
@@ -74,15 +72,15 @@ class GUI : Application() {
         val nfaeMenu = MenuItem("NFA-e")
         val regexMenu = MenuItem("Regex")
         dfaMenu.onAction= EventHandler<ActionEvent> {
-            var newDfa = DFA()
+            val newDfa = DFA()
             addNewTab(newDfa)
         }
         nfaMenu.onAction= EventHandler<ActionEvent> {
-            var newNfa = NFA()
+            val newNfa = NFA()
             addNewTab(newNfa)
         }
         nfaeMenu.onAction= EventHandler<ActionEvent> {
-            var newNfae = NFAE()
+            val newNfae = NFAE()
             addNewTab(newNfae)
         }
         newFile.items.addAll(dfaMenu,nfaMenu,nfaeMenu,regexMenu)
@@ -97,14 +95,14 @@ class GUI : Application() {
                     FileChooser.ExtensionFilter("NFAE", "*.nfae"),
                     FileChooser.ExtensionFilter("REGEX", "*.regex")
             )
-            var file = fileChooser.showOpenDialog(stage)
+            val file = fileChooser.showOpenDialog(stage)
 
             if (file != null) {
                 try {
                     val fileIn = FileInputStream(file)
                     val ois: ObjectInputStream = ObjectInputStream(fileIn)
-                    var automata:IAutomata =ois.readObject() as IAutomata
-                    addNewTab(automata,file.name)
+                    val automata:IAutomata =ois.readObject() as IAutomata
+                    addNewTab(automata,file.name,file)
                     ois.close()
                     fileIn.close()
                 } catch (i: IOException) {
@@ -115,37 +113,48 @@ class GUI : Application() {
                 }
             }
         }
+        openFile.accelerator = KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN)
         val saveFile = MenuItem("Save")
+        saveFile.onAction= EventHandler<ActionEvent> {
+            if(tabPane.selectionModel.isEmpty) return@EventHandler
+            try {
+                var tabContainer = tabPane.selectionModel.selectedItem as TabContainer
+                val automaton = tabContainer.automaton
+                var file = tabContainer.file
+                if(file==null){
+                    file = saveAutomatonAs()
+                    tabContainer.file=file
+                }else{
+                    saveAutomaton(file,automaton)
+                }
+                tabContainer.text = file.name
+                tabContainer.modified = false
+            }catch (e: Exception){
+                println(e.message)
+            }
+
+        }
+        saveFile.accelerator = KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN)
         val saveFileAs = MenuItem("Save As...")
         saveFileAs.onAction= EventHandler<ActionEvent> {
-            val fileChooser = FileChooser()
-            var automaton = (tabPane.selectionModel.selectedItem as TabContainer).automaton
-            fileChooser.setTitle("Save As...")
-            fileChooser.extensionFilters.addAll(
-                    FileChooser.ExtensionFilter(automaton.getClassName().toUpperCase(), "*.${automaton.getClassName().toLowerCase()}")
-            )
-            var file = fileChooser.showSaveDialog(stage)
-
-            if (file != null) {
-                try {
-                    file = File(file.parentFile, file.nameWithoutExtension + ".${automaton.getClassName().toLowerCase()}")
-                    val fileOut = FileOutputStream(file)
-                    val out = ObjectOutputStream(fileOut)
-
-                    out.writeObject(automaton)
-                    out.flush()
-                    out.close()
-                    fileOut.close()
-                } catch (ex: IOException) {
-                    System.out.println(ex.message)
-                }
-
+            if(tabPane.selectionModel.isEmpty) return@EventHandler
+            try {
+                var tabContainer = tabPane.selectionModel.selectedItem as TabContainer
+                var file = saveAutomatonAs()
+                tabContainer.file=file
+                tabContainer.text = file?.name
+                tabContainer.modified= false
+            }catch (e: Exception){
+                println(e.message)
             }
+
         }
+        saveFileAs.accelerator = KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN,KeyCombination.SHIFT_DOWN)
         val exitApp = MenuItem("Exit")
         exitApp.onAction= EventHandler<ActionEvent> {
             System.exit(0)
         }
+        exitApp.accelerator = KeyCodeCombination(KeyCode.E, KeyCombination.CONTROL_DOWN)
         file.items.addAll(newFile,openFile,SeparatorMenuItem(),saveFile,saveFileAs,SeparatorMenuItem(), exitApp)
 
         //Create SubMenu Edit.
@@ -158,7 +167,7 @@ class GUI : Application() {
         val toDFA = MenuItem("To DFA")
         toDFA.onAction= EventHandler<ActionEvent> {
             if(tabPane.selectionModel.selectedItem!=null){
-                var automata = (tabPane.selectionModel.selectedItem as TabContainer).automaton
+                val automata = (tabPane.selectionModel.selectedItem as TabContainer).automaton
                 when(automata){
                     is DFA -> { //showMessageDialog(null, "Your automaton is already a DFA", "Error", JOptionPane.ERROR_MESSAGE)
                          }
@@ -178,7 +187,7 @@ class GUI : Application() {
         val toMinimizedDFA = MenuItem("To minimized DFA")
         toMinimizedDFA.onAction= EventHandler<ActionEvent> {
             if(tabPane.selectionModel.selectedItem!=null){
-                var automata = (tabPane.selectionModel.selectedItem as TabContainer).automaton
+                val automata = (tabPane.selectionModel.selectedItem as TabContainer).automaton
                 addNewTab(automata.toMinimizedDFA().renameStates())
             }
         }
@@ -210,7 +219,7 @@ class GUI : Application() {
             addNewTab(dfa)
         }
         dfaToMinimize.onAction = EventHandler {
-            var dfa= DFA()
+            val dfa= DFA()
             dfa.addState(automata.State("a"))
             dfa.addState(automata.State("b"))
             dfa.addState(automata.State("c"))
@@ -298,7 +307,7 @@ class GUI : Application() {
             addNewTab(nfa)
         }
         nfaThirdExample.onAction = EventHandler {
-            var nfa= NFA()
+            val nfa= NFA()
             nfa.addState(automata.State("0"))
             nfa.addState(automata.State("1"))
             nfa.addState(automata.State("2"))
@@ -355,7 +364,7 @@ class GUI : Application() {
             addNewTab(nfae)
         }
         nfaeSecondExample.onAction = EventHandler {
-            var nfae = NFAE()
+            val nfae = NFAE()
             nfae.addState(automata.State("p"))
             nfae.addState(automata.State("q"))
             nfae.addState(automata.State("r"))
@@ -411,7 +420,7 @@ class GUI : Application() {
         root.top = topContainer
         root.center = tabPane
 
-        var A = DFA()
+        val A = DFA()
         A.addState(State("q0"))
         A.addState(State("q1"))
         A.addTransition('1',"q0","q0")
@@ -420,7 +429,7 @@ class GUI : Application() {
         A.setInitialState("q0")
         A.setFinalState("q0")
 
-        var B = DFA()
+        val B = DFA()
         B.addState(State("q0"))
         B.addState(State("q1"))
         B.addTransition('a',"q0","q1")
@@ -429,7 +438,7 @@ class GUI : Application() {
         B.setInitialState("q0")
         B.setFinalState("q1")
 
-        var newDfa = A.complement()
+        val newDfa = A.complement()
         addNewTab(A)
         addNewTab(newDfa)
 
@@ -460,7 +469,7 @@ class GUI : Application() {
 
             if(automataTab!=null){
                 try{
-                    var result=(automataTab as TabContainer).automaton.evaluate(alphabet)
+                    val result=(automataTab as TabContainer).automaton.evaluate(alphabet)
                     val alert = Alert(Alert.AlertType.INFORMATION)
                     alert.title = "Evaluation"
                     alert.headerText = "Evaluating input $alphabet"
@@ -479,7 +488,7 @@ class GUI : Application() {
 
         //add on key release event to scene
         scene.onKeyPressed = EventHandler<KeyEvent> { e ->
-            var tab = (tabPane.selectionModel.selectedItem as TabContainer)
+            val tab = (tabPane.selectionModel.selectedItem as TabContainer)
             if(tab==null) {
             }else{
                 try{
@@ -525,7 +534,7 @@ class GUI : Application() {
                 }
             }
             tab.graphComponent.refresh()
-            e.consume()
+            //e.consume()
 
 
         }
@@ -538,6 +547,43 @@ class GUI : Application() {
 
     }
 
+    private fun saveAutomatonAs():File {
+        val fileChooser = FileChooser()
+        val automaton = (tabPane.selectionModel.selectedItem as TabContainer).automaton
+        fileChooser.title = "Save As..."
+        fileChooser.extensionFilters.addAll(
+                FileChooser.ExtensionFilter(automaton.getClassName().toUpperCase(), "*.${automaton.getClassName().toLowerCase()}")
+        )
+        var file = fileChooser.showSaveDialog(stage)
+
+        if (file != null) {
+            try {
+                file = File(file.parentFile, file.nameWithoutExtension + ".${automaton.getClassName().toLowerCase()}")
+                val fileOut = FileOutputStream(file)
+                val out = ObjectOutputStream(fileOut)
+
+                out.writeObject(automaton)
+                out.flush()
+                out.close()
+                fileOut.close()
+            } catch (ex: IOException) {
+                System.out.println(ex.message)
+            }
+
+        }
+        return file
+    }
+
+    private fun  saveAutomaton(file: File,automaton:IAutomata) {
+        val fileOut = FileOutputStream(file)
+        val out = ObjectOutputStream(fileOut)
+
+        out.writeObject(automaton)
+        out.flush()
+        out.close()
+        fileOut.close()
+    }
+
 
     private fun mxGraph.update(block: () -> Any) {
         model.beginUpdate()
@@ -548,11 +594,11 @@ class GUI : Application() {
             model.endUpdate()
         }
     }
-    private fun  addNewTab(automaton: IAutomata,name: String="") {
+    private fun  addNewTab(automaton: IAutomata,name: String="",file:File?=null) {
         var title = name
         if(name.isEmpty())
             title="new "+automaton.getClassName()
-        val tab = TabContainer(automaton,title)
+        val tab = TabContainer(automaton,title,file)
         tabPane.tabs.add(tab)
     }
 

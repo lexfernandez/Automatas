@@ -22,6 +22,7 @@ import javafx.stage.Screen
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseWheelEvent
 import java.beans.PropertyChangeSupport
+import java.io.File
 import java.util.*
 import javax.swing.JOptionPane
 
@@ -34,17 +35,19 @@ open class TabContainer: Tab {
     var automaton: IAutomata
     val defaultStyle: String = "shape=ellipse;fillColor=white;strokeColor=blue;defaultHotspot=1.0"
     var graphComponent:mxGraphComponent
-    var modified =false
+    var modified =true
     protected var undoManager: mxUndoManager? = null
     protected var keyboardHandler: mxKeyboardHandler? = null
     private var  rubberband: mxRubberband? = null
     var changes: PropertyChangeSupport = PropertyChangeSupport(this)
     val vertexMenu:ContextMenu = ContextMenu()
     var bcontent:BorderPane
+    var file:File? = null
 
 
-    constructor(iautomaton: IAutomata,text: String? = "new tab"):super(text){
+    constructor(iautomaton: IAutomata, text: String? = "new tab",file: File?=null):super(text){
         automaton=iautomaton
+        this.file = file
 
         // Creates the embeddable graph swing component
         graphComponent = mxGraphComponent(graph)
@@ -121,6 +124,7 @@ open class TabContainer: Tab {
 
 
         this.content= bcontent
+
     }
 
     private fun mxCell.toggleType() {
@@ -214,6 +218,7 @@ open class TabContainer: Tab {
             val morph = mxMorphing(graphComponent)
             morph.addListener(mxEvent.DONE, { source, evt ->
                 graph.model.endUpdate()
+                modified=false
             })
 
             morph.startAnimation()
@@ -407,7 +412,7 @@ open class TabContainer: Tab {
         val oldValue = this.modified
         this.modified = modified
 
-        changes.firePropertyChange("modified", oldValue, modified)
+        //changes.firePropertyChange("modified", oldValue, modified)
 
         if (oldValue != modified) {
             updateTitle()
@@ -424,10 +429,7 @@ open class TabContainer: Tab {
 
     fun updateTitle() {
         Platform.runLater({
-            if(this.text.contains("*"))
-                this.text.replace("*","")
-            else
-                this.text+="*"
+            this.text+="*"
         })
 
     }

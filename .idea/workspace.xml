@@ -2,12 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3f02fb56-938e-4fd7-8052-674b51955640" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Automatas/GUI.class" afterPath="$PROJECT_DIR$/out/production/Automatas/GUI.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Automatas/automata/DFA.class" afterPath="$PROJECT_DIR$/out/production/Automatas/automata/DFA.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/hs_err_pid4708.log" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/GUI.kt" afterPath="$PROJECT_DIR$/src/GUI.kt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/TabContainer.kt" afterPath="$PROJECT_DIR$/src/TabContainer.kt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/automata/DFA.kt" afterPath="$PROJECT_DIR$/src/automata/DFA.kt" />
     </list>
     <ignored path="Automatas.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -33,27 +30,58 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="GUI.kt" pinned="false" current-in-tab="true">
+      <file leaf-file-name="GUI.kt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/GUI.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="312">
-              <caret line="432" column="19" selection-start-line="432" selection-start-column="19" selection-end-line="432" selection-end-column="19" />
+            <state relative-caret-position="110">
+              <caret line="490" column="0" selection-start-line="490" selection-start-column="0" selection-end-line="490" selection-end-column="0" />
               <folding>
                 <element signature="e#0#38#0" expanded="true" />
-                <element signature="e#40#626#0" expanded="true" />
-                <element signature="e#2162#2234#2" expanded="false" />
-                <element signature="e#2287#2359#2" expanded="false" />
-                <element signature="e#2413#2488#2" expanded="false" />
-                <element signature="e#6115#6431#2" expanded="false" />
-                <element signature="e#7230#7782#2" expanded="false" />
-                <element signature="e#7829#8831#2" expanded="false" />
-                <element signature="e#9183#10243#2" expanded="false" />
-                <element signature="e#10293#10995#2" expanded="false" />
-                <element signature="e#11044#11706#2" expanded="false" />
-                <element signature="e#12002#13239#2" expanded="false" />
-                <element signature="e#13290#13974#2" expanded="false" />
-                <element signature="e#17548#19828#2" expanded="false" />
+                <element signature="e#40#548#0" expanded="true" />
+                <element signature="n#!!block;n#main#0" expanded="false" />
+                <element signature="e#2084#2156#2" expanded="false" />
+                <element signature="e#2209#2281#2" expanded="false" />
+                <element signature="e#2335#2410#2" expanded="false" />
+                <element signature="e#2577#3773#2" expanded="false" />
+                <element signature="e#3957#4628#2" expanded="false" />
+                <element signature="e#4822#5266#2" expanded="false" />
+                <element signature="e#5476#5514#2" expanded="false" />
+                <element signature="e#6580#6896#2" expanded="false" />
+                <element signature="e#7695#8247#2" expanded="false" />
+                <element signature="e#9648#10708#2" expanded="false" />
+                <element signature="e#10758#11460#2" expanded="false" />
+                <element signature="e#12467#13704#2" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CompositeEventHandler.java" pinned="false" current-in-tab="false">
+        <entry file="jar:///usr/lib/jvm/java-8-oracle/javafx-src.zip!/com/sun/javafx/event/CompositeEventHandler.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="120">
+              <caret line="85" column="0" selection-start-line="85" selection-start-column="0" selection-end-line="85" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="EventUtil.java" pinned="false" current-in-tab="true">
+        <entry file="jar:///usr/lib/jvm/java-8-oracle/javafx-src.zip!/com/sun/javafx/event/EventUtil.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="266">
+              <caret line="73" column="0" selection-start-line="73" selection-start-column="0" selection-end-line="73" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Event.java" pinned="false" current-in-tab="false">
+        <entry file="jar:///usr/lib/jvm/java-8-oracle/javafx-src.zip!/javafx/event/Event.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="199">
+              <caret line="197" column="0" selection-start-line="197" selection-start-column="0" selection-end-line="197" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -122,17 +150,18 @@
       <file leaf-file-name="TabContainer.kt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/TabContainer.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="367">
-              <caret line="305" column="5" selection-start-line="305" selection-start-column="5" selection-end-line="305" selection-end-column="5" />
+            <state relative-caret-position="-12">
+              <caret line="220" column="30" selection-start-line="220" selection-start-column="30" selection-end-line="220" selection-end-column="30" />
               <folding>
-                <element signature="e#1#873#0" expanded="true" />
+                <element signature="e#1#893#0" expanded="true" />
+                <element signature="n#!!block;n#toggleType#0;n#!!block;n#TabContainer#0" expanded="false" />
                 <element signature="n#!!block;n#resize#0;n#!!block;n#TabContainer#0" expanded="false" />
                 <element signature="n#!!block;n#setVertexStyle#0;n#!!block;n#TabContainer#0" expanded="false" />
-                <element signature="n#!!block;n#ApplyLayout#0;n#!!block;n#TabContainer#0" expanded="false" />
-                <element signature="e#8393#9378#1" expanded="false" />
-                <element signature="e#9401#9771#2" expanded="false" />
-                <element signature="e#10867#12197#2" expanded="false" />
-                <element signature="e#12278#14439#0" expanded="false" />
+                <element signature="e#8513#9498#1" expanded="false" />
+                <element signature="e#9521#9891#2" expanded="false" />
+                <element signature="e#10987#12317#2" expanded="false" />
+                <element signature="e#12398#14559#0" expanded="false" />
+                <element signature="n#!!block;n#setModifiedProperty#0;n#!!block;n#TabContainer#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -179,8 +208,8 @@
         <option value="$PROJECT_DIR$/src/automata/NFAE.kt" />
         <option value="$PROJECT_DIR$/src/automata/State.kt" />
         <option value="$PROJECT_DIR$/src/automata/IAutomata.kt" />
-        <option value="$PROJECT_DIR$/src/TabContainer.kt" />
         <option value="$PROJECT_DIR$/src/automata/DFA.kt" />
+        <option value="$PROJECT_DIR$/src/TabContainer.kt" />
         <option value="$PROJECT_DIR$/src/GUI.kt" />
       </list>
     </option>
@@ -197,6 +226,9 @@
         <option name="mavenHome" value="Bundled (Maven 3)" />
       </MavenGeneralSettings>
     </option>
+  </component>
+  <component name="MavenProjectNavigator">
+    <treeState />
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="55" />
@@ -617,26 +649,26 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="55" y="24" width="1225" height="776" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32936078" sideWeight="0.4978678" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31470588" sideWeight="0.45462257" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31470588" sideWeight="0.40458015" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.6485294" sideWeight="0.5614928" order="8" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32647058" sideWeight="0.5182358" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32994062" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32936078" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20147058" sideWeight="0.44698897" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32647058" sideWeight="0.48515692" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32647058" sideWeight="0.4817642" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19847329" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24978614" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24936387" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.425" sideWeight="0.4385072" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.425" sideWeight="0.39016116" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -668,31 +700,19 @@
           <option name="timeStamp" value="13" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="137" />
+      <option name="time" value="141" />
     </breakpoint-manager>
-    <watches-manager />
+    <watches-manager>
+      <configuration name="JetRunConfigurationType">
+        <watch expression="file?.name" />
+      </configuration>
+    </watches-manager>
   </component>
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/DFA.kt" />
-    <entry file="file://$PROJECT_DIR$/src/automata/DFA.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="324">
-          <caret line="65" column="68" selection-start-line="65" selection-start-column="68" selection-end-line="65" selection-end-column="68" />
-          <folding>
-            <element signature="n#!!block;n#evaluate#0;n#!!block;n#DFA#0" expanded="false" />
-            <element signature="n#!!block;n#deltaExtended#0;n#!!block;n#DFA#0" expanded="false" />
-            <element signature="n#!!block;n#delta#0;n#!!block;n#DFA#0" expanded="false" />
-            <element signature="n#!!block;n#toDFA#0;n#!!block;n#DFA#0" expanded="false" />
-            <element signature="e#2478#2989#1" expanded="false" />
-            <element signature="n#!!block;n#unify#0;n#!!block;n#DFA#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Automatas.iml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -810,7 +830,6 @@
     <entry file="jar:///usr/lib/jvm/java-8-oracle/javafx-src.zip!/javafx/scene/control/Tab.java" />
     <entry file="jar:///usr/lib/jvm/java-8-oracle/src.zip!/java/awt/AWTEventMulticaster.java" />
     <entry file="jar:///usr/lib/jvm/java-8-oracle/javafx-src.zip!/javafx/scene/Scene.java" />
-    <entry file="jar:///usr/lib/jvm/java-8-oracle/javafx-src.zip!/javafx/event/Event.java" />
     <entry file="file://$PROJECT_DIR$/src/automata/BST.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
@@ -890,23 +909,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/TabContainer.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="367">
-          <caret line="305" column="5" selection-start-line="305" selection-start-column="5" selection-end-line="305" selection-end-column="5" />
-          <folding>
-            <element signature="e#1#873#0" expanded="true" />
-            <element signature="n#!!block;n#resize#0;n#!!block;n#TabContainer#0" expanded="false" />
-            <element signature="n#!!block;n#setVertexStyle#0;n#!!block;n#TabContainer#0" expanded="false" />
-            <element signature="n#!!block;n#ApplyLayout#0;n#!!block;n#TabContainer#0" expanded="false" />
-            <element signature="e#8393#9378#1" expanded="false" />
-            <element signature="e#9401#9771#2" expanded="false" />
-            <element signature="e#10867#12197#2" expanded="false" />
-            <element signature="e#12278#14439#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/automata/IAutomata.kt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="216">
@@ -938,26 +940,69 @@
         </state>
       </provider>
     </entry>
+    <entry file="jar:///usr/lib/jvm/java-8-oracle/javafx-src.zip!/javafx/event/Event.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="199">
+          <caret line="197" column="0" selection-start-line="197" selection-start-column="0" selection-end-line="197" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TabContainer.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-12">
+          <caret line="220" column="30" selection-start-line="220" selection-start-column="30" selection-end-line="220" selection-end-column="30" />
+          <folding>
+            <element signature="e#1#893#0" expanded="true" />
+            <element signature="n#!!block;n#toggleType#0;n#!!block;n#TabContainer#0" expanded="false" />
+            <element signature="n#!!block;n#resize#0;n#!!block;n#TabContainer#0" expanded="false" />
+            <element signature="n#!!block;n#setVertexStyle#0;n#!!block;n#TabContainer#0" expanded="false" />
+            <element signature="e#8513#9498#1" expanded="false" />
+            <element signature="e#9521#9891#2" expanded="false" />
+            <element signature="e#10987#12317#2" expanded="false" />
+            <element signature="e#12398#14559#0" expanded="false" />
+            <element signature="n#!!block;n#setModifiedProperty#0;n#!!block;n#TabContainer#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/GUI.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="312">
-          <caret line="432" column="19" selection-start-line="432" selection-start-column="19" selection-end-line="432" selection-end-column="19" />
+        <state relative-caret-position="110">
+          <caret line="490" column="0" selection-start-line="490" selection-start-column="0" selection-end-line="490" selection-end-column="0" />
           <folding>
             <element signature="e#0#38#0" expanded="true" />
-            <element signature="e#40#626#0" expanded="true" />
-            <element signature="e#2162#2234#2" expanded="false" />
-            <element signature="e#2287#2359#2" expanded="false" />
-            <element signature="e#2413#2488#2" expanded="false" />
-            <element signature="e#6115#6431#2" expanded="false" />
-            <element signature="e#7230#7782#2" expanded="false" />
-            <element signature="e#7829#8831#2" expanded="false" />
-            <element signature="e#9183#10243#2" expanded="false" />
-            <element signature="e#10293#10995#2" expanded="false" />
-            <element signature="e#11044#11706#2" expanded="false" />
-            <element signature="e#12002#13239#2" expanded="false" />
-            <element signature="e#13290#13974#2" expanded="false" />
-            <element signature="e#17548#19828#2" expanded="false" />
+            <element signature="e#40#548#0" expanded="true" />
+            <element signature="n#!!block;n#main#0" expanded="false" />
+            <element signature="e#2084#2156#2" expanded="false" />
+            <element signature="e#2209#2281#2" expanded="false" />
+            <element signature="e#2335#2410#2" expanded="false" />
+            <element signature="e#2577#3773#2" expanded="false" />
+            <element signature="e#3957#4628#2" expanded="false" />
+            <element signature="e#4822#5266#2" expanded="false" />
+            <element signature="e#5476#5514#2" expanded="false" />
+            <element signature="e#6580#6896#2" expanded="false" />
+            <element signature="e#7695#8247#2" expanded="false" />
+            <element signature="e#9648#10708#2" expanded="false" />
+            <element signature="e#10758#11460#2" expanded="false" />
+            <element signature="e#12467#13704#2" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///usr/lib/jvm/java-8-oracle/javafx-src.zip!/com/sun/javafx/event/CompositeEventHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="85" column="0" selection-start-line="85" selection-start-column="0" selection-end-line="85" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///usr/lib/jvm/java-8-oracle/javafx-src.zip!/com/sun/javafx/event/EventUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="266">
+          <caret line="73" column="0" selection-start-line="73" selection-start-column="0" selection-end-line="73" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
