@@ -4,7 +4,7 @@ import java.io.Serializable
 
 class NFA(): IAutomata, Serializable {
     override fun toMinimizedDFA(): DFA {
-        return this.toDFA().renameStates().toMinimizedDFA()
+        return this.toDFA().toMinimizedDFA()
     }
 
     override fun toRegex(): String {
@@ -28,7 +28,7 @@ class NFA(): IAutomata, Serializable {
             }
         }
 
-        var transition: Transition = Transition(symbol, s, f)
+        var transition: Transition = Transition(symbol.toString(), s, f)
         addLanguageSymbol(symbol)
         f.addTransitionPointingToMe(transition)
         return s.addTransition(transition)

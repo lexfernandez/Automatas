@@ -1,7 +1,6 @@
 
 import automata.IAutomata
 import automata.State
-import com.btr.proxy.util.PlatformUtil
 import com.mxgraph.layout.mxFastOrganicLayout
 import com.mxgraph.model.mxCell
 import com.mxgraph.model.mxGeometry
@@ -23,6 +22,7 @@ import javafx.stage.Screen
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseWheelEvent
 import java.beans.PropertyChangeSupport
+import java.io.File
 import java.util.*
 import javax.swing.JOptionPane
 
@@ -30,24 +30,24 @@ import javax.swing.JOptionPane
  * Created by lex on 08-05-16.
  */
 
-
-@Suppress("NAME_SHADOWING")
 open class TabContainer: Tab {
     val graph = mxGraph()
     var automaton: IAutomata
     val defaultStyle: String = "shape=ellipse;fillColor=white;strokeColor=blue;defaultHotspot=1.0"
     var graphComponent:mxGraphComponent
-    var modified =false
+    var modified =true
     protected var undoManager: mxUndoManager? = null
     protected var keyboardHandler: mxKeyboardHandler? = null
     private var  rubberband: mxRubberband? = null
     var changes: PropertyChangeSupport = PropertyChangeSupport(this)
     val vertexMenu:ContextMenu = ContextMenu()
     var bcontent:BorderPane
+    var file:File? = null
 
 
-    constructor(iautomaton: IAutomata,text: String? = "new tab"):super(text){
+    constructor(iautomaton: IAutomata, text: String? = "new tab",file: File?=null):super(text){
         automaton=iautomaton
+        this.file = file
 
         // Creates the embeddable graph swing component
         graphComponent = mxGraphComponent(graph)
@@ -124,9 +124,6 @@ open class TabContainer: Tab {
 
 
         this.content= bcontent
-
-
-
 
     }
 
@@ -221,6 +218,7 @@ open class TabContainer: Tab {
             val morph = mxMorphing(graphComponent)
             morph.addListener(mxEvent.DONE, { source, evt ->
                 graph.model.endUpdate()
+                modified=false
             })
 
             morph.startAnimation()
@@ -289,10 +287,10 @@ open class TabContainer: Tab {
         undoManager?.undoableEditHappened(evt.getProperty("edit") as mxUndoableEdit)
     }
 
-    protected var changeTracker: mxEventSource.mxIEventListener = mxEventSource.mxIEventListener { source, evt ->
+    protected var changeTracker: mxEventSource.mxIEventListener = mxEventSource.mxIEventListener({ source, evt ->
         setModifiedProperty(true)
         println("Was Modified")
-    }
+    })
 
     protected fun createUndoManager(): mxUndoManager {
         return mxUndoManager()
@@ -414,7 +412,7 @@ open class TabContainer: Tab {
         val oldValue = this.modified
         this.modified = modified
 
-        changes.firePropertyChange("modified", oldValue, modified)
+        //changes.firePropertyChange("modified", oldValue, modified)
 
         if (oldValue != modified) {
             updateTitle()
