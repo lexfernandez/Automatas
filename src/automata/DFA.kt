@@ -286,6 +286,10 @@ open class DFA(): IAutomata, Serializable,Cloneable {
         automata.addState(State(initialStateName))
         automata.setInitialState(initialStateName)
 
+        if(A.isFinal(A.getInitialState().value) or B.isFinal(B.getInitialState().value)){
+            automata.setFinalState(initialStateName)
+        }
+
         var acceptedLanguage = A.language.union(B.language)
 
         var iterate = states.listIterator()
@@ -323,7 +327,9 @@ open class DFA(): IAutomata, Serializable,Cloneable {
                         }
                         AutomataOperation.Subtract -> {
                             if((A.finals.intersect(targetGroup).count()>0)){
-                                automata.setFinalState(targetName)
+                                if(B.finals.intersect(targetGroup).count()==0){
+                                    automata.setFinalState(targetName)
+                                }
                             }
                         }
 

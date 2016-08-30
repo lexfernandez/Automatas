@@ -84,18 +84,9 @@ class GUI : Application() {
             addNewTab(newNfae)
         }
         newFile.items.addAll(dfaMenu,nfaMenu,nfaeMenu,regexMenu)
-        val openFile = MenuItem("Open file...")
-        openFile.onAction= EventHandler<ActionEvent> {
-            val fileChooser = FileChooser()
-            fileChooser.title = "Open file..."
-            fileChooser.extensionFilters.addAll(
-                    FileChooser.ExtensionFilter("All", "*.*"),
-                    FileChooser.ExtensionFilter("DFA", "*.dfa"),
-                    FileChooser.ExtensionFilter("NFA", "*.nfa"),
-                    FileChooser.ExtensionFilter("NFAE", "*.nfae"),
-                    FileChooser.ExtensionFilter("REGEX", "*.regex")
-            )
-            val file = fileChooser.showOpenDialog(stage)
+        val openFileMenu = MenuItem("Open file...")
+        openFileMenu.onAction= EventHandler<ActionEvent> {
+            val file = openFile()
 
             if (file != null) {
                 try {
@@ -108,12 +99,11 @@ class GUI : Application() {
                 } catch (i: IOException) {
                     i.printStackTrace()
                 } catch (c: ClassNotFoundException) {
-                    println("Employee class not found")
                     c.printStackTrace()
                 }
             }
         }
-        openFile.accelerator = KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN)
+        openFileMenu.accelerator = KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN)
         val saveFile = MenuItem("Save")
         saveFile.onAction= EventHandler<ActionEvent> {
             if(tabPane.selectionModel.isEmpty) return@EventHandler
@@ -155,12 +145,30 @@ class GUI : Application() {
             System.exit(0)
         }
         exitApp.accelerator = KeyCodeCombination(KeyCode.E, KeyCombination.CONTROL_DOWN)
-        file.items.addAll(newFile,openFile,SeparatorMenuItem(),saveFile,saveFileAs,SeparatorMenuItem(), exitApp)
+        file.items.addAll(newFile,openFileMenu,SeparatorMenuItem(),saveFile,saveFileAs,SeparatorMenuItem(), exitApp)
 
         //Create SubMenu Edit.
         val edit = Menu("Edit")
+        val union = MenuItem("Union")
+        union.onAction= EventHandler<ActionEvent> {
+            automataOperation(AutomataOperation.Union)
+        }
+        val intersect = MenuItem("Intersect")
+        intersect.onAction= EventHandler<ActionEvent> {
+            automataOperation(AutomataOperation.Intersect)
+        }
+        val subtract = MenuItem("Subtract")
+        subtract.onAction= EventHandler<ActionEvent> {
+            automataOperation(AutomataOperation.Subtract)
+        }
+        val complement = MenuItem("Complement")
+        complement.onAction= EventHandler<ActionEvent> {
+            if(tabPane.selectionModel.isEmpty) return@EventHandler
+            var A = (tabPane.selectionModel.selectedItem as TabContainer).automaton
+            addNewTab(A.toDFA().complement())
+        }
         val properties = MenuItem("Properties")
-        edit.items.add(properties)
+        edit.items.addAll(union,intersect,subtract,complement,SeparatorMenuItem(),properties)
 
         //Create SubMenu Edit.
         val convert = Menu("Convert")
@@ -192,8 +200,6 @@ class GUI : Application() {
             }
         }
         convert.items.addAll(toDFA,toRegex,toMinimizedDFA)
-
-
 
         //Create SubMenu Examples.
         val examples = Menu("Examples")
@@ -438,7 +444,7 @@ class GUI : Application() {
         B.setInitialState("q0")
         B.setFinalState("q1")
 
-        val newDfa = A.complement()
+        val newDfa = A.subtract(B)
         addNewTab(A)
         addNewTab(newDfa)
 
@@ -478,7 +484,11 @@ class GUI : Application() {
                     alert.showAndWait()
                     //showMessageDialog(null, "evaluation: $result")
                 }catch (e: Exception){
-                    //showMessageDialog(null, e.message, "Error", JOptionPane.ERROR_MESSAGE)
+                    val alert = Alert(Alert.AlertType.ERROR)
+                    alert.headerText = "Evaluating input $alphabet"
+                    alert.contentText =  e.message
+
+                    alert.showAndWait()
                 }
             }
         }
@@ -545,6 +555,62 @@ class GUI : Application() {
         primaryStage.scene = scene
         primaryStage.show()
 
+    }
+
+    private fun  automataOperation(op: AutomataOperation) {
+        if(tabPane.selectionModel.isEmpty) return
+        val file = openFile()
+
+        if (file != null) {
+            try {
+                val fileIn = FileInputStream(file)
+                val ois: ObjectInputStream = ObjectInputStream(fileIn)
+                val B =(ois.readObject() as IAutomata).toDFA()
+                var tab = (tabPane.selectionModel.selectedItem as TabContainer)
+                val A = tab.automaton.toDFA()
+
+                var name=""
+                if(tab.file!=null) {
+                    name = (tab.file as File).nameWithoutExtension +op.name+ file.nameWithoutExtension
+                }else{
+                    name = tab.text +op.name+ file.nameWithoutExtension
+                }
+
+                var automata:IAutomata
+                when(op){
+                    AutomataOperation.Union ->{
+                        automata = A.union(B)
+                    }
+                    AutomataOperation.Subtract ->{
+                        automata = A.subtract(B)
+                    }
+                    AutomataOperation.Intersect ->{
+                        automata = A.intersect(B)
+                    }
+                }
+                addNewTab(automata,name)
+                ois.close()
+                fileIn.close()
+            } catch (i: IOException) {
+                i.printStackTrace()
+            } catch (c: ClassNotFoundException) {
+                c.printStackTrace()
+            }
+        }
+    }
+
+    private fun  openFile(): File? {
+        val fileChooser = FileChooser()
+        fileChooser.title = "Open file..."
+        fileChooser.extensionFilters.addAll(
+                FileChooser.ExtensionFilter("All", "*.*"),
+                FileChooser.ExtensionFilter("DFA", "*.dfa"),
+                FileChooser.ExtensionFilter("NFA", "*.nfa"),
+                FileChooser.ExtensionFilter("NFAE", "*.nfae"),
+                FileChooser.ExtensionFilter("REGEX", "*.regex")
+        )
+        val file = fileChooser.showOpenDialog(stage)
+        return file
     }
 
     private fun saveAutomatonAs():File {
