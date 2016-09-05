@@ -27,8 +27,8 @@ import java.util.*
 import javax.swing.JOptionPane
 
 /**
- * Created by lex on 08-05-16.
- */
+* Created by lex on 08-05-16.
+*/
 
 open class TabContainer: Tab {
     val graph = mxGraph()
@@ -247,14 +247,17 @@ open class TabContainer: Tab {
 
         for (state in automata.states){
             val cell = graph.insertVertex(graph.defaultParent, null,state.value, x, y, 40.0, 40.0, defaultStyle) as mxCell
-            var isInitial=automata.getInitialState().value==state.value;
-            var isFinal=automata.isFinal(state.value)
-            if(isInitial and isFinal){
-                setVertexStyle(cell,VertexType.INITIAL_FINAL)
-            }else if(isInitial){
-                setVertexStyle(cell,VertexType.INITIAL)
-            }else if(isFinal){
-                setVertexStyle(cell,VertexType.FINAL)
+            val initial=automata.getInitialState()
+            if(initial!=null){
+                val isInitial=initial.value==state.value
+                val isFinal=automata.isFinal(state.value)
+                if(isInitial and isFinal){
+                    setVertexStyle(cell,VertexType.INITIAL_FINAL)
+                }else if(isInitial){
+                    setVertexStyle(cell,VertexType.INITIAL)
+                }else if(isFinal){
+                    setVertexStyle(cell,VertexType.FINAL)
+                }
             }
             cell.resize()
             cells[state.value] = cell
@@ -394,7 +397,7 @@ open class TabContainer: Tab {
             }
 
             override fun mousePressed(e: java.awt.event.MouseEvent) {
-                var cell = graphComponent.getCellAt(e.x, e.y)
+                val cell = graphComponent.getCellAt(e.x, e.y)
                 println("Mouse click in graph component")
                 if (cell != null) {
                     println("cell=" + graph.getLabel(cell))
@@ -418,6 +421,7 @@ open class TabContainer: Tab {
             updateTitle()
         }
     }
+
 
     fun isModified(): Boolean {
         return modified

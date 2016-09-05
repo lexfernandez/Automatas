@@ -47,8 +47,8 @@ interface IAutomata {
         initial = states.find { it.value==value }
     }
 
-    fun getInitialState(): State {
-        return initial?:throw Exception("Initial state is not set")
+    fun getInitialState(): State? {
+        return initial
     }
 
     fun setFinalState(value: String):Boolean {
