@@ -3,8 +3,8 @@ package automata
 import java.io.Serializable
 
 /**
- * Created by Alex Fernandez on 07/25/2016.
- */
+* Created by Alex Fernandez on 07/25/2016.
+*/
 
 open class DFA(): IAutomata, Serializable,Cloneable {
 
@@ -18,9 +18,9 @@ open class DFA(): IAutomata, Serializable,Cloneable {
     override fun addTransition(symbol: Char, source: String, target: String): Boolean {
         if(symbol.equals('E'))
             throw Exception("Symbol E is not valid for a ${this.javaClass.simpleName}")
-        var s = getState(source)
-        var t = getState(target)
-        var transition: Transition = Transition(symbol, s, t)
+        val s = getState(source)
+        val t = getState(target)
+        val transition: Transition = Transition(symbol, s, t)
         if(s.getTransition(symbol)!=null)
             throw Exception("Transition from ${s.value} with symbol $symbol already exist!")
         else{
@@ -33,7 +33,7 @@ open class DFA(): IAutomata, Serializable,Cloneable {
     override fun evaluate(alphabet: String): Boolean {
         if(this.states.count()==0) return false
         println("DFA Evaluation")
-        var init = getInitialState()
+        val init = getInitialState()
         val result: State = deltaExtended(init,alphabet)
         return getFinalStates().contains(result)
     }
@@ -43,8 +43,8 @@ open class DFA(): IAutomata, Serializable,Cloneable {
             return q
         }
 
-        var a = alphabet.last()
-        var x = alphabet.subSequence(0,alphabet.length-1).toString()
+        val a = alphabet.last()
+        val x = alphabet.subSequence(0,alphabet.length-1).toString()
 
         //println("x: $x a:$a")
         return delta(deltaExtended(q,x),a)
@@ -66,9 +66,9 @@ open class DFA(): IAutomata, Serializable,Cloneable {
     override fun toRegex(): String {
         println(this)
         println(this.finals.map { it.value })
-        var regex=""
+        val regex=""
         for(final in getFinalStates()){
-            var clone = this.clone()
+            val clone = this.clone()
             println(clone)
             for(cfinal in clone.getFinalStates()){
                 if(final.value!=cfinal.value)
@@ -100,7 +100,7 @@ open class DFA(): IAutomata, Serializable,Cloneable {
     }
 
     override fun clone(): DFA {
-        var clone = DFA()
+        val clone = DFA()
         for(state in this.states){
             clone.addState(State(state.value))
         }
@@ -121,13 +121,13 @@ open class DFA(): IAutomata, Serializable,Cloneable {
     }
 
     override fun toMinimizedDFA(): DFA {
-        var pairsTable:MutableList<Pair<State,State>> = mutableListOf()
-        var markedPairs:MutableList<Pair<State,State>> = mutableListOf()
-        var unmarkedPairs:MutableList<Pair<State,State>> = mutableListOf()
+        val pairsTable:MutableList<Pair<State,State>> = mutableListOf()
+        val markedPairs:MutableList<Pair<State,State>> = mutableListOf()
+        val unmarkedPairs:MutableList<Pair<State,State>> = mutableListOf()
 
 
         //Step 1
-        var visitedStates:MutableList<State> = mutableListOf()
+        val visitedStates:MutableList<State> = mutableListOf()
         for (qi in this.states){
             for (qj in this.states.filter { !visitedStates.contains(it) }){
                 if(qi!=qj){
@@ -152,15 +152,15 @@ open class DFA(): IAutomata, Serializable,Cloneable {
         //Step 3
         var up:MutableList<Pair<State,State>> = mutableListOf()
         up=up.union(unmarkedPairs).toMutableList()
-        var iterate = up.listIterator()
+        val iterate = up.listIterator()
         while (iterate.hasNext()){
-            var pair=iterate.next()
+            val pair=iterate.next()
             for (a in this.language){
                 try {
-                    var A=delta(pair.first,a)
-                    var B=delta(pair.second,a)
+                    val A=delta(pair.first,a)
+                    val B=delta(pair.second,a)
                     val list = markedPairs.filter { (it.first.value == A.value && it.second.value == B.value) }
-                    var result=list.firstOrNull()
+                    val result=list.firstOrNull()
                     println("(${pair.first.value},${pair.second.value}):$a ==>(${A.value}.${B.value}):${result!=null}")
                     if(result!=null){
                         markedPairs.add(pair)
@@ -176,19 +176,19 @@ open class DFA(): IAutomata, Serializable,Cloneable {
         }
 
         //Step 4
-        var newStates: MutableList<MutableList<State>> = mutableListOf()
+        val newStates: MutableList<MutableList<State>> = mutableListOf()
 
         for (pair in unmarkedPairs){
             newStates.add(pair.toList().toMutableList())
         }
 
-        var toAddLater:MutableList<MutableList<State>> = mutableListOf()
+        val toAddLater:MutableList<MutableList<State>> = mutableListOf()
         for (state in this.states){
-            var toCombine = newStates.filter { it.contains(state) }
+            val toCombine = newStates.filter { it.contains(state) }
             if(toCombine.count()>1){
                 //Combine
                 newStates.removeAll(toCombine)
-                var states: MutableList<State> = toCombine.flatten().toMutableList()
+                val states: MutableList<State> = toCombine.flatten().toMutableList()
                 newStates.add(states)
             }else if(toCombine.count()==0){
                 toAddLater.add(mutableListOf(state))
@@ -197,7 +197,7 @@ open class DFA(): IAutomata, Serializable,Cloneable {
 
         newStates.addAll(toAddLater)
         //Create minimized DFA
-        var minimizedDfa:DFA = DFA()
+        val minimizedDfa:DFA = DFA()
         for (states in newStates){
             minimizedDfa.addState(State(states.map { it.value }.sorted().toString().replace("[","").replace("]","").trim()))
         }
@@ -213,12 +213,12 @@ open class DFA(): IAutomata, Serializable,Cloneable {
 
                 for (symbol in this.language){
                     try {
-                        var destiny = delta(source, symbol)
-                        var msource = states.map { it.value }.sorted().toString().replace("[", "").replace("]", "").trim()
-                        var targets = newStates.filter { it.contains(destiny) }
+                        val destiny = delta(source, symbol)
+                        val msource = states.map { it.value }.sorted().toString().replace("[", "").replace("]", "").trim()
+                        val targets = newStates.filter { it.contains(destiny) }
 
                         for (target in targets){
-                            var mdestiny = target.map { it.value }.sorted().toString().replace("[", "").replace("]", "").trim()
+                            val mdestiny = target.map { it.value }.sorted().toString().replace("[", "").replace("]", "").trim()
                             minimizedDfa.addTransition(symbol,msource,mdestiny)
                         }
                     } catch(e: Exception) {

@@ -21,16 +21,16 @@ class NFAE(): IAutomata, Serializable {
     override var finals: MutableList<State> = mutableListOf()
 
     override fun addTransition(symbol: Char, source: String, target: String): Boolean {
-        var s = getState(source)
-        var f = getState(target)
-        var ts = s.getTransitions(symbol)
+        val s = getState(source)
+        val f = getState(target)
+        val ts = s.getTransitions(symbol)
         for (t in ts){
             if(t.source.value==source && t.target.value==target){
                 throw Exception("Transition from ${s.value} to ${f.value} with symbol $symbol already exist!")
             }
         }
 
-        var transition: Transition = Transition(symbol, s, f)
+        val transition: Transition = Transition(symbol, s, f)
         addLanguageSymbol(symbol)
         f.addTransitionPointingToMe(transition)
         return s.addTransition(transition)
@@ -38,7 +38,7 @@ class NFAE(): IAutomata, Serializable {
 
     override fun evaluate(alphabet: String): Boolean {
         println("NFAE Evaluation")
-        var init = getInitialState()
+        val init = getInitialState()
         val result: List<State> = deltaExtended(eClosure(init),alphabet)
         return !getFinalStates().intersect(result).isEmpty()
     }
@@ -48,15 +48,15 @@ class NFAE(): IAutomata, Serializable {
             return eclosures
         }
 
-        var a = alphabet.first()
-        var x = alphabet.subSequence(1,alphabet.length).toString()
+        val a = alphabet.first()
+        val x = alphabet.subSequence(1,alphabet.length).toString()
 
         //print("s: $a ")
         //println("c:${eclosures.map { it.value }}")
         var deltas : MutableList<State> = mutableListOf()
 
         for(cstate in eclosures){
-            var delta = delta(cstate,a)
+            val delta = delta(cstate,a)
             deltas = deltas.union(delta).toMutableList()
         }
 
@@ -71,7 +71,7 @@ class NFAE(): IAutomata, Serializable {
     private fun delta(q: State, symbol: Char): List<State> {
         if (q.getTransition(symbol)!=null){
             //println("Delta ${q.value},$symbol:")
-            var qs = q.getTransitions(symbol).map{ it.target }
+            val qs = q.getTransitions(symbol).map{ it.target }
 
             return qs
         }
@@ -101,7 +101,7 @@ class NFAE(): IAutomata, Serializable {
 
         for (value in states.split(",")){
             if(hasState(value.trim())){
-                var state = getState(value.trim())
+                val state = getState(value.trim())
                 deltas = deltas.union(delta(state,symbol)).toMutableList()
             }
         }
@@ -124,17 +124,17 @@ class NFAE(): IAutomata, Serializable {
         return c.sortedBy { it.value }
     }
 
-    fun printClosure(){
-        for (state in states){
-            println(eClosure(state).map { it.value })
-        }
-    }
+//    fun printClosure(){
+//        for (state in states){
+//            println(eClosure(state).map { it.value })
+//        }
+//    }
 
     override fun toDFA(): DFA{
-        var dfa = DFA()
-        var queue: Queue<State> = Queue()
-        var closure = eClosure(this.getInitialState())
-        var initial = State(closure.map { it.value }.toString().replace("[","").replace("]","").trim())
+        val dfa = DFA()
+        val queue: Queue<State> = Queue()
+        val closure = eClosure(this.getInitialState())
+        val initial = State(closure.map { it.value }.toString().replace("[","").replace("]","").trim())
         queue.enqueue(initial)
         dfa.addState(initial)
         dfa.setInitialState(initial.value)
@@ -146,16 +146,16 @@ class NFAE(): IAutomata, Serializable {
         }
 
         while (queue.isNotEmpty()){
-            var q = queue.dequeue()
+            val q = queue.dequeue()
             if(q!=null) {
                 //println("State: ${q.value}| ")
                 for (symbol in language){
-                    var newStateName = getTargetsName(q.value,symbol)
+                    val newStateName = getTargetsName(q.value,symbol)
                     //if(newStateName!=null)
                         //println("$symbol : $newStateName| ")
                     if(newStateName!=null && newStateName.isNotEmpty()){
                         if(!dfa.hasState(newStateName)){
-                            var newState = State(newStateName)
+                            val newState = State(newStateName)
                             dfa.addState(newState)
                             queue.enqueue(newState)
                         }

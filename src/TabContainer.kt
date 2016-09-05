@@ -1,7 +1,6 @@
 
 import automata.IAutomata
 import automata.State
-import com.btr.proxy.util.PlatformUtil
 import com.mxgraph.layout.mxFastOrganicLayout
 import com.mxgraph.model.mxCell
 import com.mxgraph.model.mxGeometry
@@ -27,11 +26,9 @@ import java.util.*
 import javax.swing.JOptionPane
 
 /**
- * Created by lex on 08-05-16.
- */
+* Created by lex on 08-05-16.
+*/
 
-
-@Suppress("NAME_SHADOWING")
 open class TabContainer: Tab {
     val graph = mxGraph()
     var automaton: IAutomata
@@ -249,8 +246,8 @@ open class TabContainer: Tab {
 
         for (state in automata.states){
             val cell = graph.insertVertex(graph.defaultParent, null,state.value, x, y, 40.0, 40.0, defaultStyle) as mxCell
-            var isInitial=automata.getInitialState().value==state.value;
-            var isFinal=automata.isFinal(state.value)
+            val isInitial=automata.getInitialState().value==state.value
+            val isFinal=automata.isFinal(state.value)
             if(isInitial and isFinal){
                 setVertexStyle(cell,VertexType.INITIAL_FINAL)
             }else if(isInitial){
@@ -396,7 +393,7 @@ open class TabContainer: Tab {
             }
 
             override fun mousePressed(e: java.awt.event.MouseEvent) {
-                var cell = graphComponent.getCellAt(e.x, e.y)
+                val cell = graphComponent.getCellAt(e.x, e.y)
                 println("Mouse click in graph component")
                 if (cell != null) {
                     println("cell=" + graph.getLabel(cell))
@@ -420,6 +417,7 @@ open class TabContainer: Tab {
             updateTitle()
         }
     }
+
 
     fun isModified(): Boolean {
         return modified

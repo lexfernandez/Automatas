@@ -1,6 +1,6 @@
 /**
- * Created by lex on 07-24-16.
- */
+* Created by lex on 07-24-16.
+*/
 
 import automata.DFA
 import automata.IAutomata
@@ -23,52 +23,10 @@ import javafx.scene.layout.VBox
 import javafx.stage.Screen
 import javafx.stage.Stage
 import java.io.File
-import javax.swing.JOptionPane
-import javax.swing.JOptionPane.showMessageDialog
 
 
 // This is what makes this file the starting point of the program
 fun main(args: Array<String>) {
-    //IAutomata multiplos de 3
-
-
-//
-//    println("evaluation: ${dfa.evaluate("0011")}")
-//    try {
-//        val fileOut = FileOutputStream("./numerosPrimos.dfa")
-//        val out = ObjectOutputStream(fileOut)
-//        out.writeObject(dfa)
-//        out.flush()
-//        out.close()
-//        fileOut.close()
-//        System.out.printf("Serialized data is saved in ./numerosPrimos.dfa")
-//    } catch (i: IOException) {
-//        i.printStackTrace()
-//    }
-
-
-//    var e: DFA? = null
-//    try {
-//        val fileIn = FileInputStream("./numerosPrimos.dfa")
-//        val ois: ObjectInputStream = ObjectInputStream(fileIn)
-//        e = ois.readObject() as DFA
-//        ois.close()
-//        fileIn.close()
-//    } catch (i: IOException) {
-//        i.printStackTrace()
-//        return
-//    } catch (c: ClassNotFoundException) {
-//        println("Employee class not found")
-//        c.printStackTrace()
-//        return
-//    }
-//
-//    e.printStates()
-//
-//    println("evaluation: ${e.evaluate("0111")}")
-//    println("evaluation: ${e.evaluate("01111")}")
-
-
     // The only thing it does is to launch our JavaFX application defined below
     Application.launch(GUI::class.java)
 }
@@ -95,15 +53,15 @@ class GUI : Application() {
         val nfaeMenu = MenuItem("NFA-e")
         val regexMenu = MenuItem("Regex")
         dfaMenu.onAction= EventHandler<ActionEvent> {
-            var newDfa = DFA()
+            val newDfa = DFA()
             addNewTab(newDfa)
         }
         nfaMenu.onAction= EventHandler<ActionEvent> {
-            var newNfa = NFA()
+            val newNfa = NFA()
             addNewTab(newNfa)
         }
         nfaeMenu.onAction= EventHandler<ActionEvent> {
-            var newNfae = NFAE()
+            val newNfae = NFAE()
             addNewTab(newNfae)
         }
         newFile.items.addAll(dfaMenu,nfaMenu,nfaeMenu,regexMenu)
@@ -124,7 +82,7 @@ class GUI : Application() {
         val toDFA = MenuItem("To DFA")
         toDFA.onAction= EventHandler<ActionEvent> {
             if(tabPane.selectionModel.selectedItem!=null){
-                var automata = (tabPane.selectionModel.selectedItem as TabContainer).automaton
+                val automata = (tabPane.selectionModel.selectedItem as TabContainer).automaton
                 when(automata){
                     is DFA -> { //showMessageDialog(null, "Your automaton is already a DFA", "Error", JOptionPane.ERROR_MESSAGE)
                          }
@@ -136,7 +94,7 @@ class GUI : Application() {
         val toRegex = MenuItem("To Regex")
         toRegex.onAction= EventHandler<ActionEvent> {
             if(tabPane.selectionModel.selectedItem!=null){
-                var automata = (tabPane.selectionModel.selectedItem as TabContainer).automaton
+                val automata = (tabPane.selectionModel.selectedItem as TabContainer).automaton
                 var regex= automata.toRegex()
                 //showMessageDialog(null, regex, "Regex", JOptionPane.INFORMATION_MESSAGE)
             }
@@ -144,7 +102,7 @@ class GUI : Application() {
         val toMinimizedDFA = MenuItem("To minimized DFA")
         toMinimizedDFA.onAction= EventHandler<ActionEvent> {
             if(tabPane.selectionModel.selectedItem!=null){
-                var automata = (tabPane.selectionModel.selectedItem as TabContainer).automaton
+                val automata = (tabPane.selectionModel.selectedItem as TabContainer).automaton
                 addNewTab(automata.toMinimizedDFA())
             }
         }
@@ -158,25 +116,25 @@ class GUI : Application() {
         val dfaFirstExample = MenuItem("Binary numbers that are multiples of 3")
         val dfaToMinimize = MenuItem("Dfa to minimize")
         dfaExamples.items.addAll(dfaFirstExample,dfaToMinimize)
-        dfaFirstExample.onAction = EventHandler {
-            var dfa= DFA()
+        dfaFirstExample.onAction = EventHandler({
+            val dfa = DFA()
             dfa.addState(automata.State("q0"))
             dfa.addState(automata.State("q1"))
             dfa.addState(automata.State("q2"))
 
-            dfa.addTransition('0',"q0","q0")
-            dfa.addTransition('1',"q0","q1")
-            dfa.addTransition('0',"q1","q2")
-            dfa.addTransition('1',"q2","q2")
-            dfa.addTransition('0',"q2","q1")
-            dfa.addTransition('1',"q1","q0")
+            dfa.addTransition('0', "q0", "q0")
+            dfa.addTransition('1', "q0", "q1")
+            dfa.addTransition('0', "q1", "q2")
+            dfa.addTransition('1', "q2", "q2")
+            dfa.addTransition('0', "q2", "q1")
+            dfa.addTransition('1', "q1", "q0")
 
             dfa.setInitialState("q0")
             dfa.setFinalState("q0")
             addNewTab(dfa)
-        }
-        dfaToMinimize.onAction = EventHandler {
-            var dfa= DFA()
+        })
+        dfaToMinimize.onAction = EventHandler({
+            val dfa = DFA()
             dfa.addState(automata.State("a"))
             dfa.addState(automata.State("b"))
             dfa.addState(automata.State("c"))
@@ -184,18 +142,18 @@ class GUI : Application() {
             dfa.addState(automata.State("e"))
             dfa.addState(automata.State("f"))
 
-            dfa.addTransition('0',"a","b")
-            dfa.addTransition('1',"a","c")
-            dfa.addTransition('0',"b","a")
-            dfa.addTransition('1',"b","d")
-            dfa.addTransition('0',"c","e")
-            dfa.addTransition('1',"c","f")
-            dfa.addTransition('0',"d","e")
-            dfa.addTransition('1',"d","f")
-            dfa.addTransition('0',"e","e")
-            dfa.addTransition('1',"e","f")
-            dfa.addTransition('0',"f","f")
-            dfa.addTransition('1',"f","f")
+            dfa.addTransition('0', "a", "b")
+            dfa.addTransition('1', "a", "c")
+            dfa.addTransition('0', "b", "a")
+            dfa.addTransition('1', "b", "d")
+            dfa.addTransition('0', "c", "e")
+            dfa.addTransition('1', "c", "f")
+            dfa.addTransition('0', "d", "e")
+            dfa.addTransition('1', "d", "f")
+            dfa.addTransition('0', "e", "e")
+            dfa.addTransition('1', "e", "f")
+            dfa.addTransition('0', "f", "f")
+            dfa.addTransition('1', "f", "f")
 
 
             dfa.setInitialState("a")
@@ -203,93 +161,93 @@ class GUI : Application() {
             dfa.setFinalState("c")
             dfa.setFinalState("e")
             addNewTab(dfa)
-        }
+        })
 
         val nfaExamples = Menu("NFA Example")
         val nfaFirstExample = MenuItem("F Example")
         val nfaSecondExample = MenuItem("Strings starting with a's")
         val nfaThirdExample = MenuItem("S Example")
         nfaExamples.items.addAll(nfaFirstExample,nfaSecondExample,nfaThirdExample)
-        nfaFirstExample.onAction = EventHandler {
-            var nfa= NFA()
+        nfaFirstExample.onAction = EventHandler({
+            val nfa = NFA()
             nfa.addState(automata.State("0"))
             nfa.addState(automata.State("1"))
             nfa.addState(automata.State("2"))
             nfa.addState(automata.State("3"))
             nfa.addState(automata.State("4"))
 
-            nfa.addTransition('a',"0","1")
-            nfa.addTransition('a',"0","2")
-            nfa.addTransition('a',"0","3")
-            nfa.addTransition('b',"0","2")
-            nfa.addTransition('b',"0","3")
+            nfa.addTransition('a', "0", "1")
+            nfa.addTransition('a', "0", "2")
+            nfa.addTransition('a', "0", "3")
+            nfa.addTransition('b', "0", "2")
+            nfa.addTransition('b', "0", "3")
 
-            nfa.addTransition('a',"1","1")
-            nfa.addTransition('a',"1","2")
-            nfa.addTransition('b',"1","2")
-            nfa.addTransition('b',"1","3")
+            nfa.addTransition('a', "1", "1")
+            nfa.addTransition('a', "1", "2")
+            nfa.addTransition('b', "1", "2")
+            nfa.addTransition('b', "1", "3")
 
-            nfa.addTransition('b',"2","2")
-            nfa.addTransition('b',"2","3")
-            nfa.addTransition('b',"2","4")
+            nfa.addTransition('b', "2", "2")
+            nfa.addTransition('b', "2", "3")
+            nfa.addTransition('b', "2", "4")
 
-            nfa.addTransition('b',"3","3")
-            nfa.addTransition('b',"3","2")
-            nfa.addTransition('a',"3","4")
-            nfa.addTransition('b',"3","4")
+            nfa.addTransition('b', "3", "3")
+            nfa.addTransition('b', "3", "2")
+            nfa.addTransition('a', "3", "4")
+            nfa.addTransition('b', "3", "4")
 
             nfa.setInitialState("0")
             nfa.setFinalState("1")
             addNewTab(nfa)
-        }
-        nfaSecondExample.onAction = EventHandler {
-            var nfa= NFA()
+        })
+        nfaSecondExample.onAction = EventHandler({
+            val nfa = NFA()
             nfa.addState(automata.State("0"))
             nfa.addState(automata.State("1"))
             nfa.addState(automata.State("2"))
             nfa.addState(automata.State("3"))
 
-            nfa.addTransition('a',"0","1")
-            nfa.addTransition('a',"0","2")
-            nfa.addTransition('a',"1","1")
-            nfa.addTransition('a',"1","2")
-            nfa.addTransition('b',"2","3")
-            nfa.addTransition('b',"2","1")
-            nfa.addTransition('a',"3","1")
-            nfa.addTransition('a',"3","2")
+            nfa.addTransition('a', "0", "1")
+            nfa.addTransition('a', "0", "2")
+            nfa.addTransition('a', "1", "1")
+            nfa.addTransition('a', "1", "2")
+            nfa.addTransition('b', "2", "3")
+            nfa.addTransition('b', "2", "1")
+            nfa.addTransition('a', "3", "1")
+            nfa.addTransition('a', "3", "2")
 
             nfa.setInitialState("0")
             nfa.setFinalState("0")
             nfa.setFinalState("1")
             addNewTab(nfa)
-        }
-        nfaThirdExample.onAction = EventHandler {
-            var nfa= NFA()
+        })
+        nfaThirdExample.onAction = EventHandler({
+            val nfa = NFA()
             nfa.addState(automata.State("0"))
             nfa.addState(automata.State("1"))
             nfa.addState(automata.State("2"))
             nfa.addState(automata.State("3"))
             nfa.addState(automata.State("4"))
 
-            nfa.addTransition('a',"2","1")
-            nfa.addTransition('a',"1","0")
-            nfa.addTransition('b',"2","3")
-            nfa.addTransition('b',"3","4")
-            nfa.addTransition('a',"2","2")
-            nfa.addTransition('b',"2","2")
+            nfa.addTransition('a', "2", "1")
+            nfa.addTransition('a', "1", "0")
+            nfa.addTransition('b', "2", "3")
+            nfa.addTransition('b', "3", "4")
+            nfa.addTransition('a', "2", "2")
+            nfa.addTransition('b', "2", "2")
 
             nfa.setInitialState("2")
             nfa.setFinalState("0")
             nfa.setFinalState("4")
             addNewTab(nfa)
-        }
+        })
 
         val nfaeExamples = Menu("NFA-e Examples")
         val nfaeFirstExample = MenuItem("Strings terminated with abb")
         val nfaeSecondExample = MenuItem("S Example")
         nfaeExamples.items.addAll(nfaeFirstExample,nfaeSecondExample)
-        nfaeFirstExample.onAction = EventHandler {
-            var nfae = NFAE()
+        nfaeFirstExample.onAction = EventHandler({
+            val nfae = NFAE()
             nfae.addState(automata.State("0"))
             nfae.addState(automata.State("1"))
             nfae.addState(automata.State("2"))
@@ -302,46 +260,46 @@ class GUI : Application() {
             nfae.addState(automata.State("9"))
             nfae.addState(automata.State("10"))
 
-            nfae.addTransition('E',"0","1")
-            nfae.addTransition('E',"1","2")
-            nfae.addTransition('E',"1","4")
-            nfae.addTransition('a',"2","3")
-            nfae.addTransition('b',"4","5")
-            nfae.addTransition('E',"3","6")
-            nfae.addTransition('E',"5","6")
-            nfae.addTransition('E',"6","7")
-            nfae.addTransition('a',"7","8")
-            nfae.addTransition('b',"8","9")
-            nfae.addTransition('b',"9","10")
-            nfae.addTransition('E',"0","7")
-            nfae.addTransition('E',"6","1")
+            nfae.addTransition('E', "0", "1")
+            nfae.addTransition('E', "1", "2")
+            nfae.addTransition('E', "1", "4")
+            nfae.addTransition('a', "2", "3")
+            nfae.addTransition('b', "4", "5")
+            nfae.addTransition('E', "3", "6")
+            nfae.addTransition('E', "5", "6")
+            nfae.addTransition('E', "6", "7")
+            nfae.addTransition('a', "7", "8")
+            nfae.addTransition('b', "8", "9")
+            nfae.addTransition('b', "9", "10")
+            nfae.addTransition('E', "0", "7")
+            nfae.addTransition('E', "6", "1")
 
             nfae.setInitialState("0")
             nfae.setFinalState("10")
             addNewTab(nfae)
-        }
-        nfaeSecondExample.onAction = EventHandler {
-            var nfae = NFAE()
+        })
+        nfaeSecondExample.onAction = EventHandler({
+            val nfae = NFAE()
             nfae.addState(automata.State("p"))
             nfae.addState(automata.State("q"))
             nfae.addState(automata.State("r"))
 
-            nfae.addTransition('a',"p","p")
-            nfae.addTransition('b',"p","q")
-            nfae.addTransition('c',"p","r")
+            nfae.addTransition('a', "p", "p")
+            nfae.addTransition('b', "p", "q")
+            nfae.addTransition('c', "p", "r")
 
-            nfae.addTransition('a',"q","q")
-            nfae.addTransition('b',"q","r")
-            nfae.addTransition('E',"q","p")
+            nfae.addTransition('a', "q", "q")
+            nfae.addTransition('b', "q", "r")
+            nfae.addTransition('E', "q", "p")
 
-            nfae.addTransition('a',"r","r")
-            nfae.addTransition('E',"r","q")
-            nfae.addTransition('c',"r","p")
+            nfae.addTransition('a', "r", "r")
+            nfae.addTransition('E', "r", "q")
+            nfae.addTransition('c', "r", "p")
 
             nfae.setInitialState("p")
             nfae.setFinalState("r")
             addNewTab(nfae)
-        }
+        })
 
         val regexExample = MenuItem("Regex Example")
 
@@ -377,7 +335,7 @@ class GUI : Application() {
         root.top = topContainer
         root.center = tabPane
 
-        var newDfa = DFA()
+        val newDfa = DFA()
         addNewTab(newDfa)
 
 //        tabPane.setOnContextMenuRequested({ e ->
@@ -405,7 +363,7 @@ class GUI : Application() {
 
             if(automataTab!=null){
                 try{
-                    var result=(automataTab as TabContainer).automaton.evaluate(alphabet)
+                    val result=(automataTab as TabContainer).automaton.evaluate(alphabet)
                     val alert = Alert(Alert.AlertType.INFORMATION)
                     alert.title = "Evaluation"
                     alert.headerText = "Evaluating input $alphabet"
@@ -423,9 +381,9 @@ class GUI : Application() {
 
         //add on key release event to scene
         scene.onKeyPressed = EventHandler<KeyEvent> { e ->
-            var tab = (tabPane.selectionModel.selectedItem as TabContainer)
-            if(tab==null) {
-            }else{
+
+            if(!tabPane.selectionModel.isEmpty){
+                val tab: TabContainer = (tabPane.selectionModel.selectedItem as TabContainer)
                 try{
                     println("keyEvnet: ${e.code}")
 
@@ -467,9 +425,10 @@ class GUI : Application() {
                 }catch (e:Exception){
                     //showMessageDialog(null, e.message, "Error",ERROR_MESSAGE)
                 }
+                tab.graphComponent.refresh()
+                e.consume()
             }
-            tab.graphComponent.refresh()
-            e.consume()
+
 
 
         }

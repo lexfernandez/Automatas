@@ -19,16 +19,16 @@ class NFA(): IAutomata, Serializable {
     override fun addTransition(symbol: Char, source: String, target: String): Boolean {
         if(symbol.equals('E'))
             throw Exception("Symbol E is not valid for a ${this.javaClass.simpleName}")
-        var s = getState(source)
-        var f = getState(target)
-        var ts = s.getTransitions(symbol)
+        val s = getState(source)
+        val f = getState(target)
+        val ts = s.getTransitions(symbol)
         for (t in ts){
             if(t.source.value==source && t.target.value==target){
                 throw Exception("Transition from ${s.value} to ${f.value} with symbol $symbol already exist!")
             }
         }
 
-        var transition: Transition = Transition(symbol, s, f)
+        val transition: Transition = Transition(symbol, s, f)
         addLanguageSymbol(symbol)
         f.addTransitionPointingToMe(transition)
         return s.addTransition(transition)
@@ -36,7 +36,7 @@ class NFA(): IAutomata, Serializable {
 
     override fun evaluate(alphabet: String): Boolean {
         println("NFA Evaluation")
-        var init = getInitialState()
+        val init = getInitialState()
         val result: List<State> = deltaExtended(init,alphabet)
         return !getFinalStates().intersect(result).isEmpty()
     }
@@ -46,17 +46,17 @@ class NFA(): IAutomata, Serializable {
             return listOf(q)
         }
 
-        var a = alphabet.last()
-        var x = alphabet.subSequence(0,alphabet.length-1).toString()
+        val a = alphabet.last()
+        val x = alphabet.subSequence(0,alphabet.length-1).toString()
 
         //println("x: $x a:$a")
 
-        var subset = deltaExtended(q,x)
+        val subset = deltaExtended(q,x)
 
         var result : MutableList<State> = mutableListOf()
 
         subset.forEach { q ->
-            var delta = delta(q,a)
+            val delta = delta(q,a)
             result = result.union(delta).toMutableList()
         }
         //println("DeltaExtended ${q.value},$x:")
@@ -69,7 +69,7 @@ class NFA(): IAutomata, Serializable {
     private fun delta(q: State, symbol: Char): List<State> {
         if (q.getTransition(symbol)!=null){
             //println("Delta ${q.value},$symbol:")
-            var qs = q.getTransitions(symbol).map{ it.target }
+            val qs = q.getTransitions(symbol).map{ it.target }
 
             return qs
         }
@@ -95,9 +95,9 @@ class NFA(): IAutomata, Serializable {
 //    }
 
     override fun toDFA(): DFA{
-        var dfa = DFA()
-        var queue: Queue<State> = Queue()
-        var initial = State(this.getInitialState().value.toString())
+        val dfa = DFA()
+        val queue: Queue<State> = Queue()
+        val initial = State(this.getInitialState().value.toString())
         queue.enqueue(initial)
         dfa.addState(initial)
         dfa.setInitialState(initial.value)
@@ -112,7 +112,7 @@ class NFA(): IAutomata, Serializable {
                     val newStateName = getTargetsName(q.value,symbol)
                     if(newStateName!=null && newStateName.isNotEmpty()){
                         if(!dfa.hasState(newStateName)){
-                            var newState = State(newStateName)
+                            val newState = State(newStateName)
                             dfa.addState(newState)
                             queue.enqueue(newState)
                         }
@@ -137,10 +137,10 @@ class NFA(): IAutomata, Serializable {
     }
 
     private fun getTargetsName(states: String, symbol: Char): String?{
-        var transitions: MutableSet<String> = mutableSetOf()
+        val transitions: MutableSet<String> = mutableSetOf()
         for (name  in states.split(",")){
             if(hasState(name.trim())){
-                var state = this.getState(name.trim())
+                val state = this.getState(name.trim())
                 val mutableList = state.getTransitions(symbol).map { it.target.value }
                 transitions.addAll(mutableList)
             }
