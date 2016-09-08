@@ -7,7 +7,7 @@ class NFA(): IAutomata, Serializable {
         return this.toDFA().toMinimizedDFA()
     }
 
-    override fun toRegex(): String {
+    override fun toRegex(): NFAE {
         return this.toDFA().toRegex()
     }
 

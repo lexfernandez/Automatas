@@ -10,6 +10,7 @@ import com.mxgraph.swing.mxGraphComponent
 import com.mxgraph.swing.util.mxMorphing
 import com.mxgraph.util.*
 import com.mxgraph.view.mxGraph
+import com.mxgraph.view.mxStylesheet
 import javafx.application.Platform
 import javafx.embed.swing.SwingNode
 import javafx.event.ActionEvent
@@ -74,6 +75,7 @@ open class TabContainer: Tab {
 
         // Do not change the scale and translation after files have been loaded
         graph.isResetViewOnRootChange = false
+        applyDefaultEdgeStyle()
 
         drawAutomata(automaton)
         graph.ApplyLayout()
@@ -235,6 +237,25 @@ open class TabContainer: Tab {
         finally {
             model.endUpdate()
         }
+    }
+
+    private fun applyDefaultEdgeStyle(){
+        val edge = HashMap<String,Any>()
+        edge.put(mxConstants.STYLE_ROUNDED,true)
+        edge.put(mxConstants.STYLE_ORTHOGONAL,false)
+        edge.put(mxConstants.STYLE_EDGE,"elbowEdgeStyle")
+        edge.put(mxConstants.STYLE_SHAPE,mxConstants.SHAPE_CONNECTOR)
+        edge.put(mxConstants.STYLE_ENDARROW,mxConstants.ARROW_CLASSIC)
+        edge.put(mxConstants.STYLE_VERTICAL_ALIGN,mxConstants.ALIGN_MIDDLE)
+        edge.put(mxConstants.STYLE_ALIGN,mxConstants.ALIGN_CENTER)
+        edge.put(mxConstants.STYLE_STROKECOLOR,"#6482B9")
+        edge.put(mxConstants.STYLE_FONTCOLOR,"#ffffff")
+        edge.put(mxConstants.STYLE_ARCSIZE,80)
+        edge.put(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR, "#6482B9")
+
+        val edgeStyle = mxStylesheet()
+        edgeStyle.defaultEdgeStyle=edge
+        graph.stylesheet = edgeStyle
     }
 
     private fun drawAutomata(automata: IAutomata){

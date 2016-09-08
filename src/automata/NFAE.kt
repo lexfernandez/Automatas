@@ -11,7 +11,7 @@ class NFAE(): IAutomata, Serializable {
         return this.toDFA().toMinimizedDFA()
     }
 
-    override fun toRegex(): String {
+    override fun toRegex(): NFAE {
         return this.toDFA().toRegex()
     }
 
@@ -116,12 +116,29 @@ class NFAE(): IAutomata, Serializable {
     }
 
     private fun eClosure(state: State): List<State> {
-        var c = state.getTransitions('E').map { it.target }
-        for(s in c){
-            c=c.union(eClosure(s)).toList()
+
+        var closure = state.getTransitions('E').map { it.target }
+        closure = closure.union(listOf(state)).toMutableList()
+
+        var toVisit:Queue<State> = Queue()
+        toVisit.Queue(closure.toMutableList())
+
+        while (toVisit.isNotEmpty()){
+            var current = toVisit.dequeue()
+            if(current!=null){
+                var currentClosure = current.getTransitions('E').map { it.target }.subtract(closure)
+                toVisit.items=toVisit.items.union(currentClosure).toMutableList()
+                closure=closure.union(currentClosure).toMutableList()
+
+            }
         }
-        c=c.union(listOf(state)).toList()
-        return c.sortedBy { it.value }
+
+//        for(s in c){
+//            c=c.union(eClosure(s)).toList()
+//        }
+//        c=c.union(listOf(state)).toList()
+        println("eC(${state.value})=${closure.map { it.value }}")
+        return closure.sortedBy { it.value }
     }
 
 //    fun printClosure(){
@@ -178,6 +195,5 @@ class NFAE(): IAutomata, Serializable {
         }
         return dfa
     }
-
 
 }

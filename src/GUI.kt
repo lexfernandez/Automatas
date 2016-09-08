@@ -166,6 +166,7 @@ class GUI : Application() {
             if(tabPane.selectionModel.selectedItem!=null){
                 val automata = (tabPane.selectionModel.selectedItem as TabContainer).automaton
                 var regex= automata.toRegex()
+                addNewTab(regex)
                 //showMessageDialog(null, regex, "Regex", JOptionPane.INFORMATION_MESSAGE)
             }
         }
@@ -404,6 +405,24 @@ class GUI : Application() {
         root.center = tabPane
 
         val newDfa = DFA()
+        newDfa.addState(State("q0"))
+        newDfa.addState(State("q1"))
+        newDfa.addState(State("q2"))
+        newDfa.addState(State("q3"))
+
+        newDfa.addTransition('0',"q0","q0")
+        newDfa.addTransition('1',"q0","q1")
+        newDfa.addTransition('0',"q1","q2")
+        newDfa.addTransition('1',"q1","q1")
+        newDfa.addTransition('0',"q2","q0")
+        newDfa.addTransition('1',"q2","q3")
+        newDfa.addTransition('0',"q3","q3")
+        newDfa.addTransition('1',"q3","q1")
+
+        newDfa.setInitialState("q0")
+        newDfa.setFinalState("q0")
+        newDfa.setFinalState("q3")
+
         addNewTab(newDfa)
 
 
@@ -521,17 +540,17 @@ class GUI : Application() {
                 val fileIn = FileInputStream(file)
                 val ois: ObjectInputStream = ObjectInputStream(fileIn)
                 val B =(ois.readObject() as IAutomata).toDFA()
-                var tab = (tabPane.selectionModel.selectedItem as TabContainer)
+                val tab = (tabPane.selectionModel.selectedItem as TabContainer)
                 val A = tab.automaton.toDFA()
 
                 var name=""
                 if(tab.file!=null) {
-                    name = (tab.file as File).nameWithoutExtension +op.name+ file.nameWithoutExtension
+                    name = "${(tab.file as File).nameWithoutExtension}${op.name}${file.nameWithoutExtension}"
                 }else{
-                    name = tab.text +op.name+ file.nameWithoutExtension
+                    name = "${tab.text}${op.name}${file.nameWithoutExtension}"
                 }
 
-                var automata:IAutomata
+                val automata:IAutomata
                 when(op){
                     AutomataOperation.Union ->{
                         automata = A.union(B)

@@ -62,56 +62,127 @@ open class DFA(): IAutomata, Serializable,Cloneable {
         return this
     }
 
-    override fun toRegex(): String {
-        println(this)
-        println(this.finals.map { it.value })
-        val regex=""
-        for(final in getFinalStates()){
-            val clone = this.clone()
-            println(clone)
-            for(cfinal in clone.getFinalStates()){
-                if(final.value!=cfinal.value)
-                    clone.removeFinalState(cfinal.value)
-            }
-
-            //First, if there are multiple edges from one node to other node, then these are unified into a single edge that contains the union of inputs.
-            for (state in clone.states){
-                var edgesToUnified = state.getTransitions().groupBy { it.target }.filter { it.value.count()>1 }
-
-                for (group in edgesToUnified){
-                    var target = group.key
-
-                    var edge = group.value.first()
-                    var toRemove = group.value.minus(edge)
-                    for (e in toRemove){
-                        edge.symbol+="+"+e.symbol
-                        state.removeTransition(e)
-                    }
-
-                }
-            }
-            //Second, Remove circles and sub circles
-//            for (state in clone.states){
-//                if(state.index==-1){
-//                    var sequencesToRemove = tarjan(state).filter { it.count()>1 }
-//                    for (secuence in sequencesToRemove){
-//                        println("SCC:"+secuence.map { it.value })
-//                        for (stateToRemove in secuence){
-//                            var transitionsIGointTo = stateToRemove.getTransitions()
-//                            var transitionsPointingToMe = stateToRemove.getTransitionsPointingToMe()
-//                            var kleeStart = ""
-//                            var selfTransition = transitionsIGointTo.first{ it.target==stateToRemove }
-//                            if(!=null){
-//                                kleeStart=tr
-//                            }
-//
-//                        }
-//                    }
-//                }
-//            }
+    override fun toRegex(): NFAE {
+        var nfae=NFAE()
+        for (state in states){
+            nfae.addState(State(state.value))
         }
 
-        return regex
+        for (state in states){
+            for (transition in state.getTransitions()){
+                nfae.addTransition(transition.symbol.first(),transition.source.value,transition.target.value)
+            }
+        }
+
+        var newFinal = State("Finals")
+        nfae.addState(newFinal)
+        nfae.setFinalState(newFinal.value)
+
+        for(final in finals){
+            nfae.addTransition('E',final.value,newFinal.value)
+        }
+
+        nfae.setInitialState(getInitialState()?.value)
+
+        while (nfae.states.count()>2){
+            //Get first state to remove
+            var st=nfae.states.filter { !(nfae.isFinal(it.value)) && (nfae.getInitialState()?.value!=it.value) }.sortedBy{ it.getTransitionsPointingToMe().count() }
+            println("${st.map { it.value + " - " + it.getTransitionsPointingToMe().count() }}")
+            var state = st.first()
+
+            //Get transitions pointing to self state
+            var edgesToUnified = state.getTransitions().groupBy { it.target }.filter { it.value.count()>1 }
+
+            var newTransitionSimbol=""
+            for (group in edgesToUnified){
+                var edge = group.value.first()
+                var toRemove = group.value.minus(edge)
+                for (e in toRemove){
+                    newTransitionSimbol = edge.symbol+"+"+e.symbol
+                    state.removeTransition(e)
+                }
+                state.removeTransition(edge)
+            }
+            if(newTransitionSimbol.isNotEmpty()){
+                var nt=Transition(newTransitionSimbol,state,state)
+                state.addTransition(nt)
+                state.addTransitionPointingToMe(nt)
+
+            }
+
+            //get multiple transitions pointing from one state to another state
+
+
+            //create new edges and remove old ones
+            if(!(nfae.isFinal(state.value)) && (nfae.getInitialState()?.value!=state.value)){
+                var transition =  state.getTransitions().filter { it.source==it.target }.firstOrNull()
+                var star=""
+                if(transition!=null){
+                    star = if (transition.symbol.count()>1) "(${transition.symbol})*" else "${transition.symbol}*"
+                    transition.target.removeTransitionPointingToMe(transition)
+                    state.removeTransition(transition)
+                }
+
+                var transitionsIGointTo = state.getTransitions()
+                //println("transitionsIGointTo: ${transitionsIGointTo.map { it.source.value + "->"+it.symbol+"->"+it.target.value }}")
+                var transitionsPointingToMe = state.getTransitionsPointingToMe()
+                //println("transitionsPointingToMe: ${transitionsPointingToMe.map { it.source.value + "->"+it.symbol+"->"+it.target.value }}")
+
+                var transitions:MutableList<Transition> =  mutableListOf()
+                for (p in transitionsPointingToMe){
+                    //println("0 - ${p.source.value} -> [${p.symbol}] -> ${p.target.value}")
+                    if(p==transition) continue
+                    for (t in transitionsIGointTo){
+                        if(t==transition) continue
+                        var symbol = p.symbol + star + t.symbol
+                        var source = p.source
+                        var target = t.target
+                        println("1 - ${source.value} -> [$symbol] -> ${target.value}")
+                        transitions.add(Transition(symbol,source,target))
+                    }
+                }
+
+                while (transitionsPointingToMe.any()){
+                    var t = transitionsPointingToMe.first()
+                    //println("2 - ${t.source.value} -> [${t.symbol}] -> ${t.target.value}")
+                    t.source.removeTransition(t)
+                    t.target.removeTransition(t)
+                    transitionsPointingToMe.remove(t)
+                }
+
+                while (transitionsIGointTo.any()){
+                    var t = transitionsIGointTo.first()
+                    //println("3 - ${t.source.value} -> [${t.symbol}] -> ${t.target.value}")
+                    t.source.removeTransition(t)
+                    t.target.removeTransitionPointingToMe(t)
+                    transitionsIGointTo.remove(t)
+                }
+
+                nfae.removeState(state.value)
+
+                for(newTransition in transitions){
+                    newTransition.source.addTransition(newTransition)
+                    newTransition.target.addTransitionPointingToMe(newTransition)
+                }
+            }
+        }
+
+
+        //First, if there are multiple edges from one node to other node, then these are unified into a single edge that contains the union of inputs.
+        for (state in nfae.states){
+            var edgesToUnified = state.getTransitions().groupBy { it.target }.filter { it.value.count()>1 }
+
+            for (group in edgesToUnified){
+                var edge = group.value.first()
+                var toRemove = group.value.minus(edge)
+                for (e in toRemove){
+                    edge.symbol+="+"+e.symbol
+                    state.removeTransition(e)
+                }
+            }
+        }
+
+        return nfae
     }
 
     private fun tarjan(state: State): MutableList<MutableList<State>> {
