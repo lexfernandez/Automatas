@@ -74,7 +74,12 @@ open class DFA(): IAutomata, Serializable,Cloneable {
             }
         }
 
-        var newFinal = State("Finals")
+        var newInitial = State("Initial")
+        nfae.addState(newInitial)
+        nfae.setInitialState(newInitial.value)
+        nfae.addTransition('E',newInitial.value,getInitialState()!!.value)
+
+        var newFinal = State("Final")
         nfae.addState(newFinal)
         nfae.setFinalState(newFinal.value)
 
@@ -82,7 +87,6 @@ open class DFA(): IAutomata, Serializable,Cloneable {
             nfae.addTransition('E',final.value,newFinal.value)
         }
 
-        nfae.setInitialState(getInitialState()?.value)
 
         while (nfae.states.count()>2){
             //Get first state to remove
@@ -97,14 +101,16 @@ open class DFA(): IAutomata, Serializable,Cloneable {
 
                 var edge = group.value.first()
                 var toRemove = group.value.minus(edge)
-                var newTransitionSimbol= if(edge.symbol.equals('E')) "" else edge.symbol
+                var newTransitionSymbol= if(edge.symbol.equals("E")) "" else edge.symbol
                 for (e in toRemove){
-                    newTransitionSimbol += if(e.symbol.equals('E')) "" else "+"+e.symbol
+                    newTransitionSymbol += if(e.symbol.equals("E")) "" else (if(e.symbol.count()>1) "+"+e.symbol else e.symbol)
                     state.removeTransition(e)
                 }
                 state.removeTransition(edge)
-                if(newTransitionSimbol.isNotEmpty()){
-                    var nt=Transition(newTransitionSimbol,edge.source,edge.target)
+                if(newTransitionSymbol.isNotEmpty()){
+                    if(newTransitionSymbol.count()>1 && !newTransitionSymbol.startsWith("("))
+                        newTransitionSymbol = "($newTransitionSymbol)"
+                    var nt=Transition(newTransitionSymbol,edge.source,edge.target)
                     edge.source.addTransition(nt)
                     edge.target.addTransitionPointingToMe(nt)
                 }
@@ -113,16 +119,18 @@ open class DFA(): IAutomata, Serializable,Cloneable {
             //get multiple transitions pointing from one state to another state
             edgesToUnified = state.getTransitionsPointingToMe().groupBy { it.source }.filter { it.value.count()>1 }
             for (group in edgesToUnified){
-                var newTransitionSimbol=""
                 var edge = group.value.first()
                 var toRemove = group.value.minus(edge)
+                var newTransitionSymbol= if(edge.symbol.equals("E")) "" else edge.symbol
                 for (e in toRemove){
-                    newTransitionSimbol = edge.symbol+"+"+e.symbol
+                    newTransitionSymbol += if(e.symbol.equals("E")) "" else (if(e.symbol.count()>1) "+"+e.symbol else e.symbol)
                     state.removeTransitionPointingToMe(e)
                 }
                 state.removeTransitionPointingToMe(edge)
-                if(newTransitionSimbol.isNotEmpty()){
-                    var nt=Transition(newTransitionSimbol,edge.source,edge.target)
+                if(newTransitionSymbol.isNotEmpty()){
+                    if(newTransitionSymbol.count()>1 && !newTransitionSymbol.startsWith("("))
+                        newTransitionSymbol = "($newTransitionSymbol)"
+                    var nt=Transition(newTransitionSymbol,edge.source,edge.target)
                     edge.source.addTransition(nt)
                     edge.target.addTransitionPointingToMe(nt)
                 }
@@ -133,7 +141,7 @@ open class DFA(): IAutomata, Serializable,Cloneable {
                 var transition =  state.getTransitions().filter { it.source==it.target }.firstOrNull()
                 var star=""
                 if(transition!=null){
-                    star = if (transition.symbol.count()>1) "(${transition.symbol})*" else "${transition.symbol}*"
+                    star = if (transition.symbol.count()>1 && !transition.symbol.startsWith("(")) "(${transition.symbol})*" else "${transition.symbol}*"
                     transition.target.removeTransitionPointingToMe(transition)
                     state.removeTransition(transition)
                 }
@@ -149,7 +157,7 @@ open class DFA(): IAutomata, Serializable,Cloneable {
                     if(p==transition) continue
                     for (t in transitionsIGointTo){
                         if(t==transition) continue
-                        var symbol = p.symbol + star + t.symbol
+                        var symbol = (if(p.symbol.equals("E")) "" else p.symbol) + star + (if(t.symbol.equals("E")) "" else t.symbol)
                         var source = p.source
                         var target = t.target
                         println("1 - ${source.value} -> [$symbol] -> ${target.value}")
@@ -182,20 +190,20 @@ open class DFA(): IAutomata, Serializable,Cloneable {
             }
         }
 
-
-        //First, if there are multiple edges from one node to other node, then these are unified into a single edge that contains the union of inputs.
-        for (state in nfae.states){
-            var edgesToUnified = state.getTransitions().groupBy { it.target }.filter { it.value.count()>1 }
-
-            for (group in edgesToUnified){
-                var edge = group.value.first()
-                var toRemove = group.value.minus(edge)
-                for (e in toRemove){
-                    edge.symbol+="+"+e.symbol
-                    state.removeTransition(e)
-                }
-            }
-        }
+//
+//        //First, if there are multiple edges from one node to other node, then these are unified into a single edge that contains the union of inputs.
+//        for (state in nfae.states){
+//            var edgesToUnified = state.getTransitions().groupBy { it.target }.filter { it.value.count()>1 }
+//
+//            for (group in edgesToUnified){
+//                var edge = group.value.first()
+//                var toRemove = group.value.minus(edge)
+//                for (e in toRemove){
+//                    edge.symbol+="+"+e.symbol
+//                    state.removeTransition(e)
+//                }
+//            }
+//        }
 
         return nfae
     }
