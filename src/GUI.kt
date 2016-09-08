@@ -404,28 +404,44 @@ class GUI : Application() {
         root.top = topContainer
         root.center = tabPane
 
-        val newDfa = DFA()
-        newDfa.addState(State("q0"))
-        newDfa.addState(State("q1"))
-        newDfa.addState(State("q2"))
-        newDfa.addState(State("q3"))
+//        val newDfa = DFA()
+//        newDfa.addState(State("q0"))
+//        newDfa.addState(State("q1"))
+//        newDfa.addState(State("q2"))
+//        newDfa.addState(State("q3"))
+//
+//        newDfa.addTransition('0',"q0","q0")
+//        newDfa.addTransition('1',"q0","q1")
+//        newDfa.addTransition('0',"q1","q2")
+//        newDfa.addTransition('1',"q1","q1")
+//        newDfa.addTransition('0',"q2","q0")
+//        newDfa.addTransition('1',"q2","q3")
+//        newDfa.addTransition('0',"q3","q3")
+//        newDfa.addTransition('1',"q3","q1")
+//
+//        newDfa.setInitialState("q0")
+//        newDfa.setFinalState("q0")
+//        newDfa.setFinalState("q3")
 
-        newDfa.addTransition('0',"q0","q0")
-        newDfa.addTransition('1',"q0","q1")
-        newDfa.addTransition('0',"q1","q2")
-        newDfa.addTransition('1',"q1","q1")
-        newDfa.addTransition('0',"q2","q0")
-        newDfa.addTransition('1',"q2","q3")
-        newDfa.addTransition('0',"q3","q3")
-        newDfa.addTransition('1',"q3","q1")
-
-        newDfa.setInitialState("q0")
-        newDfa.setFinalState("q0")
-        newDfa.setFinalState("q3")
-
-        addNewTab(newDfa)
+//        addNewTab(newDfa)
 
 
+        var newDFA = DFA()
+        newDFA.addState(State("1"))
+        newDFA.addState(State("2"))
+        newDFA.addState(State("3"))
+
+        newDFA.addTransition('a',"1","2")
+        newDFA.addTransition('a',"2","3")
+        newDFA.addTransition('a',"3","1")
+        newDFA.addTransition('b',"1","3")
+        newDFA.addTransition('b',"3","2")
+        newDFA.addTransition('b',"2","1")
+
+        newDFA.setInitialState("1")
+        newDFA.setFinalState("1")
+
+        addNewTab(newDFA)
 
 //        tabPane.setOnContextMenuRequested({ e ->
 ////            val cell = (tabPane.selectionModel.selectedItem as TabContainer).graphComponent.getCellAt(e.x.toInt(), e.y.toInt())

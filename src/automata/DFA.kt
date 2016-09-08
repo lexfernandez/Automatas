@@ -93,25 +93,40 @@ open class DFA(): IAutomata, Serializable,Cloneable {
             //Get transitions pointing to self state
             var edgesToUnified = state.getTransitions().groupBy { it.target }.filter { it.value.count()>1 }
 
-            var newTransitionSimbol=""
             for (group in edgesToUnified){
+
+                var edge = group.value.first()
+                var toRemove = group.value.minus(edge)
+                var newTransitionSimbol= if(edge.symbol.equals('E')) "" else edge.symbol
+                for (e in toRemove){
+                    newTransitionSimbol += if(e.symbol.equals('E')) "" else "+"+e.symbol
+                    state.removeTransition(e)
+                }
+                state.removeTransition(edge)
+                if(newTransitionSimbol.isNotEmpty()){
+                    var nt=Transition(newTransitionSimbol,edge.source,edge.target)
+                    edge.source.addTransition(nt)
+                    edge.target.addTransitionPointingToMe(nt)
+                }
+            }
+
+            //get multiple transitions pointing from one state to another state
+            edgesToUnified = state.getTransitionsPointingToMe().groupBy { it.source }.filter { it.value.count()>1 }
+            for (group in edgesToUnified){
+                var newTransitionSimbol=""
                 var edge = group.value.first()
                 var toRemove = group.value.minus(edge)
                 for (e in toRemove){
                     newTransitionSimbol = edge.symbol+"+"+e.symbol
-                    state.removeTransition(e)
+                    state.removeTransitionPointingToMe(e)
                 }
-                state.removeTransition(edge)
+                state.removeTransitionPointingToMe(edge)
+                if(newTransitionSimbol.isNotEmpty()){
+                    var nt=Transition(newTransitionSimbol,edge.source,edge.target)
+                    edge.source.addTransition(nt)
+                    edge.target.addTransitionPointingToMe(nt)
+                }
             }
-            if(newTransitionSimbol.isNotEmpty()){
-                var nt=Transition(newTransitionSimbol,state,state)
-                state.addTransition(nt)
-                state.addTransitionPointingToMe(nt)
-
-            }
-
-            //get multiple transitions pointing from one state to another state
-
 
             //create new edges and remove old ones
             if(!(nfae.isFinal(state.value)) && (nfae.getInitialState()?.value!=state.value)){
