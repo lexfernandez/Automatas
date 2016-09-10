@@ -190,54 +190,7 @@ open class DFA(): IAutomata, Serializable,Cloneable {
             }
         }
 
-//
-//        //First, if there are multiple edges from one node to other node, then these are unified into a single edge that contains the union of inputs.
-//        for (state in nfae.states){
-//            var edgesToUnified = state.getTransitions().groupBy { it.target }.filter { it.value.count()>1 }
-//
-//            for (group in edgesToUnified){
-//                var edge = group.value.first()
-//                var toRemove = group.value.minus(edge)
-//                for (e in toRemove){
-//                    edge.symbol+="+"+e.symbol
-//                    state.removeTransition(e)
-//                }
-//            }
-//        }
-
         return nfae
-    }
-
-    private fun tarjan(state: State): MutableList<MutableList<State>> {
-        state.index=index
-        state.lowlink = index
-        index+=1
-
-        S.add(state)
-
-        var otherLists: MutableList<MutableList<State>> = mutableListOf()
-        for (transition in state.getTransitions()){
-            var target = transition.target
-            if(target.index==-1){
-                otherLists = tarjan(target)
-                state.lowlink=Math.min(state.lowlink,target.lowlink)
-            }else if(target in S){
-                state.lowlink=Math.min(state.lowlink,target.index)
-            }
-        }
-
-        var toRemove : MutableList<State> = mutableListOf()
-        if(state.lowlink==state.index){
-            do {
-                var target = S.last()
-                S.remove(target)
-                toRemove.add(target)
-            }while (S.count()>0  && state!=target)
-            otherLists.add(toRemove)
-        }
-
-
-        return otherLists
     }
 
     override fun clone(): DFA {

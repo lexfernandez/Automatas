@@ -31,155 +31,240 @@ class GUI : Application() {
 
     var stage: Stage = Stage()
     var tabPane = TabPane()
+    //Setup the Main Menu bar and the ToolBar
+    val mainMenu = MenuBar()
+    val toolBar = ToolBar()
     override fun start(primaryStage: Stage) {
         stage = primaryStage
         //Setup the VBox Container and BorderPane
         val root = BorderPane()
         val topContainer = VBox()
 
-        //Setup the Main Menu bar and the ToolBar
-        val mainMenu = MenuBar()
-        val toolBar = ToolBar()
+        //Create File Menu.
+        var file = addFileMenu()
 
-        //Create SubMenu File.
-        val file = Menu("File")
-        val newFile = Menu("New")
-        val dfaMenu = MenuItem("DFA")
-        val nfaMenu = MenuItem("NFA")
-        val nfaeMenu = MenuItem("NFA-e")
-        val regexMenu = MenuItem("Regex")
-        dfaMenu.onAction= EventHandler<ActionEvent> {
-            val newDfa = DFA()
-            addNewTab(newDfa)
-        }
-        nfaMenu.onAction= EventHandler<ActionEvent> {
-            val newNfa = NFA()
-            addNewTab(newNfa)
-        }
-        nfaeMenu.onAction= EventHandler<ActionEvent> {
-            val newNfae = NFAE()
-            addNewTab(newNfae)
-        }
-        newFile.items.addAll(dfaMenu,nfaMenu,nfaeMenu,regexMenu)
-        val openFileMenu = MenuItem("Open file...")
-        openFileMenu.onAction= EventHandler<ActionEvent> {
-            val file = openFile()
+        //Create Edit Menu.
+        var edit = addEditMenu()
 
-            if (file != null) {
-                try {
-                    val fileIn = FileInputStream(file)
-                    val ois: ObjectInputStream = ObjectInputStream(fileIn)
-                    val automata:IAutomata =ois.readObject() as IAutomata
-                    addNewTab(automata,file.name,file)
-                    ois.close()
-                    fileIn.close()
-                } catch (i: IOException) {
-                    i.printStackTrace()
-                } catch (c: ClassNotFoundException) {
-                    c.printStackTrace()
+        //Create View Menu.
+        var view = addViewMenu()
+
+        //Create Convert Menu.
+        var convert = addConvertMenu()
+
+        //Create Examples Menu.
+        val examples = addExamplesMenu()
+
+
+        // /Create Help Menu.
+        val help = addHelpMenu()
+
+        mainMenu.menus.addAll(file, edit, view, convert, examples, help)
+
+        //Create some toolbar buttons
+        val openFileBtn = Button()
+        val printBtn = Button()
+        val snapshotBtn = Button()
+        val alphabetTextField = TextField()
+        val evaluateBtn = Button("Evaluar")
+
+
+        //Add some button graphicsdelta(q,a)delta(q,a)
+        openFileBtn.graphic = ImageView(Image("icons"+File.separator+"folder-11.png"))
+        printBtn.graphic = ImageView(Image("icons"+File.separator+"print.png"))
+        snapshotBtn.graphic = ImageView(Image("icons"+File.separator+"photo-camera-1.png"))
+
+
+        toolBar.items.addAll(openFileBtn, printBtn, snapshotBtn,Separator(),alphabetTextField,evaluateBtn)
+
+        //Add the ToolBar and Main Meu to the VBox
+        topContainer.children.add(mainMenu)
+        topContainer.children.add(toolBar)
+
+        root.top = topContainer
+        root.center = tabPane
+
+//        val newDfa = DFA()
+//        newDfa.addState(State("q0"))
+//        newDfa.addState(State("q1"))
+//        newDfa.addState(State("q2"))
+//        newDfa.addState(State("q3"))
+//
+//        newDfa.addTransition('0',"q0","q0")
+//        newDfa.addTransition('1',"q0","q1")
+//        newDfa.addTransition('0',"q1","q2")
+//        newDfa.addTransition('1',"q1","q1")
+//        newDfa.addTransition('0',"q2","q0")
+//        newDfa.addTransition('1',"q2","q3")
+//        newDfa.addTransition('0',"q3","q3")
+//        newDfa.addTransition('1',"q3","q1")
+//
+//        newDfa.setInitialState("q0")
+//        newDfa.setFinalState("q0")
+//        newDfa.setFinalState("q3")
+
+//        addNewTab(newDfa)
+
+
+        var newDFA = DFA()
+        newDFA.addState(State("1"))
+        newDFA.addState(State("2"))
+        newDFA.addState(State("3"))
+
+        newDFA.addTransition('a',"1","2")
+        newDFA.addTransition('a',"2","3")
+        newDFA.addTransition('a',"3","1")
+        newDFA.addTransition('b',"1","3")
+        newDFA.addTransition('b',"3","2")
+        newDFA.addTransition('b',"2","1")
+
+        newDFA.setInitialState("1")
+        newDFA.setFinalState("1")
+
+        addNewTab(newDFA)
+
+//        tabPane.setOnContextMenuRequested({ e ->
+////            val cell = (tabPane.selectionModel.selectedItem as TabContainer).graphComponent.getCellAt(e.x.toInt(), e.y.toInt())
+////
+////            if (cell is mxCell) {}
+//            println(e.sceneX)
+//            println(e.sceneY)
+//                tabPane.selectionModel.selectedItem.contextMenu.show(tabPane, e.sceneX, e.sceneY)
+//
+//        })
+//
+
+
+//        graphComponent.connectionHandler.addListener(mxEvent.LABEL_CHANGED) { sender, evt ->
+//            println("label change to=" + evt.name)
+//            println(evt.properties.toString())
+//        }
+
+
+        // Creates an event handler for the button
+        evaluateBtn.onMouseClicked = EventHandler<MouseEvent> {
+            val alphabet = alphabetTextField.text ?:""
+            val automataTab = tabPane.selectionModel.selectedItem
+
+            if(automataTab!=null){
+                try{
+                    val result=(automataTab as TabContainer).automaton.evaluate(alphabet)
+                    val alert = Alert(Alert.AlertType.INFORMATION)
+                    alert.title = "Evaluation"
+                    alert.headerText = "Evaluating input $alphabet"
+                    alert.contentText = "Accepted: $result"
+
+                    alert.showAndWait()
+                    //showMessageDialog(null, "evaluation: $result")
+                }catch (e: Exception){
+                    val alert = Alert(Alert.AlertType.ERROR)
+                    alert.headerText = "Evaluating input $alphabet"
+                    alert.contentText =  e.message
+
+                    alert.showAndWait()
                 }
             }
         }
-        openFileMenu.accelerator = KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN)
-        val saveFile = MenuItem("Save")
-        saveFile.onAction= EventHandler<ActionEvent> {
-            if(tabPane.selectionModel.isEmpty) return@EventHandler
-            try {
-                var tabContainer = tabPane.selectionModel.selectedItem as TabContainer
-                val automaton = tabContainer.automaton
-                var file = tabContainer.file
-                if(file==null){
-                    file = saveAutomatonAs()
-                    tabContainer.file=file
-                }else{
-                    saveAutomaton(file,automaton)
+
+
+        val scene = Scene(root, Screen.getPrimary().bounds.width-200, Screen.getPrimary().bounds.height-200)
+
+        //add on key release event to scene
+        scene.onKeyPressed = EventHandler<KeyEvent> { e ->
+            if(!tabPane.selectionModel.isEmpty){
+                val tab: TabContainer = (tabPane.selectionModel.selectedItem as TabContainer)
+                try{
+                    println("keyEvnet: ${e.code}")
+
+                    val cell: mxCell = (tab.graph.selectionCell as mxCell)
+                    if(cell.isVertex){
+                        if (e.isAltDown && e.code === KeyCode.I) {
+                            println("setting initial")
+                            tab.setVertexStyle(cell,VertexType.INITIAL)
+
+                        }else if (e.isAltDown && e.code === KeyCode.F) {
+                            println("setting final")
+                            tab.setVertexStyle(cell,VertexType.FINAL)
+                        }else if (e.isAltDown && e.code === KeyCode.B) {
+                            println("setting Both Initial and Final")
+                            tab.setVertexStyle(cell,VertexType.INITIAL_FINAL)
+                        }else if (e.isAltDown && e.code === KeyCode.N) {
+                            println("setting normal")
+                            tab.setVertexStyle(cell,VertexType.NORMAL)
+                        }else if (e.code === KeyCode.DELETE) {
+                            println("Deleting cell")
+                            if(tab.automaton.removeState(cell.value.toString())){
+                                tab.graph.update {
+                                    for (edge in tab.graph.getEdges(cell)){
+                                        tab.graph.model.remove(edge)
+                                    }
+                                    tab.graph.model.remove(cell)
+                                }
+                            }
+
+                        }
+                    }else if(cell.isEdge){
+                        if (e.code === KeyCode.DELETE) {
+                            println("Deleting edge")
+                            tab.graph.update {
+                                tab.graph.model.remove(cell)
+                            }
+                        }
+                    }
+                }catch (e:Exception){
+                    //showMessageDialog(null, e.message, "Error",ERROR_MESSAGE)
                 }
-                tabContainer.text = file.name
-                tabContainer.modified = false
-            }catch (e: Exception){
-                println(e.message)
-            }
-
-        }
-        saveFile.accelerator = KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN)
-        val saveFileAs = MenuItem("Save As...")
-        saveFileAs.onAction= EventHandler<ActionEvent> {
-            if(tabPane.selectionModel.isEmpty) return@EventHandler
-            try {
-                var tabContainer = tabPane.selectionModel.selectedItem as TabContainer
-                var file = saveAutomatonAs()
-                tabContainer.file=file
-                tabContainer.text = file?.name
-                tabContainer.modified= false
-            }catch (e: Exception){
-                println(e.message)
-            }
-
-        }
-        saveFileAs.accelerator = KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN,KeyCombination.SHIFT_DOWN)
-        val exitApp = MenuItem("Exit")
-        exitApp.onAction= EventHandler<ActionEvent> {
-            System.exit(0)
-        }
-        exitApp.accelerator = KeyCodeCombination(KeyCode.E, KeyCombination.CONTROL_DOWN)
-        file.items.addAll(newFile,openFileMenu,SeparatorMenuItem(),saveFile,saveFileAs,SeparatorMenuItem(), exitApp)
-
-        //Create SubMenu Edit.
-        val edit = Menu("Edit")
-        val union = MenuItem("Union")
-        union.onAction= EventHandler<ActionEvent> {
-            automataOperation(AutomataOperation.Union)
-        }
-        val intersect = MenuItem("Intersect")
-        intersect.onAction= EventHandler<ActionEvent> {
-            automataOperation(AutomataOperation.Intersect)
-        }
-        val subtract = MenuItem("Subtract")
-        subtract.onAction= EventHandler<ActionEvent> {
-            automataOperation(AutomataOperation.Subtract)
-        }
-        val complement = MenuItem("Complement")
-        complement.onAction= EventHandler<ActionEvent> {
-            if(tabPane.selectionModel.isEmpty) return@EventHandler
-            var A = (tabPane.selectionModel.selectedItem as TabContainer).automaton
-            addNewTab(A.toDFA().complement())
-        }
-        val properties = MenuItem("Properties")
-        edit.items.addAll(union,intersect,subtract,complement,SeparatorMenuItem(),properties)
-
-        //Create SubMenu Edit.
-        val convert = Menu("Convert")
-        val toDFA = MenuItem("To DFA")
-        toDFA.onAction= EventHandler<ActionEvent> {
-            if(tabPane.selectionModel.selectedItem!=null){
-                val automata = (tabPane.selectionModel.selectedItem as TabContainer).automaton
-                when(automata){
-                    is DFA -> { //showMessageDialog(null, "Your automaton is already a DFA", "Error", JOptionPane.ERROR_MESSAGE)
-                         }
-                    else -> { addNewTab(automata.toDFA().renameStates()) }
-                }
-            }
-
-        }
-        val toRegex = MenuItem("To Regex")
-        toRegex.onAction= EventHandler<ActionEvent> {
-            if(tabPane.selectionModel.selectedItem!=null){
-                val automata = (tabPane.selectionModel.selectedItem as TabContainer).automaton
-                var regex= automata.toRegex()
-                addNewTab(regex)
-                //showMessageDialog(null, regex, "Regex", JOptionPane.INFORMATION_MESSAGE)
+                tab.graphComponent.refresh()
+                e.consume()
             }
         }
-        val toMinimizedDFA = MenuItem("To minimized DFA")
-        toMinimizedDFA.onAction= EventHandler<ActionEvent> {
-            if(tabPane.selectionModel.selectedItem!=null){
-                val automata = (tabPane.selectionModel.selectedItem as TabContainer).automaton
-                addNewTab(automata.toMinimizedDFA())
+
+
+        //Setup the Stage.
+        primaryStage.title = "Automatas"
+        primaryStage.scene = scene
+        primaryStage.show()
+
+    }
+
+    private fun  addViewMenu(): Menu {
+        val view = Menu("View")
+        val showTransactionsTable = RadioMenuItem("Transition table")
+        showTransactionsTable.onAction= EventHandler<ActionEvent> {
+            var tab = tabPane.selectionModel.selectedItem
+            if (tab!=null){
+                (tab as TabContainer).ToogleTransactionsTable()
             }
         }
-        convert.items.addAll(toDFA,toRegex,toMinimizedDFA)
 
-        //Create SubMenu Examples.
+        val showClosureTable = RadioMenuItem("Closure table")
+        showClosureTable.isSelected = false
+        showClosureTable.onAction= EventHandler<ActionEvent> {
+            var tab = tabPane.selectionModel.selectedItem
+            if (tab!=null){
+                (tab as TabContainer).ToogleTransactionsTable()
+            }
+        }
+
+        val showGrammarTable = RadioMenuItem("Grammar table")
+        showGrammarTable.onAction= EventHandler<ActionEvent> {
+            var tab = tabPane.selectionModel.selectedItem
+            if (tab!=null){
+                (tab as TabContainer).ToogleCFGTable()
+            }
+        }
+        view.items.addAll(showTransactionsTable,showClosureTable,showGrammarTable)
+        return view
+    }
+
+    private fun addHelpMenu(): Menu {
+        val help = Menu("Help")
+        val visitWebsite = MenuItem("Visit Website")
+        help.items.add(visitWebsite)
+        return help
+    }
+
+    private fun  addExamplesMenu(): Menu {
         val examples = Menu("Examples")
         val dfaExamples = Menu("DFA Examples")
         val dfaFirstExample = MenuItem("Binary numbers that are multiples of 3")
@@ -372,179 +457,157 @@ class GUI : Application() {
 
         val regexExample = MenuItem("Regex Example")
 
-
         examples.items.addAll(dfaExamples,nfaExamples,nfaeExamples,regexExample)
-        // /Create SubMenu Help.
-        val help = Menu("Help")
-        val visitWebsite = MenuItem("Visit Website")
-        help.items.add(visitWebsite)
+        return examples
+    }
 
-        mainMenu.menus.addAll(file, edit,convert,examples, help)
-
-        //Create some toolbar buttons
-        val openFileBtn = Button()
-        val printBtn = Button()
-        val snapshotBtn = Button()
-        val alphabetTextField = TextField()
-        val evaluateBtn = Button("Evaluar")
-
-
-        //Add some button graphicsdelta(q,a)delta(q,a)
-        openFileBtn.graphic = ImageView(Image("icons"+File.separator+"folder-11.png"))
-        printBtn.graphic = ImageView(Image("icons"+File.separator+"print.png"))
-        snapshotBtn.graphic = ImageView(Image("icons"+File.separator+"photo-camera-1.png"))
-
-
-        toolBar.items.addAll(openFileBtn, printBtn, snapshotBtn,Separator(),alphabetTextField,evaluateBtn)
-
-        //Add the ToolBar and Main Meu to the VBox
-        topContainer.children.add(mainMenu)
-        topContainer.children.add(toolBar)
-
-        root.top = topContainer
-        root.center = tabPane
-
-//        val newDfa = DFA()
-//        newDfa.addState(State("q0"))
-//        newDfa.addState(State("q1"))
-//        newDfa.addState(State("q2"))
-//        newDfa.addState(State("q3"))
-//
-//        newDfa.addTransition('0',"q0","q0")
-//        newDfa.addTransition('1',"q0","q1")
-//        newDfa.addTransition('0',"q1","q2")
-//        newDfa.addTransition('1',"q1","q1")
-//        newDfa.addTransition('0',"q2","q0")
-//        newDfa.addTransition('1',"q2","q3")
-//        newDfa.addTransition('0',"q3","q3")
-//        newDfa.addTransition('1',"q3","q1")
-//
-//        newDfa.setInitialState("q0")
-//        newDfa.setFinalState("q0")
-//        newDfa.setFinalState("q3")
-
-//        addNewTab(newDfa)
-
-
-        var newDFA = DFA()
-        newDFA.addState(State("1"))
-        newDFA.addState(State("2"))
-        newDFA.addState(State("3"))
-
-        newDFA.addTransition('a',"1","2")
-        newDFA.addTransition('a',"2","3")
-        newDFA.addTransition('a',"3","1")
-        newDFA.addTransition('b',"1","3")
-        newDFA.addTransition('b',"3","2")
-        newDFA.addTransition('b',"2","1")
-
-        newDFA.setInitialState("1")
-        newDFA.setFinalState("1")
-
-        addNewTab(newDFA)
-
-//        tabPane.setOnContextMenuRequested({ e ->
-////            val cell = (tabPane.selectionModel.selectedItem as TabContainer).graphComponent.getCellAt(e.x.toInt(), e.y.toInt())
-////
-////            if (cell is mxCell) {}
-//            println(e.sceneX)
-//            println(e.sceneY)
-//                tabPane.selectionModel.selectedItem.contextMenu.show(tabPane, e.sceneX, e.sceneY)
-//
-//        })
-//
-
-
-//        graphComponent.connectionHandler.addListener(mxEvent.LABEL_CHANGED) { sender, evt ->
-//            println("label change to=" + evt.name)
-//            println(evt.properties.toString())
-//        }
-
-
-        // Creates an event handler for the button
-        evaluateBtn.onMouseClicked = EventHandler<MouseEvent> {
-            val alphabet = alphabetTextField.text ?:""
-            val automataTab = tabPane.selectionModel.selectedItem
-
-            if(automataTab!=null){
-                try{
-                    val result=(automataTab as TabContainer).automaton.evaluate(alphabet)
-                    val alert = Alert(Alert.AlertType.INFORMATION)
-                    alert.title = "Evaluation"
-                    alert.headerText = "Evaluating input $alphabet"
-                    alert.contentText = "Accepted: $result"
-
-                    alert.showAndWait()
-                    //showMessageDialog(null, "evaluation: $result")
-                }catch (e: Exception){
-                    val alert = Alert(Alert.AlertType.ERROR)
-                    alert.headerText = "Evaluating input $alphabet"
-                    alert.contentText =  e.message
-
-                    alert.showAndWait()
-                }
-            }
-        }
-
-
-        val scene = Scene(root, Screen.getPrimary().bounds.width-200, Screen.getPrimary().bounds.height-200)
-
-        //add on key release event to scene
-        scene.onKeyPressed = EventHandler<KeyEvent> { e ->
-            if(!tabPane.selectionModel.isEmpty){
-                val tab: TabContainer = (tabPane.selectionModel.selectedItem as TabContainer)
-                try{
-                    println("keyEvnet: ${e.code}")
-
-                    val cell: mxCell = (tab.graph.selectionCell as mxCell)
-                    if(cell.isVertex){
-                        if (e.isAltDown && e.code === KeyCode.I) {
-                            println("setting initial")
-                            tab.setVertexStyle(cell,VertexType.INITIAL)
-
-                        }else if (e.isAltDown && e.code === KeyCode.F) {
-                            println("setting final")
-                            tab.setVertexStyle(cell,VertexType.FINAL)
-                        }else if (e.isAltDown && e.code === KeyCode.B) {
-                            println("setting Both Initial and Final")
-                            tab.setVertexStyle(cell,VertexType.INITIAL_FINAL)
-                        }else if (e.isAltDown && e.code === KeyCode.N) {
-                            println("setting normal")
-                            tab.setVertexStyle(cell,VertexType.NORMAL)
-                        }else if (e.code === KeyCode.DELETE) {
-                            println("Deleting cell")
-                            if(tab.automaton.removeState(cell.value.toString())){
-                                tab.graph.update {
-                                    for (edge in tab.graph.getEdges(cell)){
-                                        tab.graph.model.remove(edge)
-                                    }
-                                    tab.graph.model.remove(cell)
-                                }
-                            }
-
-                        }
-                    }else if(cell.isEdge){
-                        if (e.code === KeyCode.DELETE) {
-                            println("Deleting edge")
-                            tab.graph.update {
-                                tab.graph.model.remove(cell)
-                            }
-                        }
+    private fun  addConvertMenu(): Menu {
+        val convert = Menu("Convert")
+        val toDFA = MenuItem("To DFA")
+        toDFA.onAction= EventHandler<ActionEvent> {
+            if(tabPane.selectionModel.selectedItem!=null){
+                val automata = (tabPane.selectionModel.selectedItem as TabContainer).automaton
+                when(automata){
+                    is DFA -> { //showMessageDialog(null, "Your automaton is already a DFA", "Error", JOptionPane.ERROR_MESSAGE)
                     }
-                }catch (e:Exception){
-                    //showMessageDialog(null, e.message, "Error",ERROR_MESSAGE)
+                    else -> { addNewTab(automata.toDFA().renameStates()) }
                 }
-                tab.graphComponent.refresh()
-                e.consume()
+            }
+
+        }
+        val toRegex = MenuItem("To Regex")
+        toRegex.onAction= EventHandler<ActionEvent> {
+            if(tabPane.selectionModel.selectedItem!=null){
+                val automata = (tabPane.selectionModel.selectedItem as TabContainer).automaton
+                var regex= automata.toRegex()
+                addNewTab(regex)
+                //showMessageDialog(null, regex, "Regex", JOptionPane.INFORMATION_MESSAGE)
             }
         }
+        val toMinimizedDFA = MenuItem("To minimized DFA")
+        toMinimizedDFA.onAction= EventHandler<ActionEvent> {
+            if(tabPane.selectionModel.selectedItem!=null){
+                val automata = (tabPane.selectionModel.selectedItem as TabContainer).automaton
+                addNewTab(automata.toMinimizedDFA())
+            }
+        }
+        convert.items.addAll(toDFA,toRegex,toMinimizedDFA)
+        return convert
+    }
 
+    private fun  addEditMenu(): Menu {
+        val edit = Menu("Edit")
+        val union = MenuItem("Union")
+        union.onAction= EventHandler<ActionEvent> {
+            automataOperation(AutomataOperation.Union)
+        }
+        val intersect = MenuItem("Intersect")
+        intersect.onAction= EventHandler<ActionEvent> {
+            automataOperation(AutomataOperation.Intersect)
+        }
+        val subtract = MenuItem("Subtract")
+        subtract.onAction= EventHandler<ActionEvent> {
+            automataOperation(AutomataOperation.Subtract)
+        }
+        val complement = MenuItem("Complement")
+        complement.onAction= EventHandler<ActionEvent> {
+            if(tabPane.selectionModel.isEmpty) return@EventHandler
+            var A = (tabPane.selectionModel.selectedItem as TabContainer).automaton
+            addNewTab(A.toDFA().complement())
+        }
+        val properties = MenuItem("Properties")
+        edit.items.addAll(union,intersect,subtract,complement,SeparatorMenuItem(),properties)
+        return edit
+    }
 
-        //Setup the Stage.
-        primaryStage.title = "Automatas"
-        primaryStage.scene = scene
-        primaryStage.show()
+    private fun addFileMenu(): Menu {
+        val file = Menu("File")
+        val newFile = Menu("New")
+        val dfaMenu = MenuItem("DFA")
+        val nfaMenu = MenuItem("NFA")
+        val nfaeMenu = MenuItem("NFA-e")
+        val pdaMenu = MenuItem("PDA")
+        val regexMenu = MenuItem("Regex")
+        dfaMenu.onAction= EventHandler<ActionEvent> {
+            val newDfa = DFA()
+            addNewTab(newDfa)
+        }
+        nfaMenu.onAction= EventHandler<ActionEvent> {
+            val newNfa = NFA()
+            addNewTab(newNfa)
+        }
+        nfaeMenu.onAction= EventHandler<ActionEvent> {
+            val newNfae = NFAE()
+            addNewTab(newNfae)
+        }
+        pdaMenu.onAction= EventHandler<ActionEvent> {
+            val newPda = PDA()
+            addNewTab(newPda)
+        }
+        newFile.items.addAll(dfaMenu,nfaMenu,nfaeMenu,pdaMenu,regexMenu)
+        val openFileMenu = MenuItem("Open file...")
+        openFileMenu.onAction= EventHandler<ActionEvent> {
+            val file = openFile()
 
+            if (file != null) {
+                try {
+                    val fileIn = FileInputStream(file)
+                    val ois: ObjectInputStream = ObjectInputStream(fileIn)
+                    val automata:IAutomata =ois.readObject() as IAutomata
+                    addNewTab(automata,file.name,file)
+                    ois.close()
+                    fileIn.close()
+                } catch (i: IOException) {
+                    i.printStackTrace()
+                } catch (c: ClassNotFoundException) {
+                    c.printStackTrace()
+                }
+            }
+        }
+        openFileMenu.accelerator = KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN)
+        val saveFile = MenuItem("Save")
+        saveFile.onAction= EventHandler<ActionEvent> {
+            if(tabPane.selectionModel.isEmpty) return@EventHandler
+            try {
+                var tabContainer = tabPane.selectionModel.selectedItem as TabContainer
+                val automaton = tabContainer.automaton
+                var file = tabContainer.file
+                if(file==null){
+                    file = saveAutomatonAs()
+                    tabContainer.file=file
+                }else{
+                    saveAutomaton(file,automaton)
+                }
+                tabContainer.text = file.name
+                tabContainer.modified = false
+            }catch (e: Exception){
+                println(e.message)
+            }
+
+        }
+        saveFile.accelerator = KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN)
+        val saveFileAs = MenuItem("Save As...")
+        saveFileAs.onAction= EventHandler<ActionEvent> {
+            if(tabPane.selectionModel.isEmpty) return@EventHandler
+            try {
+                var tabContainer = tabPane.selectionModel.selectedItem as TabContainer
+                var file = saveAutomatonAs()
+                tabContainer.file=file
+                tabContainer.text = file?.name
+                tabContainer.modified= false
+            }catch (e: Exception){
+                println(e.message)
+            }
+
+        }
+        saveFileAs.accelerator = KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN,KeyCombination.SHIFT_DOWN)
+        val exitApp = MenuItem("Exit")
+        exitApp.onAction= EventHandler<ActionEvent> {
+            System.exit(0)
+        }
+        exitApp.accelerator = KeyCodeCombination(KeyCode.E, KeyCombination.CONTROL_DOWN)
+        file.items.addAll(newFile,openFileMenu,SeparatorMenuItem(),saveFile,saveFileAs,SeparatorMenuItem(), exitApp)
+        return file
     }
 
     private fun  automataOperation(op: AutomataOperation) {

@@ -1,5 +1,7 @@
 
 import automata.IAutomata
+import automata.PDA
+import automata.Production
 import automata.State
 import com.mxgraph.layout.mxFastOrganicLayout
 import com.mxgraph.model.mxCell
@@ -9,16 +11,20 @@ import com.mxgraph.swing.handler.mxRubberband
 import com.mxgraph.swing.mxGraphComponent
 import com.mxgraph.swing.util.mxMorphing
 import com.mxgraph.util.*
+import com.mxgraph.view.mxEdgeStyle
 import com.mxgraph.view.mxGraph
 import com.mxgraph.view.mxStylesheet
 import javafx.application.Platform
+import javafx.collections.FXCollections
 import javafx.embed.swing.SwingNode
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
-import javafx.scene.control.ContextMenu
-import javafx.scene.control.MenuItem
-import javafx.scene.control.Tab
+import javafx.geometry.Insets
+import javafx.scene.control.*
+import javafx.scene.control.cell.PropertyValueFactory
 import javafx.scene.layout.BorderPane
+import javafx.scene.layout.HBox
+import javafx.scene.layout.VBox
 import javafx.stage.Screen
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseWheelEvent
@@ -34,7 +40,7 @@ import javax.swing.JOptionPane
 open class TabContainer: Tab {
     val graph = mxGraph()
     var automaton: IAutomata
-    val defaultStyle: String = "shape=ellipse;fillColor=white;strokeColor=blue;defaultHotspot=1.0"
+    private val defaultStyle: String = "shape=ellipse;fillColor=white;strokeColor=blue;defaultHotspot=1.0"
     var graphComponent:mxGraphComponent
     var modified =true
     protected var undoManager: mxUndoManager? = null
@@ -42,9 +48,15 @@ open class TabContainer: Tab {
     private var  rubberband: mxRubberband? = null
     var changes: PropertyChangeSupport = PropertyChangeSupport(this)
     val vertexMenu:ContextMenu = ContextMenu()
-    var bcontent:BorderPane
+    private var bcontent:BorderPane
     var file:File? = null
-
+    private val transactionsTable = javafx.scene.control.TableView<Production>()
+    private val grammarTable = javafx.scene.control.TableView<Production>()
+    private val data = FXCollections.observableArrayList<Production>()
+    private val grammarVBox = VBox()
+    private val grammarHBox = HBox()
+    private val transitionsVBox = VBox()
+    private val transitionsHBox = HBox()
 
     constructor(iautomaton: IAutomata, text: String? = "new tab",file: File?=null):super(text){
         automaton=iautomaton
@@ -117,16 +129,146 @@ open class TabContainer: Tab {
         }
         vertexMenu.items.addAll(setAsInitial,setAsFinal,setAsInitialAndFinal)
 
-        bcontent =BorderPane(SwingNode().apply {
+        bcontent =BorderPane()
+
+        bcontent.center=SwingNode().apply {
             //Sets the graph as the content of the swing node
             content = graphComponent
-        })
+        }
 
         this.contextMenu=vertexMenu
 
-
         this.content= bcontent
 
+        addTransactionsTable()
+        addCFGTable()
+    }
+
+    private fun addCFGTable() {
+        val noTerminal = TableColumn<Production,Production>("No Terminals")
+        noTerminal.maxWidth = 40.0
+        noTerminal.cellValueFactory = PropertyValueFactory("noTerminal")
+        val production = TableColumn<Production,Production>("Production")
+        production.minWidth = 160.0
+        production.cellValueFactory = PropertyValueFactory("production")
+
+
+        val noTerminaltf = TextField()
+        noTerminaltf.promptText = "S"
+        noTerminaltf.maxWidth = 40.0
+
+        val productiontf = TextField()
+        productiontf.promptText = "aSb"
+        productiontf.minWidth = 160.0
+
+        val addButton = Button("Add")
+        addButton.setOnAction({ e: ActionEvent ->
+            if(noTerminaltf.text.isNotEmpty() and productiontf.text.isNotEmpty()){
+                data.add(Production(
+                        noTerminaltf.text.first(),
+                        productiontf.text
+                ))
+                noTerminaltf.clear()
+                productiontf.clear()
+            }
+        })
+
+        val delButton = Button("Del")
+        delButton.setOnAction({ e: ActionEvent ->
+
+        })
+
+        grammarHBox.children.addAll(noTerminaltf, productiontf, addButton, delButton)
+        grammarHBox.spacing = 3.0
+
+        grammarTable.items = data
+        grammarTable.columns.addAll(noTerminal,production)
+
+        grammarVBox.spacing = 5.0
+        grammarVBox.padding = Insets(10.0, 0.0, 0.0, 10.0)
+        grammarVBox.children.addAll(grammarHBox,grammarTable)
+
+
+        if(automaton is PDA)
+            bcontent.right=grammarVBox
+
+        data.add(Production('S',"aSb"))
+    }
+
+    fun ToogleCFGTable(){
+        if(automaton is PDA)
+            if(bcontent.right==null)
+                bcontent.right=grammarVBox
+            else
+                bcontent.right = null
+        else
+            bcontent.right=null
+    }
+
+    private fun addTransactionsTable() {
+        val noTerminal = TableColumn<Production,Production>("NT")
+        noTerminal.maxWidth = 40.0
+        noTerminal.cellValueFactory = PropertyValueFactory("noTerminal")
+
+        val production = TableColumn<Production,Production>("Production")
+        production.maxWidth = 300.0
+        production.cellValueFactory = PropertyValueFactory("production")
+
+
+        val noTerminaltf = TextField()
+        noTerminaltf.promptText = "S"
+        noTerminaltf.maxWidth = 40.0
+
+        val productiontf = TextField()
+        productiontf.promptText = "aSb"
+        productiontf.maxWidth = 160.0
+
+        val addButton = Button("Add")
+        addButton.setOnAction({ e: ActionEvent ->
+            if(noTerminaltf.text.isNotEmpty() and productiontf.text.isNotEmpty()){
+                data.add(Production(
+                        noTerminaltf.text.first(),
+                        productiontf.text
+                ))
+                noTerminaltf.clear()
+                productiontf.clear()
+            }
+        })
+
+        val delButton = Button("Del")
+        delButton.setOnAction({ e: ActionEvent ->
+            var tab = tabPane.selectionModel.selectedItem
+            if(tab != null){
+                val item = transactionsTable.selectionModel.selectedItem
+                if(item!=null){
+                    data.remove(item)
+                    transactionsTable.refresh()
+                }
+            }
+        })
+
+        transitionsHBox.children.addAll(noTerminaltf, productiontf, addButton, delButton)
+        transitionsHBox.spacing = 3.0
+
+        transactionsTable.items = data
+        transactionsTable.columns.addAll(noTerminal,production)
+
+       // transitionsVBox.spacing = 5.0
+        //transitionsVBox.padding = Insets(10.0, 0.0, 0.0, 10.0)
+        transitionsVBox.children.addAll(transitionsHBox,transactionsTable)
+
+
+        if(automaton is PDA)
+            bcontent.right=transitionsVBox
+    }
+
+
+
+    fun ToogleTransactionsTable() {
+        if(bcontent.left==null)
+            bcontent.left=transitionsVBox
+        else
+            bcontent.left = null
     }
 
     private fun mxCell.toggleType() {
@@ -243,7 +385,7 @@ open class TabContainer: Tab {
         val edge = HashMap<String,Any>()
         edge.put(mxConstants.STYLE_ROUNDED,true)
         edge.put(mxConstants.STYLE_ORTHOGONAL,false)
-        edge.put(mxConstants.STYLE_EDGE,"elbowEdgeStyle")
+        edge.put(mxConstants.STYLE_EDGE,mxEdgeStyle.TopToBottom)
         edge.put(mxConstants.STYLE_SHAPE,mxConstants.SHAPE_CONNECTOR)
         edge.put(mxConstants.STYLE_ENDARROW,mxConstants.ARROW_CLASSIC)
         edge.put(mxConstants.STYLE_VERTICAL_ALIGN,mxConstants.ALIGN_MIDDLE)
@@ -458,6 +600,8 @@ open class TabContainer: Tab {
         })
 
     }
+
+
 
 
 }
