@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="3f02fb56-938e-4fd7-8052-674b51955640" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/GUI.kt" afterPath="$PROJECT_DIR$/src/GUI.kt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/TabContainer.kt" afterPath="$PROJECT_DIR$/src/TabContainer.kt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/automata/PDA.kt" afterPath="$PROJECT_DIR$/src/automata/PDA.kt" />
     </list>
     <ignored path="Automatas.iws" />
@@ -31,11 +29,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="TabContainer.kt" pinned="false" current-in-tab="true">
+      <file leaf-file-name="TabContainer.kt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/TabContainer.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="133">
-              <caret line="534" column="113" selection-start-line="534" selection-start-column="113" selection-end-line="534" selection-end-column="113" />
+            <state relative-caret-position="1440">
+              <caret line="116" column="44" selection-start-line="116" selection-start-column="41" selection-end-line="116" selection-end-column="44" />
               <folding>
                 <element signature="e#1#1349#0" expanded="true" />
                 <element signature="e#6021#6104#2" expanded="false" />
@@ -50,11 +48,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PDA.kt" pinned="false" current-in-tab="false">
+      <file leaf-file-name="PDA.kt" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/automata/PDA.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="506">
-              <caret line="118" column="53" selection-start-line="118" selection-start-column="53" selection-end-line="118" selection-end-column="53" />
+            <state relative-caret-position="-468">
+              <caret line="58" column="0" selection-start-line="58" selection-start-column="0" selection-end-line="58" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Stack.kt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/automata/Stack.kt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="90">
+              <caret line="5" column="28" selection-start-line="5" selection-start-column="28" selection-end-line="5" selection-end-column="28" />
               <folding />
             </state>
           </provider>
@@ -64,7 +72,7 @@
         <entry file="file://$PROJECT_DIR$/src/GUI.kt">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="227">
-              <caret line="68" column="43" selection-start-line="68" selection-start-column="43" selection-end-line="68" selection-end-column="43" />
+              <caret line="150" column="0" selection-start-line="150" selection-start-column="0" selection-end-line="150" selection-end-column="0" />
               <folding>
                 <element signature="e#0#36#0" expanded="true" />
                 <element signature="e#38#546#0" expanded="true" />
@@ -139,8 +147,8 @@
         <option value="$PROJECT_DIR$/src/automata/test.java" />
         <option value="$PROJECT_DIR$/src/automata/ButtonCell.kt" />
         <option value="$PROJECT_DIR$/src/GUI.kt" />
-        <option value="$PROJECT_DIR$/src/automata/PDA.kt" />
         <option value="$PROJECT_DIR$/src/TabContainer.kt" />
+        <option value="$PROJECT_DIR$/src/automata/PDA.kt" />
       </list>
     </option>
   </component>
@@ -191,7 +199,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -258,8 +267,7 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -643,7 +651,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="55" y="-4" width="1225" height="804" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32936078" sideWeight="0.4978678" order="6" side_tool="false" content_ui="tabs" />
@@ -714,14 +722,37 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/src/automata/PDA.kt</url>
+          <line>78</line>
+          <properties />
+          <option name="timeStamp" value="211" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/src/automata/PDA.kt</url>
+          <line>58</line>
+          <properties />
+          <option name="timeStamp" value="212" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <condition expression="top=='Z'" language="kotlin" custom="" />
+          <url>file://$PROJECT_DIR$/src/automata/PDA.kt</url>
+          <line>54</line>
+          <properties />
+          <option name="timeStamp" value="213" />
+        </line-breakpoint>
+      </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="202" />
+      <option name="time" value="214" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="JetRunConfigurationType">
         <watch expression="automaton.states" />
+        <watch expression="stack" />
+        <watch expression="stack.peek()" language="kotlin" custom="" />
       </configuration>
     </watches-manager>
   </component>
@@ -811,13 +842,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/automata/Stack.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="5" column="1" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar:///usr/lib/jvm/java-8-oracle/javafx-src.zip!/javafx/scene/control/MenuItem.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="6516">
@@ -891,35 +915,19 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/automata/ButtonCell.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/automata/ButtonCell.kt" />
     <entry file="jar:///usr/lib/jvm/java-8-oracle/javafx-src.zip!/com/sun/javafx/tk/Toolkit.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="101">
           <caret line="353" column="0" selection-start-line="353" selection-start-column="0" selection-end-line="353" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/automata/test.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="954">
-          <caret line="68" column="16" selection-start-line="68" selection-start-column="6" selection-end-line="68" selection-end-column="16" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/automata/test.java" />
     <entry file="jar:///usr/lib/jvm/java-8-oracle/javafx-src.zip!/javafx/collections/ListChangeBuilder.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="101">
           <caret line="541" column="0" selection-start-line="541" selection-start-column="0" selection-end-line="541" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -927,9 +935,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="101">
           <caret line="205" column="0" selection-start-line="205" selection-start-column="0" selection-end-line="205" selection-end-column="0" />
-          <folding>
-            <element signature="e#8250#8251#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -937,7 +942,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="101">
           <caret line="90" column="0" selection-start-line="90" selection-start-column="0" selection-end-line="90" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -945,7 +949,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
           <caret line="254" column="0" selection-start-line="254" selection-start-column="0" selection-end-line="254" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -993,7 +996,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="857">
           <caret line="532" column="0" selection-start-line="532" selection-start-column="0" selection-end-line="532" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1001,9 +1003,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="163">
           <caret line="74" column="0" selection-start-line="74" selection-start-column="0" selection-end-line="74" selection-end-column="0" />
-          <folding>
-            <element signature="e#1722#1723#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1011,7 +1010,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="101">
           <caret line="103" column="0" selection-start-line="103" selection-start-column="0" selection-end-line="103" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1038,7 +1036,7 @@
     <entry file="file://$PROJECT_DIR$/src/GUI.kt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="227">
-          <caret line="68" column="43" selection-start-line="68" selection-start-column="43" selection-end-line="68" selection-end-column="43" />
+          <caret line="150" column="0" selection-start-line="150" selection-start-column="0" selection-end-line="150" selection-end-column="0" />
           <folding>
             <element signature="e#0#36#0" expanded="true" />
             <element signature="e#38#546#0" expanded="true" />
@@ -1064,18 +1062,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/automata/PDA.kt">
+    <entry file="file://$PROJECT_DIR$/src/automata/Stack.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="506">
-          <caret line="118" column="53" selection-start-line="118" selection-start-column="53" selection-end-line="118" selection-end-column="53" />
+        <state relative-caret-position="90">
+          <caret line="5" column="28" selection-start-line="5" selection-start-column="28" selection-end-line="5" selection-end-column="28" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/TabContainer.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="534" column="113" selection-start-line="534" selection-start-column="113" selection-end-line="534" selection-end-column="113" />
+        <state relative-caret-position="1440">
+          <caret line="116" column="44" selection-start-line="116" selection-start-column="41" selection-end-line="116" selection-end-column="44" />
           <folding>
             <element signature="e#1#1349#0" expanded="true" />
             <element signature="e#6021#6104#2" expanded="false" />
@@ -1086,6 +1084,14 @@
             <element signature="n#!!block;n#resize#0;n#!!block;n#TabContainer#0" expanded="false" />
             <element signature="n#!!block;n#setModifiedProperty#0;n#!!block;n#TabContainer#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/automata/PDA.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-468">
+          <caret line="58" column="0" selection-start-line="58" selection-start-column="0" selection-end-line="58" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>

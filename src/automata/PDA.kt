@@ -15,16 +15,17 @@ class PDA():IAutomata{
     var stack = Stack<Char>(mutableListOf())
     var stackLanguage: MutableList<Char> = mutableListOf()
     val START_CHARACTER: Char = 'Z'
+    private val  epsilon: Char = 'E'
 
     fun addTransition(symbol: Char, source: String, target: String,top:Char,toPush:List<Char>): Boolean {
         val s = getState(source)
         val f = getState(target)
         val ts = s.getTransitions(symbol)
-        for (t in ts){
-            if(t.source.value==source && t.target.value==target){
-                throw Exception("Transition from ${s.value} to ${f.value} with symbol $symbol already exist!")
-            }
-        }
+//        for (t in ts){
+//            if(t.source.value==source && t.target.value==target){
+//                throw Exception("Transition from ${s.value} to ${f.value} with symbol $symbol already exist!")
+//            }
+//        }
 
         val transition: Transition = Transition(symbol.toString(), s, f,top,toPush)
         addLanguageSymbol(symbol)
@@ -37,56 +38,71 @@ class PDA():IAutomata{
     override fun evaluate(alphabet: String): Boolean {
         println("NFAE Evaluation")
         val init = getInitialState() ?: throw Exception("Initial state is not set")
+        stack.items.clear()
         stack.push(START_CHARACTER)
-        val result: List<State> = deltaExtended(eClosure(init),alphabet,stack)
-        return (finals.isEmpty() and stack.isEmpty()) or (!getFinalStates().intersect(result).isEmpty())
+
+        val result: State? = deltaExtended(init,alphabet,stack)
+        return  getFinalStates().contains(result)
     }
 
-    private val  epsilon: Char = 'E'
 
-//    private fun evaluateExpression(state: State, alphabet: String, stack: Stack<Char>):State{
-//        var top:Char
-//
-//        if(stack.isEmpty())
-//            top = epsilon
-//        else
-//            top = stack.pop()!!
-//
-//        if(alphabet.isEmpty()){
-//                eClosure(state)
-//
-//            val roads = state.getTransitions().filter { it.symbol.equals(epsilon) && it.top==top }
-//            if(roads.any()){
-//                for (road in roads){
-//
-//                }
-//            }
-//        }
-//
-//    }
 
-    private fun deltaExtended(eclosures: List<State>, alphabet: String, stack: Stack<Char>): List<State> {
+
+    private fun deltaExtended(state: State, alphabet: String, stack: Stack<Char>): State? {
+        var top: Char = if(stack.isEmpty()) epsilon else stack.pop()!!
+
         if(alphabet.isEmpty()){
-            return eclosures
+            for (transition in delta(state,epsilon,top)){
+                var newStack = Stack<Char>(stack.items.map { it }.toMutableList())
+                for (element in transition.second.reversed()){
+                    if(!element.equals(epsilon)){
+                        newStack.push(element)
+                    }
+                }
+                var result = deltaExtended(transition.first,alphabet,newStack)
+                if(result!=null){
+                    println("1 - $result")
+                    return result
+                }
+            }
+            println("current - $state")
+            return state
         }
 
         val a = alphabet.first()
         val x = alphabet.subSequence(1,alphabet.length).toString()
-        var top = stack.pop()
 
-        var deltas : MutableList<Pair<State, List<Char>>> = mutableListOf()
-
-        for(cstate in eclosures){
-            val delta = delta(cstate,a,top)
-            deltas = deltas.union(delta).toMutableList()
+        for (transition in delta(state,a,top)){
+            var newStack = Stack<Char>(stack.items.map { it }.toMutableList())
+            for (element in transition.second.reversed()){
+                if(!element.equals(epsilon)){
+                    newStack.push(element)
+                }
+            }
+            var result = deltaExtended(transition.first,x,newStack)
+            if(result!=null){
+                println("2 - $result")
+                return result
+            }
         }
 
-        var result : MutableList<State> = mutableListOf()
-        for (d in deltas){
-            //result = result.union(eClosure(d)).toMutableList()
+
+        for (transition in delta(state,epsilon,top)){
+            var newStack = Stack<Char>(stack.items.map { it }.toMutableList())
+            for (element in transition.second.reversed()){
+                if(!element.equals(epsilon)){
+                    newStack.push(element)
+                }
+            }
+            var result = deltaExtended(transition.first,alphabet,newStack)
+            if(result!=null){
+                println("3 - $result")
+                return result
+            }
         }
 
-        return deltaExtended(result, x, stack)
+        println("null")
+        return null
     }
 
     private fun delta(q: State, symbol: Char, top: Char?): List<Pair<State, List<Char>>> {
