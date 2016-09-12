@@ -13,6 +13,8 @@ class PDA():IAutomata{
     override var initial: State? = null
     override var finals: MutableList<State> = mutableListOf()
     var stack = Stack<Char>(mutableListOf())
+    var stackLanguage: MutableList<Char> = mutableListOf()
+    val START_CHARACTER: Char = 'Z'
 
     fun addTransition(symbol: Char, source: String, target: String,top:Char,toPush:List<Char>): Boolean {
         val s = getState(source)
@@ -30,7 +32,7 @@ class PDA():IAutomata{
         return s.addTransition(transition)
     }
 
-    private val START_CHARACTER: Char = 'Z'
+
 
     override fun evaluate(alphabet: String): Boolean {
         println("NFAE Evaluation")

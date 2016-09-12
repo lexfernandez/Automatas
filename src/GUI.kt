@@ -250,7 +250,7 @@ class GUI : Application() {
         showGrammarTable.onAction= EventHandler<ActionEvent> {
             var tab = tabPane.selectionModel.selectedItem
             if (tab!=null){
-                (tab as TabContainer).ToogleCFGTable()
+                (tab as TabContainer).toogleCFGTable()
             }
         }
         view.items.addAll(showTransactionsTable,showClosureTable,showGrammarTable)

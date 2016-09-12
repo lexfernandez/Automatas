@@ -6,6 +6,7 @@ import automata.State
 import com.mxgraph.layout.mxFastOrganicLayout
 import com.mxgraph.model.mxCell
 import com.mxgraph.model.mxGeometry
+import com.mxgraph.model.mxGraphModel
 import com.mxgraph.swing.handler.mxKeyboardHandler
 import com.mxgraph.swing.handler.mxRubberband
 import com.mxgraph.swing.mxGraphComponent
@@ -44,7 +45,7 @@ import javax.swing.JOptionPane
 
 open class TabContainer: Tab {
     val graph = mxGraph()
-    var automaton: IAutomata
+    val automaton: IAutomata
     private val defaultStyle: String = "shape=ellipse;fillColor=white;strokeColor=blue;defaultHotspot=1.0"
     var graphComponent: mxGraphComponent
     var modified = true
@@ -57,7 +58,7 @@ open class TabContainer: Tab {
     var file: File? = null
     private val transactionsTable = javafx.scene.control.TableView<Production>()
     private val grammarTable = javafx.scene.control.TableView<Production>()
-    private val data = FXCollections.observableArrayList<Production>()
+    private val grammarData = FXCollections.observableArrayList<Production>()
     private val grammarVBox = VBox()
     private val grammarHBox = HBox()
     private val transitionsVBox = VBox()
@@ -172,7 +173,7 @@ open class TabContainer: Tab {
                         tableView.selectionModel.select(index)
                         val person = tableView.items[index]
                         println(person.noTerminal + "   " + person.production)
-                        data.remove(tableView.selectionModel.selectedItem)
+                        grammarData.remove(tableView.selectionModel.selectedItem)
                     }
                 }
                 public override fun updateItem(item: Boolean?, empty: Boolean) {
@@ -200,7 +201,7 @@ open class TabContainer: Tab {
         val addButton = Button("Add")
         addButton.setOnAction({ e: ActionEvent ->
             if (noTerminaltf.text.isNotEmpty() and productiontf.text.isNotEmpty()) {
-                data.add(Production(
+                grammarData.add(Production(
                         noTerminaltf.text.first(),
                         productiontf.text
                 ))
@@ -209,10 +210,18 @@ open class TabContainer: Tab {
             }
         })
 
-        grammarHBox.children.addAll(noTerminaltf, productiontf, addButton)
-        grammarHBox.spacing = 3.0
+        val convertToPDAButton = Button("To PDA")
+        convertToPDAButton.setOnAction({ e: ActionEvent ->
+            if(tabPane.selectionModel.selectedItem!=null){
+                var tab = tabPane.selectionModel.selectedItem as TabContainer
+                tab.redrawAutomata()
+            }
+        })
 
-        grammarTable.items = data
+        grammarHBox.children.addAll(noTerminaltf, productiontf, addButton,convertToPDAButton)
+        grammarHBox.spacing = 0.0
+
+        grammarTable.items = grammarData
         grammarTable.columns.addAll(noTerminal, production, actions)
 
         grammarVBox.spacing = 5.0
@@ -223,10 +232,61 @@ open class TabContainer: Tab {
         if (automaton is PDA)
             bcontent.right = grammarVBox
 
-        data.add(Production('S', "aSb"))
+        grammarData.add(Production('S', "aSb"))
     }
 
-    fun ToogleCFGTable() {
+    private fun redrawAutomata() {
+        graph.removeCells()
+        (graph.model as mxGraphModel).clear()
+        graphComponent.refresh()
+
+        when(automaton){
+            is PDA -> {
+                automaton.states.removeAll(automaton.states)
+
+                var grammar = grammarData.toList()
+
+                var noTerminals = grammar.map { it.noTerminal }.distinct()
+                var terminals = grammar.map { it.production.toList() }.flatten().subtract(noTerminals)
+                (automaton as PDA).stackLanguage = noTerminals.union(terminals).union(listOf('Z')).toMutableList()
+                println("$noTerminals")
+                println("$terminals")
+                println("${(automaton as PDA).stackLanguage}")
+
+                var q0 = State("q0")
+                var q1 = State("q1")
+                var q2 = State("q2")
+
+                automaton.addState(q0)
+                automaton.addState(q1)
+                automaton.addState(q2)
+
+                automaton.setInitialState(q0.value)
+                automaton.setFinalState(q2.value)
+
+                automaton.addTransition('E',q0.value,q1.value,'Z', listOf(noTerminals.first(),'Z'))
+                automaton.addTransition('E',q1.value,q2.value,'Z', listOf('Z'))
+
+                for (entry in grammar){
+                    automaton.addTransition('E',q1.value,q1.value,entry.noTerminal, entry.production.toList())
+                }
+
+                for(t in terminals){
+                    automaton.addTransition(t,q1.value,q1.value,t, listOf('E'))
+                }
+
+                for (state in automaton.states){
+                    for(transition in state.getTransitions()){
+                        println("${transition.source.value} ${transition.symbol} ${transition.top} ${transition.target.value} ${transition.toPush}")
+                    }
+                }
+            }
+        }
+
+        drawAutomata(automaton)
+    }
+
+    fun toogleCFGTable() {
         if (automaton is PDA)
             if (bcontent.right == null)
                 bcontent.right = grammarVBox
@@ -257,7 +317,7 @@ open class TabContainer: Tab {
         val addButton = Button("Add")
         addButton.setOnAction({ e: ActionEvent ->
             if (noTerminaltf.text.isNotEmpty() and productiontf.text.isNotEmpty()) {
-                data.add(Production(
+                grammarData.add(Production(
                         noTerminaltf.text.first(),
                         productiontf.text
                 ))
@@ -272,7 +332,7 @@ open class TabContainer: Tab {
             if (tab != null) {
                 val item = transactionsTable.selectionModel.selectedItem
                 if (item != null) {
-                    data.remove(item)
+                    grammarData.remove(item)
                     transactionsTable.refresh()
                 }
             }
@@ -281,7 +341,7 @@ open class TabContainer: Tab {
         transitionsHBox.children.addAll(noTerminaltf, productiontf, addButton, delButton)
         transitionsHBox.spacing = 3.0
 
-        transactionsTable.items = data
+        transactionsTable.items = grammarData
         transactionsTable.columns.addAll(noTerminal, production)
 
         // transitionsVBox.spacing = 5.0
@@ -469,9 +529,30 @@ open class TabContainer: Tab {
                 for (transition in state.getTransitions()) {
                     val source = cells[transition.source.value]
                     val target = cells[transition.target.value]
-                    graph.insertEdge(graph.defaultParent, null, transition.symbol, source, target)
+                    var symbol = transition.symbol
+                    when(automata){
+                        is PDA -> {
+                            symbol = "${transition.symbol},${transition.top}/${transition.toPush.joinToString()}"
+                        }
+                    }
+                    graph.insertEdge(graph.defaultParent, null, symbol , source, target)
                 }
             }
+
+//            Another way to do it
+//            for (state in automata.states) {
+//                for (group in state.getTransitions().groupBy { it.target }) {
+//                    val source = cells[group.value.first().source.value]
+//                    val target = cells[group.key.value]
+//                    var symbol = group.value.map { it.symbol }.joinToString()
+//                    when(automata){
+//                        is PDA -> {
+//                            symbol = group.value.map { "${it.symbol},${it.top}/${it.toPush.joinToString()}" }.joinToString("\n")
+//                        }
+//                    }
+//                    graph.insertEdge(graph.defaultParent, null, symbol , source, target)
+//                }
+//            }
         }
 
         graphComponent.refresh()
