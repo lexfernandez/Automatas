@@ -31,11 +31,13 @@ class State(var value: String): Serializable {
     }
 
     fun  removeTransition(e: Transition):Boolean {
-        e.target.removeTransitionPointingToMe(e)
+        //println("removing transition ${e.source.value} -> ${e.symbol} -> ${e.target.value}")
+        //e.target.removeTransitionPointingToMe(e)
         return this.transitions.remove(e)
     }
 
     fun  removeTransitionPointingToMe(e: Transition):Boolean {
+        //println("removing transition PM ${e.source.value} -> ${e.symbol} -> ${e.target.value}")
         return this.transitionsPointingToMe.remove(e)
     }
 
