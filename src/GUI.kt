@@ -146,6 +146,26 @@ class GUI : Application() {
         addNewTab(examen)
         addNewTab(examen.toRegex())
 
+
+        var tm = TuringMachine()
+        tm.addState(State("q0"))
+        tm.addState(State("q1"))
+        tm.addState(State("q2"))
+
+        tm.addTransition('B',"q0","q1", 'B',TuringMachineDirection.Left)
+        tm.addTransition('0',"q0","q0", '1',TuringMachineDirection.Right)
+        tm.addTransition('1',"q0","q0", '0',TuringMachineDirection.Right)
+
+        tm.addTransition('B',"q1","q2", 'B',TuringMachineDirection.Right)
+        tm.addTransition('0',"q1","q1", '1',TuringMachineDirection.Left)
+        tm.addTransition('1',"q1","q1", '0',TuringMachineDirection.Left)
+
+        tm.setInitialState("q0")
+        tm.setFinalState("q2")
+
+        addNewTab(tm)
+
+
 //        tabPane.setOnContextMenuRequested({ e ->
 ////            val cell = (tabPane.selectionModel.selectedItem as TabContainer).graphComponent.getCellAt(e.x.toInt(), e.y.toInt())
 ////
@@ -549,7 +569,8 @@ class GUI : Application() {
         val dfaMenu = MenuItem("DFA")
         val nfaMenu = MenuItem("NFA")
         val nfaeMenu = MenuItem("NFA-e")
-        val pdaMenu = MenuItem("PDA")
+        val pdaMenu = MenuItem("PDA/Grammar")
+        val turingMachineMenu = MenuItem("Turing Machine")
         val regexMenu = MenuItem("Regex")
         dfaMenu.onAction= EventHandler<ActionEvent> {
             val newDfa = DFA()
@@ -567,7 +588,11 @@ class GUI : Application() {
             val newPda = PDA()
             addNewTab(newPda)
         }
-        newFile.items.addAll(dfaMenu,nfaMenu,nfaeMenu,pdaMenu,regexMenu)
+        turingMachineMenu.onAction= EventHandler<ActionEvent> {
+            val newTM = TuringMachine()
+            addNewTab(newTM)
+        }
+        newFile.items.addAll(dfaMenu,nfaMenu,nfaeMenu,pdaMenu,turingMachineMenu,regexMenu)
         val openFileMenu = MenuItem("Open file...")
         openFileMenu.onAction= EventHandler<ActionEvent> {
             val file = openFile()
