@@ -39,12 +39,72 @@ class TuringMachine(): IAutomata, Serializable,Cloneable {
         }
     }
 
+    fun addTransition( symbol: Char, source: String, target: String, replacement: Char, direction: TuringMachineDirection): Boolean {
+        val s = getState(source)
+        val f = getState(target)
+        val ts = s.getTransitions(symbol)
+        for (t in ts){
+            if(t.source.value==source && t.target.value==target && t.replacement==replacement && t.direction==direction){
+                throw Exception("Transition from ${s.value} to ${f.value} with symbol $symbol already exist!")
+            }
+        }
+
+        val transition: Transition = Transition(symbol.toString(), s, f,replacement,direction)
+        addLanguageSymbol(symbol)
+        f.addTransitionPointingToMe(transition)
+        return s.addTransition(transition)
+    }
+
     override fun evaluate(alphabet: String): Boolean {
         if(this.states.count()==0) return false
-        println("DFA Evaluation")
-        val init = getInitialState() ?: throw Exception("Initial state is not set")
-        val result: State = deltaExtended(init,alphabet)
-        return getFinalStates().contains(result)
+        println("Turing Machine Evaluation")
+
+        var ribbon = "B"+alphabet+"B"
+        var _ribbon = ribbon.toMutableList()
+
+        var currentState = getInitialState()
+
+        var index = 1
+
+        if (currentState != null) {
+            while (!isFinal(currentState!!.value)) {
+                if (currentState != null) {
+                    var transitionsSize = currentState.getTransitions().size
+                    var transitionCount = 0
+                    for (transition in currentState!!.getTransitions()) {
+
+                        if (transition.symbol==_ribbon[index].toString()) {
+                            if (transition.direction==TuringMachineDirection.Left) {
+                                index -= 1
+                                if (index >= 0) {
+                                    _ribbon[index+1] = transition.replacement
+                                    currentState = transition.target
+                                    break
+                                } else {
+                                    return false
+                                }
+                            } else if (transition.direction==TuringMachineDirection.Right) {
+                                index += 1
+
+                                if (index <= _ribbon.size - 1) {
+                                    _ribbon[index-1] = transition.replacement
+                                    currentState = transition.target
+                                    break
+                                } else {
+                                    return false
+                                }
+                            }
+                        }
+                        transitionCount++
+                    }
+                    if (transitionCount == transitionsSize) {
+                        return false
+                    }
+                }
+            }
+        }
+        println(_ribbon.toString())
+        return true
     }
 
     private fun deltaExtended(q: State, alphabet: String): State {

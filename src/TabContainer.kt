@@ -1,8 +1,5 @@
 
-import automata.IAutomata
-import automata.PDA
-import automata.Production
-import automata.State
+import automata.*
 import com.mxgraph.layout.mxFastOrganicLayout
 import com.mxgraph.model.mxCell
 import com.mxgraph.model.mxGeometry
@@ -535,6 +532,11 @@ open class TabContainer: Tab {
                         is PDA -> {
                             symbol = "${transition.symbol},${transition.top}/${transition.toPush.joinToString("")}"
                         }
+                        is TuringMachine -> {
+                            symbol = "${transition.symbol},${transition.replacement}/${if(transition.direction==TuringMachineDirection.Right){
+                                ">"}else {"<"
+                            }}"
+                        }
                     }
                     graph.insertEdge(graph.defaultParent, null, symbol , source, target)
                 }
@@ -599,6 +601,9 @@ open class TabContainer: Tab {
                     is PDA -> {
                         instructions = "Enter edge name:\n" + "e.g.\"E,Z/SZ\" or \"a,S/AS\""
                     }
+                    is TuringMachine -> {
+                        instructions = "Enter edge name:\n" + "e.g.\"1,0/>\" or \"a,b/<\""
+                    }
                 }
                 do {
                     s = JOptionPane.showInputDialog(
@@ -618,6 +623,13 @@ open class TabContainer: Tab {
                                 throw Exception("Please enter a valid transition Ej: E,Z/SZ")
                             }
                             automaton.addTransition(data[0].first().toChar(), cell.source.value.toString(), cell.target.value.toString(),data[1].first(),data[2].toList())
+                        }
+                        is TuringMachine -> {
+                            var data = s.split(",","/")
+                            if(data.count()!=3){
+                                throw Exception("Please enter a valid transition Ej: E,Z/SZ")
+                            }
+                            automaton.addTransition(data[0].first().toChar(), cell.source.value.toString(), cell.target.value.toString(),data[1].first(),if(data[2].equals("<")) TuringMachineDirection.Left else TuringMachineDirection.Right)
                         }
                         else -> {
                             automaton.addTransition(s.first().toChar(), cell.source.value.toString(), cell.target.value.toString())
@@ -649,7 +661,7 @@ open class TabContainer: Tab {
                 val cell = graphComponent.getCellAt(e.x, e.y)
 
                 if (cell is mxCell) {
-                    if (e.button == 3) { //Rigth Click
+                    if (e.button == 3) { //Right Click
                         //vertexMenu.show(bcontent, e.xOnScreen.toDouble(),e.yOnScreen.toDouble())
                     } else if (e.clickCount == 2) {
                         println("vertex clicked")
