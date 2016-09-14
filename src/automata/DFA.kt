@@ -1,10 +1,11 @@
 package automata
 
+import automata.AutomataOperation.*
 import java.io.Serializable
 
 /**
-* Created by Alex Fernandez on 07/25/2016.
-*/
+ * Created by Alex Fernandez on 07/25/2016.
+ */
 
 open class DFA(): IAutomata, Serializable,Cloneable {
 
@@ -371,17 +372,17 @@ open class DFA(): IAutomata, Serializable,Cloneable {
                         states.add(targetGroup)
                     }
                     when(op){
-                        AutomataOperation.Union -> {
+                        Union -> {
                             if((A.finals.intersect(targetGroup).count()>0) or (B.finals.intersect(targetGroup).count()>0)){
                                 automata.setFinalState(targetName)
                             }
                         }
-                        AutomataOperation.Intersect -> {
+                        Intersect -> {
                             if((A.finals.intersect(targetGroup).count()>0) and (B.finals.intersect(targetGroup).count()>0)){
                                 automata.setFinalState(targetName)
                             }
                         }
-                        AutomataOperation.Subtract -> {
+                        Subtract -> {
                             if((A.finals.intersect(targetGroup).count()>0)){
                                 if(B.finals.intersect(targetGroup).count()==0){
                                     automata.setFinalState(targetName)
@@ -403,15 +404,15 @@ open class DFA(): IAutomata, Serializable,Cloneable {
     }
 
     fun union(B:DFA): DFA{
-        return unify(this,B, AutomataOperation.Union)
+        return unify(this,B, Union)
     }
 
     fun intersect(B:DFA): DFA{
-        return unify(this,B, AutomataOperation.Intersect)
+        return unify(this,B, Intersect)
     }
 
     fun subtract(B:DFA): DFA{
-        return unify(this,B, AutomataOperation.Subtract)
+        return unify(this,B, Subtract)
     }
 
     fun complement(): DFA{
@@ -446,14 +447,5 @@ open class DFA(): IAutomata, Serializable,Cloneable {
 
         return complement
     }
-}
-
-enum class AutomataOperation {
-    Union,
-
-    Subtract,
-
-    Intersect
-
 }
 

@@ -11,4 +11,14 @@ class Transition(var symbol: String, var source: State, var target: State): Seri
         this.top=top
         this.toPush=toPush
     }
+
+    constructor(symbol: String, source: State, target: State, replacement: Char, direction: TuringMachineDirection ) : this(symbol,source,target) {
+        this.top=top
+        this.toPush=toPush
+    }
+}
+
+enum class TuringMachineDirection(c: Char='>') {
+    Left('<'),
+    Rgit igth('>'),
 }
