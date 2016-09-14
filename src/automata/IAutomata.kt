@@ -117,7 +117,7 @@ interface IAutomata {
     open fun addTransition( symbol: Char,source: String, target: String): Boolean
     fun evaluate(alphabet: String): Boolean
     fun toDFA(): DFA
-    fun  toRegex(): NFAE
+    fun  toRegex(): DFA
     fun toMinimizedDFA(): DFA
 
 

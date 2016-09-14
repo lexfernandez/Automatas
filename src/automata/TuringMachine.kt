@@ -7,7 +7,7 @@ import java.io.Serializable
  */
 
 class TuringMachine(): IAutomata, Serializable,Cloneable {
-    override fun toRegex(): NFAE {
+    override fun toRegex(): DFA {
         throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

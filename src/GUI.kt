@@ -123,6 +123,29 @@ class GUI : Application() {
 
         addNewTab(newDFA)
 
+        var examen = DFA()
+        examen.addState(State("q0"))
+        examen.addState(State("q1"))
+        examen.addState(State("q2"))
+        examen.addState(State("q3"))
+
+        examen.addTransition('0',"q0","q0")
+        examen.addTransition('1',"q0","q1")
+        examen.addTransition('0',"q1","q0")
+        examen.addTransition('1',"q1","q2")
+        examen.addTransition('1',"q2","q2")
+        examen.addTransition('0',"q2","q3")
+        examen.addTransition('1',"q3","q2")
+
+        examen.setInitialState("q0")
+        examen.setFinalState("q0")
+        examen.setFinalState("q1")
+        examen.setFinalState("q2")
+        examen.setFinalState("q3")
+
+        addNewTab(examen)
+        addNewTab(examen.toRegex())
+
 //        tabPane.setOnContextMenuRequested({ e ->
 ////            val cell = (tabPane.selectionModel.selectedItem as TabContainer).graphComponent.getCellAt(e.x.toInt(), e.y.toInt())
 ////

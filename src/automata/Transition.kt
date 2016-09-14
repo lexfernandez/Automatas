@@ -20,5 +20,5 @@ class Transition(var symbol: String, var source: State, var target: State): Seri
 
 enum class TuringMachineDirection(c: Char='>') {
     Left('<'),
-    Rgit igth('>'),
+    Rigth('>'),
 }
