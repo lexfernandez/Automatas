@@ -272,7 +272,8 @@ open class TabContainer: Tab {
                 }
 
                 for(t in terminals){
-                    automaton.addTransition(t,q1.value,q1.value,t, listOf('E'))
+                    if(t!='E')
+                        automaton.addTransition(t,q1.value,q1.value,t, listOf('E'))
                 }
 
                 for (state in automaton.states){
@@ -532,7 +533,7 @@ open class TabContainer: Tab {
                     var symbol = transition.symbol
                     when(automata){
                         is PDA -> {
-                            symbol = "${transition.symbol},${transition.top}/${transition.toPush.joinToString()}"
+                            symbol = "${transition.symbol},${transition.top}/${transition.toPush.joinToString("")}"
                         }
                     }
                     graph.insertEdge(graph.defaultParent, null, symbol , source, target)
@@ -593,11 +594,16 @@ open class TabContainer: Tab {
             val cell = evt.getProperty("cell") as mxCell
             if (cell.isEdge) {
                 var s: String
-
+                var instructions = "Enter edge name:\n" + "e.g.\"1\" or \"a\""
+                when(automaton){
+                    is PDA -> {
+                        instructions = "Enter edge name:\n" + "e.g.\"E,Z/SZ\" or \"a,S/AS\""
+                    }
+                }
                 do {
                     s = JOptionPane.showInputDialog(
                             null,
-                            "Enter edge name:\n" + "e.g.\"1\" or \"a\"",
+                            instructions,
                             "Edge Name",
                             JOptionPane.PLAIN_MESSAGE,
                             null,
@@ -605,7 +611,19 @@ open class TabContainer: Tab {
                             "0") as String
                 } while (s.isNullOrEmpty())
                 try {
-                    automaton.addTransition(s.first().toChar(), cell.source.value.toString(), cell.target.value.toString())
+                    when(automaton){
+                        is PDA -> {
+                            var data = s.split(",","/")
+                            if(data.count()!=3){
+                                throw Exception("Please enter a valid transition Ej: E,Z/SZ")
+                            }
+                            automaton.addTransition(data[0].first().toChar(), cell.source.value.toString(), cell.target.value.toString(),data[1].first(),data[2].toList())
+                        }
+                        else -> {
+                            automaton.addTransition(s.first().toChar(), cell.source.value.toString(), cell.target.value.toString())
+                        }
+                    }
+
                     cell.value = s
                     cell.style = "rounded=true;arcSize=30;edgeStyle=orthogonalEdgeStyle;portConstraint=north"
                 } catch (e: NullPointerException) {

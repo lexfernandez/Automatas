@@ -165,8 +165,8 @@ class PDA():IAutomata{
         throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun toRegex(): NFAE {
-        return NFAE()
+    override fun toRegex(): DFA {
+        return DFA()
     }
 
     override fun toMinimizedDFA(): DFA {

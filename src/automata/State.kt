@@ -13,6 +13,9 @@ class State(var value: String): Serializable {
     fun getTransition(id: Char): Transition? {
         return transitions.find { it.symbol.first()==id }
     }
+    fun getTransition(id: String): Transition? {
+        return transitions.find { it.symbol==id }
+    }
 
     fun getTransitions(): MutableList<Transition> {
         return transitions

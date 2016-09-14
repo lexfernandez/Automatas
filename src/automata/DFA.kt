@@ -1,10 +1,11 @@
 package automata
 
+import automata.AutomataOperation.*
 import java.io.Serializable
 
 /**
-* Created by Alex Fernandez on 07/25/2016.
-*/
+ * Created by Alex Fernandez on 07/25/2016.
+ */
 
 open class DFA(): IAutomata, Serializable,Cloneable {
 
@@ -62,135 +63,193 @@ open class DFA(): IAutomata, Serializable,Cloneable {
         return this
     }
 
-    override fun toRegex(): NFAE {
-        var nfae=NFAE()
+    override fun toRegex(): DFA {
+        var nfae=DFA()
         for (state in states){
             nfae.addState(State(state.value))
         }
 
         for (state in states){
             for (transition in state.getTransitions()){
-                nfae.addTransition(transition.symbol.first(),transition.source.value,transition.target.value)
+                var s = nfae.getState(transition.source.value)
+                s.addTransition(transition)
+                var t= nfae.getState(transition.target.value)
+                t.addTransitionPointingToMe(transition)
+                //nfae.addTransition(transition.symbol.first(),transition.source.value,transition.target.value)
             }
         }
 
         var newInitial = State("Initial")
         nfae.addState(newInitial)
         nfae.setInitialState(newInitial.value)
-        nfae.addTransition('E',newInitial.value,getInitialState()!!.value)
+        newInitial.addTransition(Transition("E",newInitial,nfae.getState(getInitialState()!!.value)))
+        //nfae.addTransition('E',newInitial.value,getInitialState()!!.value)
 
         var newFinal = State("Final")
         nfae.addState(newFinal)
         nfae.setFinalState(newFinal.value)
 
         for(final in finals){
-            nfae.addTransition('E',final.value,newFinal.value)
+            var f = nfae.getState(final.value)
+            f.addTransition(Transition("E",f,newFinal))
+            //nfae.addTransition('E',final.value,newFinal.value)
         }
 
 
-        while (nfae.states.count()>2){
+        while (nfae.states.count()>3){
             //Get first state to remove
             var st=nfae.states.filter { !(nfae.isFinal(it.value)) && (nfae.getInitialState()?.value!=it.value) }.sortedBy{ it.getTransitionsPointingToMe().count() }
             println("${st.map { it.value + " - " + it.getTransitionsPointingToMe().count() }}")
             var state = st.first()
 
+            if(getInitialState()!!.value.equals(state.value)){
+                state = st.filter { it!=state }.first()
+            }
+
             //Get transitions pointing to self state
-            var edgesToUnified = state.getTransitions().groupBy { it.target }.filter { it.value.count()>1 }
+            if(state.getTransitionsPointingToMe().filter { it.source.value==it.target.value }.count()>1)
+                removeSelfTransitions(state)
 
-            for (group in edgesToUnified){
+            state.getTransitionsPointingToMe().groupBy { it.source }.toList().forEach { transitionsGroup ->
+                val pendingTransitions:MutableList<Transition> = mutableListOf()
+                transitionsGroup.second.forEach { transitionPTM ->
+                    state.getTransitions().forEach { transitionIPT ->
+                        var star = ""
+                        val selfTransition= state.getTransitions().filter { it.target.value==state.value }.firstOrNull()
+                        if(selfTransition!=null){
+                            star = "(${selfTransition.symbol})*"
+                        }
+                        var symbol = transitionPTM.symbol + star + transitionIPT.symbol
+                        pendingTransitions.add(Transition(symbol,transitionPTM.source,transitionIPT.target))
+                        nfae.getState(transitionPTM.source.value).removeTransition(transitionPTM)
+                        nfae.getState(transitionIPT.target.value).removeTransitionPointingToMe(transitionIPT)
+                        //transitionIPT.target.removeTransition(transitionPTM)
+                    }
 
-                var edge = group.value.first()
-                var toRemove = group.value.minus(edge)
-                var newTransitionSymbol= if(edge.symbol.equals("E")) "" else edge.symbol
-                for (e in toRemove){
-                    newTransitionSymbol += if(e.symbol.equals("E")) "" else (if(e.symbol.count()>1) "+"+e.symbol else e.symbol)
-                    state.removeTransition(e)
                 }
-                state.removeTransition(edge)
-                if(newTransitionSymbol.isNotEmpty()){
-                    if(newTransitionSymbol.count()>1 && !newTransitionSymbol.startsWith("("))
-                        newTransitionSymbol = "($newTransitionSymbol)"
-                    var nt=Transition(newTransitionSymbol,edge.source,edge.target)
-                    edge.source.addTransition(nt)
-                    edge.target.addTransitionPointingToMe(nt)
+                pendingTransitions.forEach {
+                    println("PT: ${it.source.value} -> ${it.symbol} -> ${it.target.value}")
+                    nfae.getState(it.target.value).addTransitionPointingToMe(it)
+                    nfae.getState(it.source.value).addTransition(it)
                 }
             }
+
+            nfae.removeState(state.value)
 
             //get multiple transitions pointing from one state to another state
-            edgesToUnified = state.getTransitionsPointingToMe().groupBy { it.source }.filter { it.value.count()>1 }
-            for (group in edgesToUnified){
-                var edge = group.value.first()
-                var toRemove = group.value.minus(edge)
-                var newTransitionSymbol= if(edge.symbol.equals("E")) "" else edge.symbol
-                for (e in toRemove){
-                    newTransitionSymbol += if(e.symbol.equals("E")) "" else (if(e.symbol.count()>1) "+"+e.symbol else e.symbol)
-                    state.removeTransitionPointingToMe(e)
-                }
-                state.removeTransitionPointingToMe(edge)
-                if(newTransitionSymbol.isNotEmpty()){
-                    if(newTransitionSymbol.count()>1 && !newTransitionSymbol.startsWith("("))
-                        newTransitionSymbol = "($newTransitionSymbol)"
-                    var nt=Transition(newTransitionSymbol,edge.source,edge.target)
-                    edge.source.addTransition(nt)
-                    edge.target.addTransitionPointingToMe(nt)
-                }
-            }
+//            edgesToUnified = state.getTransitionsPointingToMe().groupBy { it.source }.filter { it.value.count()>1 }
+//            for (group in edgesToUnified){
+//                var edge = group.value.first()
+//                var toRemove = group.value.minus(edge)
+//                var newTransitionSymbol= if(edge.symbol.equals("E")) "" else edge.symbol
+//                for (e in toRemove){
+//                    newTransitionSymbol += if(e.symbol.equals("E")) "" else (if(e.symbol.count()>1) "+"+e.symbol else e.symbol)
+//                    state.removeTransitionPointingToMe(e)
+//                }
+//                state.removeTransitionPointingToMe(edge)
+//                if(newTransitionSymbol.isNotEmpty()){
+//                    if(newTransitionSymbol.count()>1 && !newTransitionSymbol.startsWith("("))
+//                        newTransitionSymbol = "($newTransitionSymbol)"
+//                    var nt=Transition(newTransitionSymbol,edge.source,edge.target)
+//                    edge.source.addTransition(nt)
+//                    edge.target.addTransitionPointingToMe(nt)
+//                }
+//            }
+
+
 
             //create new edges and remove old ones
-            if(!(nfae.isFinal(state.value)) && (nfae.getInitialState()?.value!=state.value)){
-                var transition =  state.getTransitions().filter { it.source==it.target }.firstOrNull()
-                var star=""
-                if(transition!=null){
-                    star = if (transition.symbol.count()>1 && !transition.symbol.startsWith("(")) "(${transition.symbol})*" else "${transition.symbol}*"
-                    transition.target.removeTransitionPointingToMe(transition)
-                    state.removeTransition(transition)
-                }
-
-                var transitionsIGointTo = state.getTransitions()
-                //println("transitionsIGointTo: ${transitionsIGointTo.map { it.source.value + "->"+it.symbol+"->"+it.target.value }}")
-                var transitionsPointingToMe = state.getTransitionsPointingToMe()
-                //println("transitionsPointingToMe: ${transitionsPointingToMe.map { it.source.value + "->"+it.symbol+"->"+it.target.value }}")
-
-                var transitions:MutableList<Transition> =  mutableListOf()
-                for (p in transitionsPointingToMe){
-                    //println("0 - ${p.source.value} -> [${p.symbol}] -> ${p.target.value}")
-                    if(p==transition) continue
-                    for (t in transitionsIGointTo){
-                        if(t==transition) continue
-                        var symbol = (if(p.symbol.equals("E")) "" else p.symbol) + star + (if(t.symbol.equals("E")) "" else t.symbol)
-                        var source = p.source
-                        var target = t.target
-                        println("1 - ${source.value} -> [$symbol] -> ${target.value}")
-                        transitions.add(Transition(symbol,source,target))
-                    }
-                }
-
-                while (transitionsPointingToMe.any()){
-                    var t = transitionsPointingToMe.first()
-                    //println("2 - ${t.source.value} -> [${t.symbol}] -> ${t.target.value}")
-                    t.source.removeTransition(t)
-                    t.target.removeTransition(t)
-                    transitionsPointingToMe.remove(t)
-                }
-
-                while (transitionsIGointTo.any()){
-                    var t = transitionsIGointTo.first()
-                    //println("3 - ${t.source.value} -> [${t.symbol}] -> ${t.target.value}")
-                    t.source.removeTransition(t)
-                    t.target.removeTransitionPointingToMe(t)
-                    transitionsIGointTo.remove(t)
-                }
-
-                nfae.removeState(state.value)
-
-                for(newTransition in transitions){
-                    newTransition.source.addTransition(newTransition)
-                    newTransition.target.addTransitionPointingToMe(newTransition)
-                }
-            }
+//            if(!(nfae.isFinal(state.value)) && (nfae.getInitialState()?.value!=state.value)){
+//                var transition =  state.getTransitions().filter { it.source==it.target }.firstOrNull()
+//                var star=""
+//                if(transition!=null){
+//                    star = if (transition.symbol.count()>1 && !transition.symbol.startsWith("(")) "(${transition.symbol})*" else "${transition.symbol}*"
+//                    transition.target.removeTransitionPointingToMe(transition)
+//                    state.removeTransition(transition)
+//                }
+//
+//                var transitionsIGointTo = state.getTransitions()
+//                //println("transitionsIGointTo: ${transitionsIGointTo.map { it.source.value + "->"+it.symbol+"->"+it.target.value }}")
+//                var transitionsPointingToMe = state.getTransitionsPointingToMe()
+//                //println("transitionsPointingToMe: ${transitionsPointingToMe.map { it.source.value + "->"+it.symbol+"->"+it.target.value }}")
+//
+//                var transitions:MutableList<Transition> =  mutableListOf()
+//                for (p in transitionsPointingToMe){
+//                    //println("0 - ${p.source.value} -> [${p.symbol}] -> ${p.target.value}")
+//                    if(p==transition) continue
+//                    for (t in transitionsIGointTo){
+//                        if(t==transition) continue
+//                        var symbol = (if(p.symbol.equals("E")) "" else p.symbol) + star + (if(t.symbol.equals("E")) "" else t.symbol)
+//                        var source = p.source
+//                        var target = t.target
+//                        println("1 - ${source.value} -> [$symbol] -> ${target.value}")
+//                        transitions.add(Transition(symbol,source,target))
+//                    }
+//                }
+//
+//                while (transitionsPointingToMe.any()){
+//                    var t = transitionsPointingToMe.first()
+//                    //println("2 - ${t.source.value} -> [${t.symbol}] -> ${t.target.value}")
+//                    t.source.removeTransition(t)
+//                    t.target.removeTransition(t)
+//                    transitionsPointingToMe.remove(t)
+//                }
+//
+//                while (transitionsIGointTo.any()){
+//                    var t = transitionsIGointTo.first()
+//                    //println("3 - ${t.source.value} -> [${t.symbol}] -> ${t.target.value}")
+//                    t.source.removeTransition(t)
+//                    t.target.removeTransitionPointingToMe(t)
+//                    transitionsIGointTo.remove(t)
+//                }
+//
+//                nfae.removeState(state.value)
+//
+//                for(newTransition in transitions){
+//                    newTransition.source.addTransition(newTransition)
+//                    newTransition.target.addTransitionPointingToMe(newTransition)
+//                }
+//            }
         }
 
         return nfae
+    }
+
+    private fun  removeSelfTransitions(state: State) {
+        val source = state
+        val target = state
+        val symbols:MutableList<String> = mutableListOf()
+
+        state.getTransitionsPointingToMe().filter { it.source.value==it.target.value }.forEach {
+            symbols.add(it.symbol)
+            var t = state.getTransition(it.symbol)!!
+            state.removeTransition(t)
+            state.removeTransitionPointingToMe(t)
+        }
+
+        var symbol = symbols.joinToString("+")
+        state.addTransition(Transition(symbol,source,target))
+//
+//        var edgesToUnified = .groupBy { it.target }.filter { it.value.count()>1 }
+//
+//        for (group in edgesToUnified){
+//
+//            var edge = group.value.first()
+//            var toRemove = group.value.minus(edge)
+//            var newTransitionSymbol= if(edge.symbol.equals("E")) "" else edge.symbol
+//            for (e in toRemove){
+//                newTransitionSymbol += if(e.symbol.equals("E")) "" else (if(e.symbol.count()>1) "+"+e.symbol else e.symbol)
+//                state.removeTransition(e)
+//            }
+//            state.removeTransition(edge)
+//            if(newTransitionSymbol.isNotEmpty()){
+//                if(newTransitionSymbol.count()>1 && !newTransitionSymbol.startsWith("("))
+//                    newTransitionSymbol = "($newTransitionSymbol)"
+//                var nt=Transition(newTransitionSymbol,edge.source,edge.target)
+//                edge.source.addTransition(nt)
+//                edge.target.addTransitionPointingToMe(nt)
+//            }
+//        }
     }
 
     override fun clone(): DFA {
@@ -371,17 +430,17 @@ open class DFA(): IAutomata, Serializable,Cloneable {
                         states.add(targetGroup)
                     }
                     when(op){
-                        AutomataOperation.Union -> {
+                        Union -> {
                             if((A.finals.intersect(targetGroup).count()>0) or (B.finals.intersect(targetGroup).count()>0)){
                                 automata.setFinalState(targetName)
                             }
                         }
-                        AutomataOperation.Intersect -> {
+                        Intersect -> {
                             if((A.finals.intersect(targetGroup).count()>0) and (B.finals.intersect(targetGroup).count()>0)){
                                 automata.setFinalState(targetName)
                             }
                         }
-                        AutomataOperation.Subtract -> {
+                        Subtract -> {
                             if((A.finals.intersect(targetGroup).count()>0)){
                                 if(B.finals.intersect(targetGroup).count()==0){
                                     automata.setFinalState(targetName)
@@ -403,15 +462,15 @@ open class DFA(): IAutomata, Serializable,Cloneable {
     }
 
     fun union(B:DFA): DFA{
-        return unify(this,B, AutomataOperation.Union)
+        return unify(this,B, Union)
     }
 
     fun intersect(B:DFA): DFA{
-        return unify(this,B, AutomataOperation.Intersect)
+        return unify(this,B, Intersect)
     }
 
     fun subtract(B:DFA): DFA{
-        return unify(this,B, AutomataOperation.Subtract)
+        return unify(this,B, Subtract)
     }
 
     fun complement(): DFA{
@@ -446,14 +505,5 @@ open class DFA(): IAutomata, Serializable,Cloneable {
 
         return complement
     }
-}
-
-enum class AutomataOperation {
-    Union,
-
-    Subtract,
-
-    Intersect
-
 }
 
