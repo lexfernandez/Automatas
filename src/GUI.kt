@@ -165,6 +165,12 @@ class GUI : Application() {
 
         addNewTab(tm)
 
+        var nfaFromRegex = NFAE().fromRegex("(0+1.0)*+(0+1.0)*.1+(0+1.0)*.1.1.(1+0.1)*+(0+1.0)*.1.1.(1+0.1)*.0")
+
+        addNewTab(nfaFromRegex,"Regex")
+        println("Language: ${nfaFromRegex.language}")
+
+
 
 //        tabPane.setOnContextMenuRequested({ e ->
 ////            val cell = (tabPane.selectionModel.selectedItem as TabContainer).graphComponent.getCellAt(e.x.toInt(), e.y.toInt())
