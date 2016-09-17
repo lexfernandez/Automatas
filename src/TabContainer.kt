@@ -163,9 +163,9 @@ open class TabContainer: Tab {
         actions.cellFactory = Callback<javafx.scene.control.TableColumn<automata.Production, Boolean>, javafx.scene.control.TableCell<automata.Production, Boolean>> {
             val cell = object : TableCell<Production, Boolean>() {
 
-                internal val btn = Button("Just Do It")
+                internal val btn = Button()
                 init{
-                    btn.graphic = ImageView(Image("icons"+File.separator+"folder-11.png"))
+                    btn.graphic = ImageView(Image("icons"+File.separator+"minus.png"))
                     btn.setOnAction { event: ActionEvent ->
                         tableView.selectionModel.select(index)
                         val person = tableView.items[index]
@@ -195,7 +195,8 @@ open class TabContainer: Tab {
         productiontf.promptText = "aSb"
         productiontf.minWidth = 160.0
 
-        val addButton = Button("Add")
+        val addButton = Button()
+        addButton.graphic = ImageView(Image("icons"+File.separator+"plus.png"))
         addButton.setOnAction({ e: ActionEvent ->
             if (noTerminaltf.text.isNotEmpty() and productiontf.text.isNotEmpty()) {
                 grammarData.add(Production(
@@ -207,7 +208,8 @@ open class TabContainer: Tab {
             }
         })
 
-        val convertToPDAButton = Button("To PDA")
+        val convertToPDAButton = Button()
+        convertToPDAButton.graphic = ImageView(Image("icons"+File.separator+"network.png"))
         convertToPDAButton.setOnAction({ e: ActionEvent ->
             if(tabPane.selectionModel.selectedItem!=null){
                 var tab = tabPane.selectionModel.selectedItem as TabContainer
@@ -595,7 +597,7 @@ open class TabContainer: Tab {
         graphComponent.connectionHandler.addListener(mxEvent.CONNECT) { sender, evt ->
             val cell = evt.getProperty("cell") as mxCell
             if (cell.isEdge) {
-                var s: String? = ""
+                var s: String?
                 var instructions = "Enter edge name:\n" + "e.g.\"1\" or \"a\""
                 when(automaton){
                     is PDA -> {
@@ -605,54 +607,60 @@ open class TabContainer: Tab {
                         instructions = "Enter edge name:\n" + "e.g.\"1,0/>\" or \"a,b/<\""
                     }
                 }
+                var valid=true
                 do {
-                    try{
-                        s = JOptionPane.showInputDialog(
-                                null,
-                                instructions,
-                                "Edge Name",
-                                JOptionPane.PLAIN_MESSAGE,
-                                null,
-                                null,
-                                "0") as String
-                    }catch (e:Exception){
-                        println(e.message)
-                    }
+                    s = JOptionPane.showInputDialog(
+                            null,
+                            instructions,
+                            "Edge Name",
+                            JOptionPane.PLAIN_MESSAGE,
+                            null,
+                            null,
+                            null) as String?
 
-                } while (s.isNullOrEmpty())
-                try {
-                    if(s!=null){
-                        when(automaton){
-                            is PDA -> {
-                                var data = s.split(",","/")
-                                if(data.count()!=3){
-                                    throw Exception("Please enter a valid transition Ej: E,Z/SZ")
+                    if(s!=null && s!!.isNotEmpty()){
+                        valid=false
+                    }else if(s==null){
+                        valid=false
+                    }
+                } while (valid)
+                if(s!=null){
+                    try {
+                            when(automaton){
+                                is PDA -> {
+                                    var data = s.split(",","/")
+                                    if(data.count()!=3){
+                                        throw Exception("Please enter a valid transition Ej: E,Z/SZ")
+                                    }
+                                    automaton.addTransition(data[0].first(), cell.source.value.toString(), cell.target.value.toString(),data[1].first(),data[2].toList())
                                 }
-                                automaton.addTransition(data[0].first(), cell.source.value.toString(), cell.target.value.toString(),data[1].first(),data[2].toList())
-                            }
-                            is TuringMachine -> {
-                                var data = s.split(",","/")
-                                if(data.count()!=3){
-                                    throw Exception("Please enter a valid transition Ej: E,Z/SZ")
+                                is TuringMachine -> {
+                                    var data = s.split(",","/")
+                                    if(data.count()!=3){
+                                        throw Exception("Please enter a valid transition Ej: E,Z/SZ")
+                                    }
+                                    automaton.addTransition(data[0].first(), cell.source.value.toString(), cell.target.value.toString(),data[1].first(),if(data[2].equals("<")) TuringMachineDirection.Left else TuringMachineDirection.Right)
                                 }
-                                automaton.addTransition(data[0].first(), cell.source.value.toString(), cell.target.value.toString(),data[1].first(),if(data[2].equals("<")) TuringMachineDirection.Left else TuringMachineDirection.Right)
+                                else -> {
+                                    automaton.addTransition(s.first(), cell.source.value.toString(), cell.target.value.toString())
+                                }
                             }
-                            else -> {
-                                automaton.addTransition(s.first(), cell.source.value.toString(), cell.target.value.toString())
-                            }
+
+                            cell.value = s
+                            cell.style = "rounded=true;arcSize=30;edgeStyle=orthogonalEdgeStyle;portConstraint=north"
+
+                    } catch (e: NullPointerException) {
+                        if (cell.isEdge) {
+                            graph.model.remove(cell)
                         }
-
-                        cell.value = s
-                        cell.style = "rounded=true;arcSize=30;edgeStyle=orthogonalEdgeStyle;portConstraint=north"
-                    }
-                } catch (e: NullPointerException) {
-                    if (cell.isEdge) {
+                    } catch (e: Exception) {
+                        JOptionPane.showMessageDialog(null, e.message, "Error", JOptionPane.ERROR_MESSAGE)
                         graph.model.remove(cell)
                     }
-                } catch (e: Exception) {
-                    JOptionPane.showMessageDialog(null, e.message, "Error", JOptionPane.ERROR_MESSAGE)
+                }else{
                     graph.model.remove(cell)
                 }
+
             } else {
                 println("Got a cell: ${cell.value}")
             }
@@ -678,6 +686,7 @@ open class TabContainer: Tab {
                 } else {
                     if (e.clickCount == 2) {
                         var s: String?
+                        var valid=true
 
                         do {
                             s = JOptionPane.showInputDialog(
@@ -688,15 +697,22 @@ open class TabContainer: Tab {
                                     null,
                                     null,
                                     null) as String?
-                        } while (s.isNullOrEmpty() || s.equals("new vertex"))
-                        val cell = graph.insertVertex(graph.defaultParent, null, s?.toLowerCase(), e.x.toDouble(), e.y.toDouble(), 40.0, 40.0, defaultStyle)
-                        try {
-                            cell as mxCell
-                            automaton.addState(State(cell.value.toString()))
-                            cell.resize()
-                        } catch (e: Exception) {
-                            JOptionPane.showMessageDialog(null, e.message, "Error", JOptionPane.ERROR_MESSAGE)
-                            graph.model.remove(cell)
+                            if(s!=null && s!!.isNotEmpty()){
+                                valid=false
+                            }else if(s==null){
+                                valid=false
+                            }
+                        } while (valid)
+                        if(s!=null){
+                            val cell = graph.insertVertex(graph.defaultParent, null, s?.toLowerCase(), e.x.toDouble(), e.y.toDouble(), 40.0, 40.0, defaultStyle)
+                            try {
+                                cell as mxCell
+                                automaton.addState(State(cell.value.toString()))
+                                cell.resize()
+                            } catch (e: Exception) {
+                                JOptionPane.showMessageDialog(null, e.message, "Error", JOptionPane.ERROR_MESSAGE)
+                                graph.model.remove(cell)
+                            }
                         }
                     }
                 }
