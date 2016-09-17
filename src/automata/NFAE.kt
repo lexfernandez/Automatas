@@ -4,9 +4,9 @@ package automata
  * Created by lex on 08-02-16.
  */
 
-import java.io.Serializable
 import org.unitec.regularexpresion.RegularExpressionParser
 import org.unitec.regularexpresion.tree.*
+import java.io.Serializable
 
 class NFAE(): IAutomata, Serializable {
     override fun toMinimizedDFA(): DFA {
@@ -14,9 +14,29 @@ class NFAE(): IAutomata, Serializable {
     }
 
     fun fromRegex(regex: String): NFAE {
-        var rootNode: Node = RegularExpressionParser().Parse(regex)
+        
+        var rootNode: Node = RegularExpressionParser().Parse(sanitizeRegex(regex))
 
         return regexToNFAE(rootNode)
+    }
+
+    private fun  sanitizeRegex(regex: String): String {
+        var regexp = regex.replace(".","")
+        var ret: String =""
+        var c:Char
+        var c2:Char
+        for (i in 0..regexp.length-1){
+            c=regexp[i];
+            if(i+1<regexp.length){
+                c2=regexp[i+1]
+                ret+=c;
+                if(c!='('&&c2!=')'&&c!='+'&&c2!='+'&&c2!='*'){
+                    ret+='.'
+                }
+            }
+        }
+        ret+=regexp[regexp.length-1]
+        return ret
     }
 
     private fun regexToNFAE(node:Node):NFAE{
@@ -108,6 +128,9 @@ class NFAE(): IAutomata, Serializable {
             R.addTransition('E',state.value,final.value)
         }
         R.setFinalState(final.value)
+
+        S.language.forEach { symbol -> R.addLanguageSymbol(symbol) }
+        R.language = R.language.distinct().toMutableList()
         return R as NFAE
     }
 
@@ -129,7 +152,7 @@ class NFAE(): IAutomata, Serializable {
         }
 
         S.language.forEach { symbol -> R.addLanguageSymbol(symbol) }
-
+        R.language = R.language.distinct().toMutableList()
         return R as NFAE
     }
 

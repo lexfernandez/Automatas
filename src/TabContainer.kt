@@ -595,7 +595,7 @@ open class TabContainer: Tab {
         graphComponent.connectionHandler.addListener(mxEvent.CONNECT) { sender, evt ->
             val cell = evt.getProperty("cell") as mxCell
             if (cell.isEdge) {
-                var s: String
+                var s: String? = ""
                 var instructions = "Enter edge name:\n" + "e.g.\"1\" or \"a\""
                 when(automaton){
                     is PDA -> {
@@ -606,38 +606,45 @@ open class TabContainer: Tab {
                     }
                 }
                 do {
-                    s = JOptionPane.showInputDialog(
-                            null,
-                            instructions,
-                            "Edge Name",
-                            JOptionPane.PLAIN_MESSAGE,
-                            null,
-                            null,
-                            "0") as String
-                } while (s.isNullOrEmpty())
-                try {
-                    when(automaton){
-                        is PDA -> {
-                            var data = s.split(",","/")
-                            if(data.count()!=3){
-                                throw Exception("Please enter a valid transition Ej: E,Z/SZ")
-                            }
-                            automaton.addTransition(data[0].first().toChar(), cell.source.value.toString(), cell.target.value.toString(),data[1].first(),data[2].toList())
-                        }
-                        is TuringMachine -> {
-                            var data = s.split(",","/")
-                            if(data.count()!=3){
-                                throw Exception("Please enter a valid transition Ej: E,Z/SZ")
-                            }
-                            automaton.addTransition(data[0].first().toChar(), cell.source.value.toString(), cell.target.value.toString(),data[1].first(),if(data[2].equals("<")) TuringMachineDirection.Left else TuringMachineDirection.Right)
-                        }
-                        else -> {
-                            automaton.addTransition(s.first().toChar(), cell.source.value.toString(), cell.target.value.toString())
-                        }
+                    try{
+                        s = JOptionPane.showInputDialog(
+                                null,
+                                instructions,
+                                "Edge Name",
+                                JOptionPane.PLAIN_MESSAGE,
+                                null,
+                                null,
+                                "0") as String
+                    }catch (e:Exception){
+                        println(e.message)
                     }
 
-                    cell.value = s
-                    cell.style = "rounded=true;arcSize=30;edgeStyle=orthogonalEdgeStyle;portConstraint=north"
+                } while (s.isNullOrEmpty())
+                try {
+                    if(s!=null){
+                        when(automaton){
+                            is PDA -> {
+                                var data = s.split(",","/")
+                                if(data.count()!=3){
+                                    throw Exception("Please enter a valid transition Ej: E,Z/SZ")
+                                }
+                                automaton.addTransition(data[0].first(), cell.source.value.toString(), cell.target.value.toString(),data[1].first(),data[2].toList())
+                            }
+                            is TuringMachine -> {
+                                var data = s.split(",","/")
+                                if(data.count()!=3){
+                                    throw Exception("Please enter a valid transition Ej: E,Z/SZ")
+                                }
+                                automaton.addTransition(data[0].first(), cell.source.value.toString(), cell.target.value.toString(),data[1].first(),if(data[2].equals("<")) TuringMachineDirection.Left else TuringMachineDirection.Right)
+                            }
+                            else -> {
+                                automaton.addTransition(s.first(), cell.source.value.toString(), cell.target.value.toString())
+                            }
+                        }
+
+                        cell.value = s
+                        cell.style = "rounded=true;arcSize=30;edgeStyle=orthogonalEdgeStyle;portConstraint=north"
+                    }
                 } catch (e: NullPointerException) {
                     if (cell.isEdge) {
                         graph.model.remove(cell)

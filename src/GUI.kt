@@ -165,10 +165,14 @@ class GUI : Application() {
 
         addNewTab(tm)
 
-        var nfaFromRegex = NFAE().fromRegex("(0+1.0)*+(0+1.0)*.1+(0+1.0)*.1.1.(1+0.1)*+(0+1.0)*.1.1.(1+0.1)*.0")
-
-        addNewTab(nfaFromRegex,"Regex")
-        println("Language: ${nfaFromRegex.language}")
+        var symbol = NFAE().fromRegex("a")
+        addNewTab(symbol,"Concat")
+        var and = NFAE().fromRegex("bc")
+        addNewTab(and,"and")
+        var or = NFAE().fromRegex("d+e")
+        addNewTab(or,"or")
+        var star = NFAE().fromRegex("(a+b)*c")
+        addNewTab(star,"star")
 
 
 
