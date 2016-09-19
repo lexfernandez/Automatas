@@ -1,6 +1,8 @@
 package automata
 
-enum class AutomataOperation {
+import java.io.Serializable
+
+enum class AutomataOperation: Serializable {
     Union,
 
     Subtract,

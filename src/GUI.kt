@@ -84,95 +84,68 @@ class GUI : Application() {
         root.top = topContainer
         root.center = tabPane
 
-//        val newDfa = DFA()
-//        newDfa.addState(State("q0"))
-//        newDfa.addState(State("q1"))
-//        newDfa.addState(State("q2"))
-//        newDfa.addState(State("q3"))
+
+//        var newDFA = DFA()
+//        newDFA.addState(State("1"))
+//        newDFA.addState(State("2"))
+//        newDFA.addState(State("3"))
 //
-//        newDfa.addTransition('0',"q0","q0")
-//        newDfa.addTransition('1',"q0","q1")
-//        newDfa.addTransition('0',"q1","q2")
-//        newDfa.addTransition('1',"q1","q1")
-//        newDfa.addTransition('0',"q2","q0")
-//        newDfa.addTransition('1',"q2","q3")
-//        newDfa.addTransition('0',"q3","q3")
-//        newDfa.addTransition('1',"q3","q1")
+//        newDFA.addTransition('a',"1","2")
+//        newDFA.addTransition('a',"2","3")
+//        newDFA.addTransition('a',"3","1")
+//        newDFA.addTransition('b',"1","3")
+//        newDFA.addTransition('b',"3","2")
+//        newDFA.addTransition('b',"2","1")
 //
-//        newDfa.setInitialState("q0")
-//        newDfa.setFinalState("q0")
-//        newDfa.setFinalState("q3")
+//        newDFA.setInitialState("1")
+//        newDFA.setFinalState("1")
+//
+//        addNewTab(newDFA)
 
-//        addNewTab(newDfa)
-
-
-        var newDFA = DFA()
-        newDFA.addState(State("1"))
-        newDFA.addState(State("2"))
-        newDFA.addState(State("3"))
-
-        newDFA.addTransition('a',"1","2")
-        newDFA.addTransition('a',"2","3")
-        newDFA.addTransition('a',"3","1")
-        newDFA.addTransition('b',"1","3")
-        newDFA.addTransition('b',"3","2")
-        newDFA.addTransition('b',"2","1")
-
-        newDFA.setInitialState("1")
-        newDFA.setFinalState("1")
-
-        addNewTab(newDFA)
-
-        var examen = DFA()
-        examen.addState(State("q0"))
-        examen.addState(State("q1"))
-        examen.addState(State("q2"))
-        examen.addState(State("q3"))
-
-        examen.addTransition('0',"q0","q0")
-        examen.addTransition('1',"q0","q1")
-        examen.addTransition('0',"q1","q0")
-        examen.addTransition('1',"q1","q2")
-        examen.addTransition('1',"q2","q2")
-        examen.addTransition('0',"q2","q3")
-        examen.addTransition('1',"q3","q2")
-
-        examen.setInitialState("q0")
-        examen.setFinalState("q0")
-        examen.setFinalState("q1")
-        examen.setFinalState("q2")
-        examen.setFinalState("q3")
-
-        addNewTab(examen)
-        addNewTab(examen.toRegex())
-
-
-        var tm = TuringMachine()
-        tm.addState(State("q0"))
-        tm.addState(State("q1"))
-        tm.addState(State("q2"))
-
-        tm.addTransition('B',"q0","q1", 'B',TuringMachineDirection.Left)
-        tm.addTransition('0',"q0","q0", '1',TuringMachineDirection.Right)
-        tm.addTransition('1',"q0","q0", '0',TuringMachineDirection.Right)
-
-        tm.addTransition('B',"q1","q2", 'B',TuringMachineDirection.Right)
-        tm.addTransition('0',"q1","q1", '1',TuringMachineDirection.Left)
-        tm.addTransition('1',"q1","q1", '0',TuringMachineDirection.Left)
-
-        tm.setInitialState("q0")
-        tm.setFinalState("q2")
-
-        addNewTab(tm)
-
-        var symbol = NFAE().fromRegex("a")
-        addNewTab(symbol,"Concat")
-        var and = NFAE().fromRegex("bc")
-        addNewTab(and,"and")
-        var or = NFAE().fromRegex("d+e")
-        addNewTab(or,"or")
-        var star = NFAE().fromRegex("(a+b)*c")
-        addNewTab(star,"star")
+//        var examen = DFA()
+//        examen.addState(State("q0"))
+//        examen.addState(State("q1"))
+//        examen.addState(State("q2"))
+//        examen.addState(State("q3"))
+//
+//        examen.addTransition('0',"q0","q0")
+//        examen.addTransition('1',"q0","q1")
+//        examen.addTransition('0',"q1","q0")
+//        examen.addTransition('1',"q1","q2")
+//        examen.addTransition('1',"q2","q2")
+//        examen.addTransition('0',"q2","q3")
+//        examen.addTransition('1',"q3","q2")
+//
+//        examen.setInitialState("q0")
+//        examen.setFinalState("q0")
+//        examen.setFinalState("q1")
+//        examen.setFinalState("q2")
+//        examen.setFinalState("q3")
+//
+//        addNewTab(examen)
+//        addNewTab(examen.toRegex())
+//
+//
+//        var tm = TuringMachine()
+//        tm.addState(State("q0"))
+//        tm.addState(State("q1"))
+//        tm.addState(State("q2"))
+//
+//        tm.addTransition('B',"q0","q1", 'B',TuringMachineDirection.Left)
+//        tm.addTransition('0',"q0","q0", '1',TuringMachineDirection.Right)
+//        tm.addTransition('1',"q0","q0", '0',TuringMachineDirection.Right)
+//
+//        tm.addTransition('B',"q1","q2", 'B',TuringMachineDirection.Right)
+//        tm.addTransition('0',"q1","q1", '1',TuringMachineDirection.Left)
+//        tm.addTransition('1',"q1","q1", '0',TuringMachineDirection.Left)
+//
+//        tm.setInitialState("q0")
+//        tm.setFinalState("q2")
+//
+//        addNewTab(tm)
+//
+        var symbol = NFAE().fromRegex("[(0+10)*] + [(0+10)*1] + [(0+10)*11(1+01)*] + [(0+10)*11(1+01)*0] ")
+        addNewTab(symbol)
 
 
 
@@ -508,9 +481,56 @@ class GUI : Application() {
             addNewTab(nfae)
         })
 
+        val tmExamples = Menu("Turing Machine Examples")
+        val palidromeExample = MenuItem("Palindrome Example")
+        palidromeExample.onAction = EventHandler({
+//            val tm = TuringMachine()
+//            tm.addState(automata.State("0"))
+//            tm.addState(automata.State("1"))
+//            tm.addState(automata.State("2"))
+//            tm.addState(automata.State("3"))
+//            tm.addState(automata.State("4"))
+//            tm.addState(automata.State("5"))
+//            tm.addState(automata.State("6"))
+//            tm.addState(automata.State("7"))
+//
+//            tm.addTransition('B', "0", "1",'B',TuringMachineDirection.Left)
+//            tm.addTransition('0', "0", "0",'0',TuringMachineDirection.Right)
+//            tm.addTransition('1', "0", "0",'1',TuringMachineDirection.Right)
+//
+//            tm.addTransition('B', "1", "7",'1',TuringMachineDirection.None)
+//            tm.addTransition('0', "1", "2",'B',TuringMachineDirection.Left)
+//            tm.addTransition('1', "1", "4",'B',TuringMachineDirection.Left)
+//
+//            tm.addTransition('B', "2", "3",'B',TuringMachineDirection.Right)
+//            tm.addTransition('0', "2", "2",'0',TuringMachineDirection.Left)
+//            tm.addTransition('1', "2", "2",'1',TuringMachineDirection.Left)
+//
+//            tm.addTransition('B', "3", "0",'B',TuringMachineDirection.None)
+//            tm.addTransition('0', "3", "0",'B',TuringMachineDirection.Right)
+//            tm.addTransition('1', "3", "6",'1',TuringMachineDirection.None)
+//
+//            tm.addTransition('B', "4", "5",'B',TuringMachineDirection.Right)
+//            tm.addTransition('0', "4", "4",'0',TuringMachineDirection.Left)
+//            tm.addTransition('1', "4", "4",'1',TuringMachineDirection.Left)
+//
+//            tm.addTransition('B', "5", "0",'B',TuringMachineDirection.None)
+//            tm.addTransition('0', "5", "6",'0',TuringMachineDirection.None)
+//            tm.addTransition('1', "5", "0",'B',TuringMachineDirection.Right)
+//
+//            tm.addTransition('B', "6", "7",'0',TuringMachineDirection.None)
+//            tm.addTransition('0', "6", "6",'B',TuringMachineDirection.Right)
+//            tm.addTransition('1', "6", "6",'B',TuringMachineDirection.Right)
+//
+//            tm.setInitialState("0")
+//            tm.setFinalState("7")
+//            addNewTab(tm)
+        })
+        tmExamples.items.addAll(palidromeExample)
         val regexExample = MenuItem("Regex Example")
 
-        examples.items.addAll(dfaExamples,nfaExamples,nfaeExamples,regexExample)
+
+        examples.items.addAll(dfaExamples,nfaExamples,nfaeExamples,tmExamples,regexExample)
         return examples
     }
 
@@ -718,7 +738,10 @@ class GUI : Application() {
                 FileChooser.ExtensionFilter("DFA", "*.dfa"),
                 FileChooser.ExtensionFilter("NFA", "*.nfa"),
                 FileChooser.ExtensionFilter("NFAE", "*.nfae"),
+                FileChooser.ExtensionFilter("PDA", "*.pda"),
+                FileChooser.ExtensionFilter("TURINGMACHINE", "*.turingmachine"),
                 FileChooser.ExtensionFilter("REGEX", "*.regex")
+
         )
         val file = fileChooser.showOpenDialog(stage)
         return file

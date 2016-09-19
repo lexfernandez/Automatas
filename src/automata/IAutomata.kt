@@ -119,6 +119,4 @@ interface IAutomata {
     fun toDFA(): DFA
     fun  toRegex(): DFA
     fun toMinimizedDFA(): DFA
-
-
 }

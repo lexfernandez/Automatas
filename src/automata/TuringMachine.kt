@@ -59,8 +59,8 @@ class TuringMachine(): IAutomata, Serializable,Cloneable {
         if(this.states.count()==0) return false
         println("Turing Machine Evaluation")
 
-        var ribbon = "B"+alphabet+"B"
-        var _ribbon = ribbon.toMutableList()
+        val ribbon = "B"+alphabet+"B"
+        val _ribbon = ribbon.toMutableList()
 
         var currentState = getInitialState()
 
@@ -69,7 +69,7 @@ class TuringMachine(): IAutomata, Serializable,Cloneable {
         if (currentState != null) {
             while (!isFinal(currentState!!.value)) {
                 if (currentState != null) {
-                    var transitionsSize = currentState.getTransitions().size
+                    val transitionsSize = currentState.getTransitions().size
                     var transitionCount = 0
                     for (transition in currentState!!.getTransitions()) {
 

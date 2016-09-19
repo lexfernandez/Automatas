@@ -1,10 +1,12 @@
 package automata
 
+import java.io.Serializable
+
 /**
  * Created by lex on 07-31-16.
  */
 
-class Queue<T>(){
+class Queue<T>(): Serializable {
     var items: MutableList<T> = mutableListOf()
 
     fun Queue(list: MutableList<T>){
