@@ -21,7 +21,7 @@ class NFAE(): IAutomata, Serializable {
     }
 
     private fun  sanitizeRegex(regex: String): String {
-        var regexp = regex.replace(".","")
+        var regexp = regex.replace(" ","").replace(".","").replace("[","(").replace("]",")")
         var ret: String =""
         var c:Char
         var c2:Char

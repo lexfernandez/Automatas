@@ -1,9 +1,11 @@
 package automata
 
+import java.io.Serializable
+
 /**
  * Created by Alex Fernandez on 09/05/2016.
  */
-class PDA():IAutomata{
+class PDA():IAutomata, Serializable {
     override fun addTransition(symbol: Char, source: String, target: String): Boolean {
         throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -32,6 +34,8 @@ class PDA():IAutomata{
         f.addTransitionPointingToMe(transition)
         return s.addTransition(transition)
     }
+
+    val  productions: MutableList<Production> = mutableListOf()
 
 
 

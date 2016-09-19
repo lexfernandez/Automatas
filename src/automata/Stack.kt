@@ -1,9 +1,11 @@
 package automata
 
+import java.io.Serializable
+
 /**
  * Created by Alex Fernandez on 09/05/2016.
  */
-class Stack<T:Comparable<T>>(list:MutableList<T>) {
+class Stack<T:Comparable<T>>(list:MutableList<T>):Serializable {
 
     var items: MutableList<T> = list
 

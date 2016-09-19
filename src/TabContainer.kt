@@ -63,6 +63,11 @@ open class TabContainer: Tab {
 
     constructor(iautomaton: IAutomata, text: String? = "new tab", file: File? = null) : super(text) {
         automaton = iautomaton
+
+        if(automaton is PDA){
+            grammarData.addAll(automaton.productions)
+        }
+
         this.file = file
 
         // Creates the embeddable graph swing component
@@ -199,10 +204,16 @@ open class TabContainer: Tab {
         addButton.graphic = ImageView(Image("icons"+File.separator+"plus.png"))
         addButton.setOnAction({ e: ActionEvent ->
             if (noTerminaltf.text.isNotEmpty() and productiontf.text.isNotEmpty()) {
-                grammarData.add(Production(
-                        noTerminaltf.text.first(),
-                        productiontf.text
-                ))
+                if(automaton is PDA){
+                    for(production in productiontf.text.split("|")){
+                        var production = Production(
+                                noTerminaltf.text.first(),
+                                production
+                        )
+                        grammarData.add(production)
+                        automaton.productions.add(production)
+                    }
+                }
                 noTerminaltf.clear()
                 productiontf.clear()
             }
@@ -230,8 +241,6 @@ open class TabContainer: Tab {
 
         if (automaton is PDA)
             bcontent.right = grammarVBox
-
-        grammarData.add(Production('S', "aSb"))
     }
 
     private fun redrawAutomata() {
@@ -442,7 +451,7 @@ open class TabContainer: Tab {
         try {
             val layout = mxFastOrganicLayout(graph)
             // set some properties
-            layout.forceConstant = 200.0 // the higher, the more separated
+            layout.forceConstant = 50.0 // the higher, the more separated
             layout.isDisableEdgeStyle = false // true transforms the edges and makes them direct lines
             layout.isUseInputOrigin = true
             // layout graph
