@@ -123,11 +123,11 @@ open class TabContainer: Tab {
         val setAsFinal: MenuItem = MenuItem("Set as Final")
         val setAsInitialAndFinal: MenuItem = MenuItem("Set as Initial & Final")
 
-        setAsInitial.onAction = EventHandler { actionEvent: ActionEvent ->
-            println((actionEvent.source as MenuItem).parentPopup.x)
-            println((actionEvent.source as MenuItem).parentPopup.y)
-            //(actionEvent.source as mxCell).setVertexStyle(VertexType.INITIAL)
-        }
+//        setAsInitial.onAction = EventHandler { actionEvent: ActionEvent ->
+//            println((actionEvent.source as MenuItem).parentPopup.x)
+//            println((actionEvent.source as MenuItem).parentPopup.y)
+//            //(actionEvent.source as mxCell).setVertexStyle(VertexType.INITIAL)
+//        }
         setAsFinal.onAction = EventHandler { actionEvent: ActionEvent ->
             setVertexStyle((actionEvent.source as mxCell), VertexType.FINAL)
         }
@@ -147,11 +147,42 @@ open class TabContainer: Tab {
 
         this.content = bcontent
 
-        addTransactionsTable()
+        //addTransactionsTable()
+        addRegexInput()
         addCFGTable()
     }
 
+    private fun addRegexInput() {
+        if (automaton !is REGEX) return
+        val expression = TextField()
+        expression.text = automaton.expression
+        expression.promptText = "(a+b)*.a.b.b"
+
+        val addButton = Button()
+        addButton.graphic = ImageView(Image("icons"+File.separator+"network.png"))
+        addButton.setOnAction({ e: ActionEvent ->
+            if(tabPane.selectionModel!=null){
+                var tab = tabPane.selectionModel.selectedItem as TabContainer
+                (tab.automaton as REGEX).fromRegex(expression.text)
+                redrawAutomata()
+            }
+        })
+
+        grammarHBox.children.addAll(expression, addButton)
+
+        grammarHBox.spacing = 0.0
+
+        grammarVBox.spacing = 5.0
+        grammarVBox.padding = Insets(10.0, 0.0, 0.0, 10.0)
+        grammarVBox.children.addAll(grammarHBox)
+
+
+
+        bcontent.top = grammarVBox
+    }
+
     private fun addCFGTable() {
+        if (automaton !is PDA) return
         val noTerminal = TableColumn<Production, Char>("No Terminals")
         noTerminal.maxWidth = 40.0
         noTerminal.cellValueFactory = PropertyValueFactory("noTerminal")
@@ -174,7 +205,7 @@ open class TabContainer: Tab {
                     btn.setOnAction { event: ActionEvent ->
                         tableView.selectionModel.select(index)
                         val person = tableView.items[index]
-                        println(person.noTerminal + "   " + person.production)
+//                        println(person.noTerminal + "   " + person.production)
                         grammarData.remove(tableView.selectionModel.selectedItem)
                     }
                 }
@@ -238,9 +269,7 @@ open class TabContainer: Tab {
         grammarVBox.padding = Insets(10.0, 0.0, 0.0, 10.0)
         grammarVBox.children.addAll(grammarHBox, grammarTable)
 
-
-        if (automaton is PDA)
-            bcontent.right = grammarVBox
+        bcontent.right = grammarVBox
     }
 
     private fun redrawAutomata() {
@@ -256,10 +285,10 @@ open class TabContainer: Tab {
 
                 var noTerminals = grammar.map { it.noTerminal }.distinct()
                 var terminals = grammar.map { it.production.toList() }.flatten().subtract(noTerminals)
-                (automaton as PDA).stackLanguage = noTerminals.union(terminals).union(listOf('Z')).toMutableList()
-                println("$noTerminals")
-                println("$terminals")
-                println("${(automaton as PDA).stackLanguage}")
+                automaton.stackLanguage = noTerminals.union(terminals).union(listOf('Z')).toMutableList()
+//                println("$noTerminals")
+//                println("$terminals")
+//                println("${(automaton as PDA).stackLanguage}")
 
                 var q0 = State("q0")
                 var q1 = State("q1")
@@ -284,11 +313,11 @@ open class TabContainer: Tab {
                         automaton.addTransition(t,q1.value,q1.value,t, listOf('E'))
                 }
 
-                for (state in automaton.states){
-                    for(transition in state.getTransitions()){
-                        println("${transition.source.value} ${transition.symbol} ${transition.top} ${transition.target.value} ${transition.toPush}")
-                    }
-                }
+//                for (state in automaton.states){
+//                    for(transition in state.getTransitions()){
+//                        println("${transition.source.value} ${transition.symbol} ${transition.top} ${transition.target.value} ${transition.toPush}")
+//                    }
+//                }
             }
         }
 
@@ -671,7 +700,7 @@ open class TabContainer: Tab {
                 }
 
             } else {
-                println("Got a cell: ${cell.value}")
+                //println("Got a cell: ${cell.value}")
             }
 
         }
@@ -688,7 +717,7 @@ open class TabContainer: Tab {
                     if (e.button == 3) { //Right Click
                         //vertexMenu.show(bcontent, e.xOnScreen.toDouble(),e.yOnScreen.toDouble())
                     } else if (e.clickCount == 2) {
-                        println("vertex clicked")
+                        //println("vertex clicked")
                         cell.toggleType()
                         graphComponent.refresh()
                     }
@@ -727,13 +756,13 @@ open class TabContainer: Tab {
                 }
             }
 
-            override fun mousePressed(e: java.awt.event.MouseEvent) {
-                val cell = graphComponent.getCellAt(e.x, e.y)
-                println("Mouse click in graph component")
-                if (cell != null) {
-                    println("cell=" + graph.getLabel(cell))
-                }
-            }
+//            override fun mousePressed(e: java.awt.event.MouseEvent) {
+//                val cell = graphComponent.getCellAt(e.x, e.y)
+//                println("Mouse click in graph component")
+//                if (cell != null) {
+//                    println("cell=" + graph.getLabel(cell))
+//                }
+//            }
         })
 
     }

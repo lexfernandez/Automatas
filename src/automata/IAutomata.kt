@@ -30,18 +30,18 @@ interface IAutomata {
         return states.find { it.value==value }?: throw Exception("State $value doesn't exist!")
     }
 
-    fun printStates(){
-        for (state in states){
-            println("state: ${state.value}")
-            for(transition in state.getTransitions()){
-                println("\ttransition: ${transition.source.value} -> ${transition.symbol} -> ${transition.target.value}")
-            }
-        }
-        println("initial state: ${initial!!.value}")
-        for (final in finals){
-            println("final state: ${final.value}")
-        }
-    }
+//    fun printStates(){
+//        for (state in states){
+//            println("state: ${state.value}")
+//            for(transition in state.getTransitions()){
+//                println("\ttransition: ${transition.source.value} -> ${transition.symbol} -> ${transition.target.value}")
+//            }
+//        }
+//        println("initial state: ${initial!!.value}")
+//        for (final in finals){
+//            println("final state: ${final.value}")
+//        }
+//    }
 
     fun setInitialState(value: String?) {
         initial = states.find { it.value==value }
