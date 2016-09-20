@@ -144,8 +144,9 @@ class GUI : Application() {
 //
 //        addNewTab(tm)
 //
-        var symbol = NFAE().fromRegex("[(0+10)*] + [(0+10)*1] + [(0+10)*11(1+01)*] + [(0+10)*11(1+01)*0] ")
-        addNewTab(symbol)
+//
+//        addNewTab(NFAE())
+//        addNewTab(REGEX("[(0+10)*] + [(0+10)*1] + [(0+10)*11(1+01)*] + [(0+10)*11(1+01)*0] "))
 
 
 
@@ -200,25 +201,25 @@ class GUI : Application() {
             if(!tabPane.selectionModel.isEmpty){
                 val tab: TabContainer = (tabPane.selectionModel.selectedItem as TabContainer)
                 try{
-                    println("keyEvnet: ${e.code}")
+                    //println("keyEvnet: ${e.code}")
 
                     val cell: mxCell = (tab.graph.selectionCell as mxCell)
                     if(cell.isVertex){
                         if (e.isAltDown && e.code === KeyCode.I) {
-                            println("setting initial")
+                            //println("setting initial")
                             tab.setVertexStyle(cell,VertexType.INITIAL)
 
                         }else if (e.isAltDown && e.code === KeyCode.F) {
-                            println("setting final")
+                            //println("setting final")
                             tab.setVertexStyle(cell,VertexType.FINAL)
                         }else if (e.isAltDown && e.code === KeyCode.B) {
-                            println("setting Both Initial and Final")
+                            //println("setting Both Initial and Final")
                             tab.setVertexStyle(cell,VertexType.INITIAL_FINAL)
                         }else if (e.isAltDown && e.code === KeyCode.N) {
-                            println("setting normal")
+                            //println("setting normal")
                             tab.setVertexStyle(cell,VertexType.NORMAL)
                         }else if (e.code === KeyCode.DELETE) {
-                            println("Deleting cell")
+                            //println("Deleting cell")
                             if(tab.automaton.removeState(cell.value.toString())){
                                 tab.graph.update {
                                     for (edge in tab.graph.getEdges(cell)){
@@ -231,7 +232,14 @@ class GUI : Application() {
                         }
                     }else if(cell.isEdge){
                         if (e.code === KeyCode.DELETE) {
-                            println("Deleting edge")
+                            //println("Deleting edge")
+                            if(tabPane.selectionModel!=null){
+                                var state = (tabPane.selectionModel.selectedItem as TabContainer).automaton.getState(cell.source.value as String)
+                                var transition =state.getTransition(cell.value as String)
+                                state.removeTransition(transition!!)
+
+                            }
+
                             tab.graph.update {
                                 tab.graph.model.remove(cell)
                             }
@@ -621,6 +629,10 @@ class GUI : Application() {
         turingMachineMenu.onAction= EventHandler<ActionEvent> {
             val newTM = TuringMachine()
             addNewTab(newTM)
+        }
+        regexMenu.onAction= EventHandler<ActionEvent> {
+            val regex = REGEX()
+            addNewTab(regex)
         }
         newFile.items.addAll(dfaMenu,nfaMenu,nfaeMenu,pdaMenu,turingMachineMenu,regexMenu)
         val openFileMenu = MenuItem("Open file...")

@@ -30,8 +30,17 @@ open class DFA(): IAutomata, Serializable,Cloneable {
     }
 
     override fun evaluate(alphabet: String): Boolean {
+//        println("_________________________________")
+//        for(state in states){
+//            println("${state.value}")
+//            for (transition in state.getTransitions()){
+//                println("${transition.source.value} => ${transition.symbol} => ${transition.target.value}")
+//            }
+//        }
+//        println("_________________________________")
+
         if(this.states.count()==0) return false
-        println("DFA Evaluation")
+        //println("DFA Evaluation")
         val init = getInitialState() ?: throw Exception("Initial state is not set")
         val result: State = deltaExtended(init,alphabet)
         return getFinalStates().contains(result)
@@ -96,7 +105,7 @@ open class DFA(): IAutomata, Serializable,Cloneable {
         while (nfae.states.count()>3){
             //Get first state to remove
             var st=nfae.states.filter { !(nfae.isFinal(it.value)) && (nfae.getInitialState()?.value!=it.value) }.sortedBy{ it.getTransitionsPointingToMe().count() }
-            println("${st.map { it.value + " - " + it.getTransitionsPointingToMe().count() }}")
+            //println("${st.map { it.value + " - " + it.getTransitionsPointingToMe().count() }}")
             var state = st.first()
 
             if(getInitialState()!!.value.equals(state.value)){
@@ -125,7 +134,7 @@ open class DFA(): IAutomata, Serializable,Cloneable {
 
                 }
                 pendingTransitions.forEach {
-                    println("PT: ${it.source.value} -> ${it.symbol} -> ${it.target.value}")
+                    //println("PT: ${it.source.value} -> ${it.symbol} -> ${it.target.value}")
                     nfae.getState(it.target.value).addTransitionPointingToMe(it)
                     nfae.getState(it.source.value).addTransition(it)
                 }
@@ -313,7 +322,7 @@ open class DFA(): IAutomata, Serializable,Cloneable {
                     val B=delta(pair.second,a)
                     val list = markedPairs.filter { (it.first.value == A.value && it.second.value == B.value) }
                     val result=list.firstOrNull()
-                    println("(${pair.first.value},${pair.second.value}):$a ==>(${A.value}.${B.value}):${result!=null}")
+                    //println("(${pair.first.value},${pair.second.value}):$a ==>(${A.value}.${B.value}):${result!=null}")
                     if(result!=null){
                         markedPairs.add(pair)
                         unmarkedPairs.remove(pair)
