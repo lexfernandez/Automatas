@@ -52,22 +52,12 @@ class REGEX private  constructor(): NFAE() {
 
     private fun regexToNFAE(node: Node):NFAE{
 
-        when(node){
-            is CharNode -> {
-                return getNFAeFromSymbol(node)
-            }
-            is ANDNode -> {
-                return getNFAeFromAnd(node)
-            }
-            is ORNode -> {
-                return  getNFAeFromOr(node)
-            }
-            is RepeatNode -> {
-                return getNFAeFromStar(node)
-            }
-            else -> {
-                throw Exception("not implemented")
-            }
+        when (node) {
+            is CharNode -> return getNFAeFromSymbol(node)
+            is ANDNode -> return getNFAeFromAnd(node)
+            is ORNode -> return  getNFAeFromOr(node)
+            is RepeatNode -> return getNFAeFromStar(node)
+            else -> throw Exception("not implemented")
         }
     }
 

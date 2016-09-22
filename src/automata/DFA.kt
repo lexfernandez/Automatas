@@ -360,30 +360,30 @@ open class DFA(): IAutomata, Serializable,Cloneable {
         //Create minimized DFA
         val minimizedDfa:DFA = DFA()
         for (states in newStates){
-            minimizedDfa.addState(State(states.map { it.value }.sorted().toString().replace("[","").replace("]","").trim()))
+            minimizedDfa.addState(State(states.map { it.value }.sorted().joinToString(",")))
         }
 
         for (states in newStates){
             for (source in states){
                 if(states.contains(this.getInitialState())){
-                    minimizedDfa.setInitialState(states.map { it.value }.sorted().toString().replace("[", "").replace("]", "").trim())
+                    minimizedDfa.setInitialState(states.map { it.value }.sorted().joinToString(","))
                 }
                 if(this.isFinal(source.value)){
-                    minimizedDfa.setFinalState(states.map { it.value }.sorted().toString().replace("[", "").replace("]", "").trim())
+                    minimizedDfa.setFinalState(states.map { it.value }.sorted().joinToString(","))
                 }
 
                 for (symbol in this.language){
                     try {
                         val destiny = delta(source, symbol)
-                        val msource = states.map { it.value }.sorted().toString().replace("[", "").replace("]", "").trim()
+                        val msource = states.map { it.value }.sorted().joinToString(",")
                         val targets = newStates.filter { it.contains(destiny) }
 
                         for (target in targets){
-                            val mdestiny = target.map { it.value }.sorted().toString().replace("[", "").replace("]", "").trim()
+                            val mdestiny = target.map { it.value }.sorted().joinToString(",")
                             minimizedDfa.addTransition(symbol,msource,mdestiny)
                         }
                     } catch(e: Exception) {
-
+                        println(e.message)
                     }
                 }
             }
