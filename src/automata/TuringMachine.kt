@@ -93,6 +93,14 @@ class TuringMachine(): IAutomata, Serializable,Cloneable {
                                 } else {
                                     return false
                                 }
+                            }else if (transition.direction==TuringMachineDirection.None) {
+                                if (index <= _ribbon.size - 1) {
+                                    _ribbon[index-1] = transition.replacement
+                                    currentState = transition.target
+                                    break
+                                } else {
+                                    return false
+                                }
                             }
                         }
                         transitionCount++

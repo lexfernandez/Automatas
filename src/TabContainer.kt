@@ -95,7 +95,7 @@ open class TabContainer: Tab {
 
         // Do not change the scale and translation after files have been loaded
         graph.isResetViewOnRootChange = false
-        applyDefaultEdgeStyle()
+        //applyDefaultEdgeStyle()
 
         drawAutomata(automaton)
         graph.ApplyLayout()
@@ -480,7 +480,7 @@ open class TabContainer: Tab {
         try {
             val layout = mxFastOrganicLayout(graph)
             // set some properties
-            layout.forceConstant = 50.0 // the higher, the more separated
+            layout.forceConstant = 150.0 // the higher, the more separated
             layout.isDisableEdgeStyle = false // true transforms the edges and makes them direct lines
             layout.isUseInputOrigin = true
             // layout graph
@@ -508,22 +508,22 @@ open class TabContainer: Tab {
     }
 
     private fun applyDefaultEdgeStyle() {
-        val edge = HashMap<String, Any>()
-        edge.put(mxConstants.STYLE_ROUNDED, true)
-        edge.put(mxConstants.STYLE_ORTHOGONAL, false)
-        edge.put(mxConstants.STYLE_EDGE, mxEdgeStyle.TopToBottom)
-        edge.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_CONNECTOR)
-        edge.put(mxConstants.STYLE_ENDARROW, mxConstants.ARROW_CLASSIC)
-        edge.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE)
-        edge.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_CENTER)
-        edge.put(mxConstants.STYLE_STROKECOLOR, "#6482B9")
-        edge.put(mxConstants.STYLE_FONTCOLOR, "#ffffff")
-        edge.put(mxConstants.STYLE_ARCSIZE, 80)
-        edge.put(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR, "#6482B9")
-
-        val edgeStyle = mxStylesheet()
-        edgeStyle.defaultEdgeStyle = edge
-        graph.stylesheet = edgeStyle
+//        val edge = HashMap<String, Any>()
+//        edge.put(mxConstants.STYLE_ROUNDED, true)
+//        edge.put(mxConstants.STYLE_ORTHOGONAL, false)
+//        edge.put(mxConstants.STYLE_EDGE, mxEdgeStyle.TopToBottom)
+//        edge.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_CONNECTOR)
+//        edge.put(mxConstants.STYLE_ENDARROW, mxConstants.ARROW_CLASSIC)
+//        edge.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE)
+//        edge.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_CENTER)
+//        edge.put(mxConstants.STYLE_STROKECOLOR, "#6482B9")
+//        edge.put(mxConstants.STYLE_FONTCOLOR, "#ffffff")
+//        edge.put(mxConstants.STYLE_ARCSIZE, 80)
+//        edge.put(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR, "#6482B9")
+//
+//        val edgeStyle = mxStylesheet()
+//        edgeStyle.defaultEdgeStyle = edge
+//        graph.stylesheet = edgeStyle
     }
 
     private fun drawAutomata(automata: IAutomata) {

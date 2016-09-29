@@ -389,7 +389,7 @@ open class DFA(): IAutomata, Serializable,Cloneable {
             }
         }
 
-        return minimizedDfa
+        return minimizedDfa.renameStates() as DFA
     }
 
     private fun unify(A:DFA,B:DFA,op: AutomataOperation): DFA {

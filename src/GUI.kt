@@ -63,19 +63,37 @@ class GUI : Application() {
 
         //Create some toolbar buttons
         val openFileBtn = Button()
-        val printBtn = Button()
-        val snapshotBtn = Button()
+//        val printBtn = Button()
+//        val snapshotBtn = Button()
         val alphabetTextField = TextField()
         val evaluateBtn = Button("Evaluar")
 
 
         //Add some button graphicsdelta(q,a)delta(q,a)
         openFileBtn.graphic = ImageView(Image("icons"+File.separator+"folder-11.png"))
-        printBtn.graphic = ImageView(Image("icons"+File.separator+"print.png"))
-        snapshotBtn.graphic = ImageView(Image("icons"+File.separator+"photo-camera-1.png"))
+        openFileBtn.onAction = EventHandler {
+            val file = openFile()
+
+            if (file != null) {
+                try {
+                    val fileIn = FileInputStream(file)
+                    val ois: ObjectInputStream = ObjectInputStream(fileIn)
+                    val automata:IAutomata =ois.readObject() as IAutomata
+                    addNewTab(automata,file.name,file)
+                    ois.close()
+                    fileIn.close()
+                } catch (i: IOException) {
+                    i.printStackTrace()
+                } catch (c: ClassNotFoundException) {
+                    c.printStackTrace()
+                }
+            }
+        }
+//        printBtn.graphic = ImageView(Image("icons"+File.separator+"print.png"))
+//        snapshotBtn.graphic = ImageView(Image("icons"+File.separator+"photo-camera-1.png"))
 
 
-        toolBar.items.addAll(openFileBtn, printBtn, snapshotBtn,Separator(),alphabetTextField,evaluateBtn)
+        toolBar.items.addAll(openFileBtn,Separator(),alphabetTextField,evaluateBtn)
 
         //Add the ToolBar and Main Meu to the VBox
         topContainer.children.add(mainMenu)
@@ -146,7 +164,7 @@ class GUI : Application() {
 //
 //
 //        addNewTab(NFAE())
-        addNewTab(REGEX("((0+1.0)*)+((0+1.0)*.1)+((0+1.0)*.1.1.(1+0.1)*)+((0+1.0)*.1.1.(1+0.1)*.0)"))
+//        addNewTab(REGEX("((0+1.0)*)+((0+1.0)*.1)+((0+1.0)*.1.1.(1+0.1)*)+((0+1.0)*.1.1.(1+0.1)*.0)"))
 
 
 
